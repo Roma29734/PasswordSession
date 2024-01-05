@@ -30,7 +30,7 @@ fun MyApplicationTheme(
         lightColorScheme(
             primary = Color(0xFF6200EE),
             secondary = Color(0xFF03DAC5),
-            tertiary = Color(0xFF3700B3)
+            tertiary = Color(0xFF3700B3),
         )
     }
     val typography = Typography(
