@@ -50,7 +50,7 @@ class RootComponent constructor(
 
     @Serializable
     sealed class Configuration {
-        data object ScreenBottomMain : Configuration()
-        data object ScreenDetail : Configuration()
+        @Serializable data object ScreenBottomMain : Configuration()
+        @Serializable data object ScreenDetail : Configuration()
     }
 }

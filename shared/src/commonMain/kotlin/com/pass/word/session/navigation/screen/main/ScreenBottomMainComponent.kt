@@ -2,18 +2,27 @@ package com.pass.word.session.navigation.screen.main
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.parcelable.Parcelable
+import com.arkivanov.essenty.parcelable.Parcelize
 import com.pass.word.session.navigation.screen.bottom.screenCreateNewComponent.ScreenCreateNewComponent
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
 import kotlinx.serialization.Serializable
 
+
 class ScreenBottomMainComponent constructor(
     componentContext: ComponentContext
 ): ComponentContext by componentContext {
     private val navigation = StackNavigation<Configuration>()
+
 
     val childStack = childStack(
         source = navigation,
@@ -22,6 +31,7 @@ class ScreenBottomMainComponent constructor(
         handleBackButton = true,
         childFactory = ::createChild
     )
+
 
     fun openPasswordScreen() {
         navigation.replaceAll(Configuration.ScreenPassword)
@@ -59,8 +69,8 @@ class ScreenBottomMainComponent constructor(
     }
     @Serializable
     sealed class Configuration {
-        data object ScreenPassword : Configuration()
-        data object ScreenCreateNew: Configuration()
-        data object ScreenSettings : Configuration()
+        @Serializable data object ScreenPassword : Configuration()
+        @Serializable data object ScreenCreateNew: Configuration()
+        @Serializable data object ScreenSettings : Configuration()
     }
 }

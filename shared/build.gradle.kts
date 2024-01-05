@@ -29,6 +29,7 @@ kotlin {
             //put your multiplatform dependencies here
             implementation(libs.decompose)
             implementation(libs.kotlinx.serialization.json)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
