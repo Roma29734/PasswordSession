@@ -44,6 +44,8 @@ kotlin {
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(compose.materialIconsExtended)
+            // more dep
+            implementation(libs.kotlinXDataTime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

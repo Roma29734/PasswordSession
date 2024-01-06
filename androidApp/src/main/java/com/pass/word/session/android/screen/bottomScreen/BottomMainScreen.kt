@@ -1,5 +1,6 @@
 package com.pass.word.session.android.screen.bottomScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -98,7 +99,7 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
             Column(modifier = Modifier.padding(innerpadding)) {
                 Children(
                     stack = component.childStack,
-                    modifier = Modifier,
+                    modifier = Modifier.background(Color.Black),
                     animation = stackAnimation(fade() + scale()),
                 ) { child ->
                     when (val instance = child.instance) {

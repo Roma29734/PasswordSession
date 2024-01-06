@@ -7,6 +7,7 @@ compose-material3 = "1.1.2"
 androidx-activityCompose = "1.8.0"
 decompose = "2.2.0-alpha03"
 kotlinxSerializationJson = "1.6.1"
+kotlinXDataTime = "0.5.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -19,6 +20,7 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 decomposeJetpack = { module = "com.arkivanov.decompose:extensions-compose-jetpack", version.ref = "decompose"}
+kotlinXDataTime = {module= "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinXDataTime"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

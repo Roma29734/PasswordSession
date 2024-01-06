@@ -44,6 +44,16 @@ fun MyApplicationTheme(
             fontFamily = poppinsFont,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 28.sp
+        ),
+        displayMedium = TextStyle(
+            fontSize = 16.sp,
+            fontFamily = poppinsFont,
+            fontWeight = FontWeight.Medium,
+        ),
+        displaySmall = TextStyle(
+            fontSize = 14.sp,
+            fontFamily = poppinsFont,
+            fontWeight = FontWeight.SemiBold
         )
     )
     val shapes = Shapes(
