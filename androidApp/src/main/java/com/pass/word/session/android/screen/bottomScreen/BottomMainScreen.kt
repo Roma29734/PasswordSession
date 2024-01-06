@@ -4,16 +4,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -21,11 +24,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
+import com.pass.word.session.android.CustomColor
+import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.bottomScreen.createNewScreen.CreateNewScreen
 import com.pass.word.session.android.screen.bottomScreen.passwordScreen.PasswordScreen
 import com.pass.word.session.android.screen.bottomScreen.settingsScreen.SettingsScreen
@@ -52,9 +59,13 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                         NavigationBarItem(
                             icon = {
                                 when (screensBottom.name) {
-                                    "Home" -> Icon(Icons.Outlined.Home, contentDescription = null)
-                                    "Profile" -> Icon(
-                                        Icons.Default.Person,
+                                    "Password" -> Icon(
+                                        painter = painterResource(id = R.drawable.ic_password),
+                                        contentDescription = null,
+                                    )
+
+                                    "Create new" -> Icon(
+                                        Icons.Default.Add,
                                         contentDescription = null
                                     )
 
@@ -70,10 +81,17 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                                 selectedItem = index
                                 screensBottom.openScreen()
                             },
-                            colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = CustomColor().brandBlueLight,
+                                unselectedTextColor = CustomColor().grayLight,
+                                selectedTextColor = CustomColor().brandBlueLight,
+                                unselectedIconColor = CustomColor().grayLight,
+                                indicatorColor = Color.Black
+                            )
                         )
                     }
-                }
+                },
+                containerColor = Color.Black,
             )
         },
         content = { innerpadding ->

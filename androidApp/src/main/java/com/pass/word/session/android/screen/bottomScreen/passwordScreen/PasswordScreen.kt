@@ -9,5 +9,10 @@ import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.Sc
 
 @Composable
 fun PasswordScreen(component: ScreenPasswordComponent) {
-    Text(modifier = Modifier, text = "password", color = MaterialTheme.colorScheme.primary)
+    Text(
+        modifier = Modifier,
+        text = "password",
+        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.bodyLarge
+    )
 }
