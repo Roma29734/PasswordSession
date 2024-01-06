@@ -43,7 +43,7 @@ fun MyApplicationTheme(
         bodyLarge = TextStyle(
             fontFamily = poppinsFont,
             fontWeight = FontWeight.ExtraBold,
-            fontSize = 24.sp
+            fontSize = 28.sp
         )
     )
     val shapes = Shapes(
@@ -62,5 +62,6 @@ fun MyApplicationTheme(
 
 data class CustomColor(
     val grayLight: Color = Color(0xFF5D5D61),
-    val brandBlueLight: Color = Color(0xFF0C98FF)
+    val brandBlueLight: Color = Color(0xFF0C98FF),
+    val accentDark: Color = Color(0xFF1C1C1E)
 )
