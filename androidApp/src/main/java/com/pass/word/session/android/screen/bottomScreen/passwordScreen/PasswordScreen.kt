@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
-import com.pass.word.session.navigation.data.model.PasswordItemModel
+import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.data.root.getDaysOrMonthsOrYearsDifference
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
 import com.pass.word.session.ui.CustomColor

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqlDelight).apply(false)
     id("org.jetbrains.compose")
 }
 
@@ -28,12 +29,6 @@ kotlin {
     }
 
     sourceSets {
-
-        val commonMain by getting{
-            dependencies{
-
-            }
-        }
         commonMain.dependencies {
             //put your multiplatform dependencies here
             implementation(libs.decompose)
@@ -50,6 +45,7 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
     }
 }
 

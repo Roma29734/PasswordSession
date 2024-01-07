@@ -1,6 +1,6 @@
 package com.pass.word.session.navigation.data.root
 
-import com.pass.word.session.navigation.data.model.PasswordItemModel
+import com.pass.word.session.data.model.PasswordItemModel
 
 class LocalDataRepository {
 

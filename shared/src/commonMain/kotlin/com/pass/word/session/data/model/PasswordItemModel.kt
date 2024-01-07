@@ -1,4 +1,4 @@
-package com.pass.word.session.navigation.data.model
+package com.pass.word.session.data.model
 
 import kotlinx.serialization.Serializable
 

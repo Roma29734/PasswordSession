@@ -1,9 +1,7 @@
 package com.pass.word.session.navigation.screen.main.detail
 
-import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
-import com.pass.word.session.navigation.data.model.PasswordItemModel
-import com.pass.word.session.utilits.showToast
+import com.pass.word.session.data.model.PasswordItemModel
 
 class ScreenDetailComponent constructor(
     componentContext: ComponentContext,

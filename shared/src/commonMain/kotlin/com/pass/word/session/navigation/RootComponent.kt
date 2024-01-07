@@ -6,7 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
-import com.pass.word.session.navigation.data.model.PasswordItemModel
+import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import kotlinx.serialization.Serializable
