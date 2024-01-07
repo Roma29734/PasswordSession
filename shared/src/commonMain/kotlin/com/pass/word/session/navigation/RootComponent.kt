@@ -6,14 +6,14 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
-import com.arkivanov.decompose.router.stack.replaceAll
-import com.pass.word.session.navigation.screen.main.ScreenBottomMainComponent
+import com.pass.word.session.navigation.data.model.PasswordItemModel
+import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import kotlinx.serialization.Serializable
 
 class RootComponent constructor(
     componentContext: ComponentContext
-): ComponentContext by componentContext {
+) : ComponentContext by componentContext {
     private val navigation = StackNavigation<Configuration>()
 
     val childStack = childStack(
@@ -33,11 +33,19 @@ class RootComponent constructor(
             Configuration.ScreenBottomMain -> Child.ScreenBottomMain(
                 ScreenBottomMainComponent(
                     componentContext = context,
+                    onNavigateToDetailComponent = { model ->
+                        navigation.pushNew(Configuration.ScreenDetail(model))
+                    }
                 )
             )
+
             is Configuration.ScreenDetail -> Child.ScreenDetail(
                 ScreenDetailComponent(
                     componentContext = context,
+                    passDetailModel = config.passDetailModel,
+                    onGoBack = {
+                        navigation.pop()
+                    }
                 )
             )
         }
@@ -50,7 +58,9 @@ class RootComponent constructor(
 
     @Serializable
     sealed class Configuration {
-        @Serializable data object ScreenBottomMain : Configuration()
-        @Serializable data object ScreenDetail : Configuration()
+        @Serializable
+        data object ScreenBottomMain : Configuration()
+        @Serializable
+        data class ScreenDetail(val passDetailModel: PasswordItemModel) : Configuration()
     }
 }

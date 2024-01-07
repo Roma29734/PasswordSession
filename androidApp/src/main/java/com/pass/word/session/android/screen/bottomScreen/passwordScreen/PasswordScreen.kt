@@ -2,6 +2,7 @@ package com.pass.word.session.android.screen.bottomScreen.passwordScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,11 +21,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
-import com.pass.word.session.android.CustomColor
 import com.pass.word.session.android.R
 import com.pass.word.session.navigation.data.model.PasswordItemModel
 import com.pass.word.session.navigation.data.root.getDaysOrMonthsOrYearsDifference
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
+import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun PasswordScreen(component: ScreenPasswordComponent) {
@@ -46,7 +47,8 @@ fun PasswordScreen(component: ScreenPasswordComponent) {
                 ItemPasswordView(
                     nameItem = listItemModel[countItem].nameItemPassword,
                     emailItem = listItemModel[countItem].emailOrUserName,
-                    changeData = listItemModel[countItem].changeData
+                    changeData = listItemModel[countItem].changeData,
+                    oncLick = {component.navigateToDetailEvent(listItemModel[countItem])}
                 )
             }
         }
@@ -54,11 +56,11 @@ fun PasswordScreen(component: ScreenPasswordComponent) {
 }
 
 @Composable
-fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String) {
+fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String, oncLick: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(start = 12.dp, bottom = 16.dp, end = 12.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth().clickable{oncLick()},
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

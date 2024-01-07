@@ -13,8 +13,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.pass.word.session.android.theme.poppinsFont
 
 @Composable
 fun MyApplicationTheme(
@@ -34,28 +32,6 @@ fun MyApplicationTheme(
             tertiary = Color(0xFF3700B3),
         )
     }
-    val typography = Typography(
-        bodyMedium = TextStyle(
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp
-        ),
-        bodyLarge = TextStyle(
-            fontFamily = poppinsFont,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 28.sp
-        ),
-        displayMedium = TextStyle(
-            fontSize = 16.sp,
-            fontFamily = poppinsFont,
-            fontWeight = FontWeight.Medium,
-        ),
-        displaySmall = TextStyle(
-            fontSize = 14.sp,
-            fontFamily = poppinsFont,
-            fontWeight = FontWeight.SemiBold
-        )
-    )
     val shapes = Shapes(
         small = RoundedCornerShape(4.dp),
         medium = RoundedCornerShape(4.dp),
@@ -64,14 +40,7 @@ fun MyApplicationTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = typography,
         shapes = shapes,
         content = content
     )
 }
-
-data class CustomColor(
-    val grayLight: Color = Color(0xFF5D5D61),
-    val brandBlueLight: Color = Color(0xFF0C98FF),
-    val accentDark: Color = Color(0xFF1C1C1E)
-)

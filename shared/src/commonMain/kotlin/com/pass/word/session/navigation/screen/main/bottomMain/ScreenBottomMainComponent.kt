@@ -1,17 +1,11 @@
-package com.pass.word.session.navigation.screen.main
+package com.pass.word.session.navigation.screen.main.bottomMain
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.lifecycle.Lifecycle
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
+import com.pass.word.session.navigation.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.bottom.screenCreateNewComponent.ScreenCreateNewComponent
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
@@ -19,8 +13,9 @@ import kotlinx.serialization.Serializable
 
 
 class ScreenBottomMainComponent constructor(
-    componentContext: ComponentContext
-): ComponentContext by componentContext {
+    componentContext: ComponentContext,
+    private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit
+) : ComponentContext by componentContext {
     private val navigation = StackNavigation<Configuration>()
 
 
@@ -32,10 +27,10 @@ class ScreenBottomMainComponent constructor(
         childFactory = ::createChild
     )
 
-
     fun openPasswordScreen() {
         navigation.replaceAll(Configuration.ScreenPassword)
     }
+
     fun openCreateNewScreen() {
         navigation.replaceAll(Configuration.ScreenCreateNew)
     }
@@ -51,11 +46,17 @@ class ScreenBottomMainComponent constructor(
     ): Child {
         return when (config) {
             Configuration.ScreenPassword -> Child.ScreenPassword(
-                ScreenPasswordComponent(componentContext = context)
+                ScreenPasswordComponent(
+                    componentContext = context,
+                    onNavigateToDetailComponent = {
+                        onNavigateToDetailComponent(it)
+                    })
             )
+
             is Configuration.ScreenCreateNew -> Child.ScreenCreateNew(
                 ScreenCreateNewComponent(componentContext = context)
             )
+
             is Configuration.ScreenSettings -> Child.ScreenSettings(
                 ScreenSettingsComponent(componentContext = context)
             )
@@ -65,12 +66,16 @@ class ScreenBottomMainComponent constructor(
     sealed class Child {
         data class ScreenPassword(val component: ScreenPasswordComponent) : Child()
         data class ScreenCreateNew(val component: ScreenCreateNewComponent) : Child()
-        data class ScreenSettings(val component: ScreenSettingsComponent): Child()
+        data class ScreenSettings(val component: ScreenSettingsComponent) : Child()
     }
+
     @Serializable
     sealed class Configuration {
-        @Serializable data object ScreenPassword : Configuration()
-        @Serializable data object ScreenCreateNew: Configuration()
-        @Serializable data object ScreenSettings : Configuration()
+        @Serializable
+        data object ScreenPassword : Configuration()
+        @Serializable
+        data object ScreenCreateNew : Configuration()
+        @Serializable
+        data object ScreenSettings : Configuration()
     }
 }

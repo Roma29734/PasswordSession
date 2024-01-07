@@ -6,18 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,12 +27,12 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
-import com.pass.word.session.android.CustomColor
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.bottomScreen.createNewScreen.CreateNewScreen
 import com.pass.word.session.android.screen.bottomScreen.passwordScreen.PasswordScreen
 import com.pass.word.session.android.screen.bottomScreen.settingsScreen.SettingsScreen
-import com.pass.word.session.navigation.screen.main.ScreenBottomMainComponent
+import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
+import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun BottomMainScreen(component: ScreenBottomMainComponent) {

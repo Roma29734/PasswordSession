@@ -17,6 +17,7 @@ import com.arkivanov.decompose.retainedComponent
 import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
 import com.pass.word.session.android.screen.detailScreen.DetailScreen
 import com.pass.word.session.navigation.RootComponent
+import com.pass.word.session.ui.MyCustomAppTheme
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalDecomposeApi::class)
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                 RootComponent(it)
             }
             val childStack by root.childStack.subscribeAsState()
-            MyApplicationTheme {
+            MyCustomAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
