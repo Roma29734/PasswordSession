@@ -1,0 +1,19 @@
+CREATE TABLE PassItemTable (
+    nameItemPassword TEXT NOT NULL,
+    emailOrUserName TEXT NOT NULL,
+    passwordItem TEXT NOT NULL ,
+    changeData TEXT NOT NULL,
+    urlSite TEXT ,
+    descriptions TEXT
+);
+
+insertPassItemTalbe:
+INSERT INTO PassItemTable(nameItemPassword, emailOrUserName, passwordItem, changeData, urlSite, descriptions)
+VALUES(?, ?, ?, ?, ?, ?);
+
+removeAllPassItemTalbe:
+DELETE FROM PassItemTable;
+
+selectAllPassItemTalbe:
+SELECT PassItemTable.*
+FROM PassItemTable;

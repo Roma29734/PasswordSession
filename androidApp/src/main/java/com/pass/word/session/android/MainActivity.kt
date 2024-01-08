@@ -1,6 +1,7 @@
 package com.pass.word.session.android
 
 import android.os.Bundle
+import android.os.CancellationSignal
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,12 +15,15 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.arkivanov.decompose.retainedComponent
+import com.pass.word.session.android.screen.authenticationScreen.AuthenticationScreen
 import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
 import com.pass.word.session.android.screen.detailScreen.DetailScreen
 import com.pass.word.session.navigation.RootComponent
 import com.pass.word.session.ui.MyCustomAppTheme
 
 class MainActivity : ComponentActivity() {
+
+    private var cancellationSignal: CancellationSignal? = null
     @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,9 @@ class MainActivity : ComponentActivity() {
                         when (val instance = child.instance) {
                             is RootComponent.Child.ScreenBottomMain -> BottomMainScreen(component = instance.component)
                             is RootComponent.Child.ScreenDetail -> DetailScreen(component = instance.component)
+                            is RootComponent.Child.ScreenAuthentication -> AuthenticationScreen(
+                                component = instance.component
+                            )
                         }
                     }
                 }

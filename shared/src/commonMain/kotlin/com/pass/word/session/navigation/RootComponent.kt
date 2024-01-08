@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import kotlinx.serialization.Serializable
@@ -19,7 +20,7 @@ class RootComponent constructor(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = Configuration.ScreenBottomMain,
+        initialConfiguration = Configuration.ScreenAuthentication,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -48,12 +49,16 @@ class RootComponent constructor(
                     }
                 )
             )
+            is Configuration.ScreenAuthentication -> Child.ScreenAuthentication(
+                ScreenAuthenticationComponent(componentContext = context)
+            )
         }
     }
 
     sealed class Child {
         data class ScreenBottomMain(val component: ScreenBottomMainComponent) : Child()
         data class ScreenDetail(val component: ScreenDetailComponent) : Child()
+        data class ScreenAuthentication(val component: ScreenAuthenticationComponent): Child()
     }
 
     @Serializable
@@ -62,5 +67,7 @@ class RootComponent constructor(
         data object ScreenBottomMain : Configuration()
         @Serializable
         data class ScreenDetail(val passDetailModel: PasswordItemModel) : Configuration()
+        @Serializable
+        data object ScreenAuthentication: Configuration()
     }
 }

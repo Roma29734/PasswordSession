@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.sqlDelight).apply(false)
     id("org.jetbrains.compose")
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -41,9 +41,16 @@ kotlin {
             implementation(compose.materialIconsExtended)
             // more dep
             implementation(libs.kotlinXDataTime)
+            implementation(libs.sqlDelightJvm)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        androidMain.dependencies {
+            implementation(libs.sqlDelightAndroid)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqlDelightNative)
         }
 
     }
@@ -57,5 +64,11 @@ android {
     }
     sourceSets["main"].apply {
         res.srcDirs("src/androidMain/res", "src/commonMain/resources")
+    }
+}
+
+sqldelight {
+    database("AppDatabase") {
+        packageName = "com.pass.word.session.shared.cache"
     }
 }

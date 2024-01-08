@@ -8,7 +8,7 @@ androidx-activityCompose = "1.8.0"
 decompose = "2.2.0-alpha03"
 kotlinxSerializationJson = "1.6.1"
 kotlinXDataTime = "0.5.0"
-sqlDelight = "2.0.1"
+sqlDelight = "1.5.5"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -22,9 +22,9 @@ decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decom
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 decomposeJetpack = { module = "com.arkivanov.decompose:extensions-compose-jetpack", version.ref = "decompose" }
 kotlinXDataTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinXDataTime" }
-sqlDelightAndroid = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
-sqlDelightNative = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
-sqlDelightJvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
+sqlDelightAndroid = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelightNative = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqlDelight" }
+sqlDelightJvm = { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelight" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -33,4 +33,4 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+sqlDelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight" }
