@@ -47,8 +47,10 @@ import com.pass.word.session.android.R
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthStateEvent
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.ui.CustomColor
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
@@ -62,16 +64,16 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
     }
 
     DisposableEffect(component) {
-        val listenerSnachBarShow: (String) -> Unit = {
+        val listenerSnackBarShow: (String) -> Unit = {
             scope.launch {
                 snackBarHostState.showSnackbar("$it")
             }
         }
-        component.subscribeListenerSnackBar(listenerSnachBarShow)
+        component.subscribeListenerSnackBar(listenerSnackBarShow)
 
         onDispose {
             // Отписка при уничтожении экрана
-            component.unsubscribeListenerSnackBar(listenerSnachBarShow)
+            component.unsubscribeListenerSnackBar(listenerSnackBarShow)
         }
     }
 
@@ -295,7 +297,6 @@ private fun checkBiometrick(
             } else {
                 TODO("VERSION.SDK_INT < P")
             }
-
             biometricPrompt.authenticate(
                 getCancelletionSignal(),
                 context.mainExecutor,

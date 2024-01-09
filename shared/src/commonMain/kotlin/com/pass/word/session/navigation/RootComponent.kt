@@ -13,6 +13,7 @@ import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
 class RootComponent constructor(
@@ -28,7 +29,7 @@ class RootComponent constructor(
         childFactory = ::createChild
     )
 
-    @OptIn(ExperimentalDecomposeApi::class)
+    @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     private fun createChild(
         config: Configuration,
         context: ComponentContext

@@ -20,11 +20,11 @@ import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
 import com.pass.word.session.android.screen.detailScreen.DetailScreen
 import com.pass.word.session.navigation.RootComponent
 import com.pass.word.session.ui.MyCustomAppTheme
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 class MainActivity : ComponentActivity() {
 
-    private var cancellationSignal: CancellationSignal? = null
-    @OptIn(ExperimentalDecomposeApi::class)
+    @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

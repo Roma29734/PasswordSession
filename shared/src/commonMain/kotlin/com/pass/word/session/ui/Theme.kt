@@ -26,5 +26,3 @@ data class CustomColor(
     val brandBlueLight: Color = Color(0xFF0C98FF),
     val accentDark: Color = Color(0xFF1C1C1E)
 )
-
-
