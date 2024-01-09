@@ -1,8 +1,8 @@
-package com.pass.word.session.navigation.screen.bottom.screenCreateNewComponent
+package com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent
 
 import com.arkivanov.decompose.ComponentContext
 
-class ScreenCreateNewComponent constructor(
+class ScreenAddPasswordComponent constructor(
     componentContext: ComponentContext
 ): ComponentContext by componentContext {
 

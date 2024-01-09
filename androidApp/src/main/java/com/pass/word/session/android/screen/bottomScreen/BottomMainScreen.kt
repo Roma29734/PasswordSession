@@ -28,7 +28,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.pass.word.session.android.R
-import com.pass.word.session.android.screen.bottomScreen.createNewScreen.CreateNewScreen
+import com.pass.word.session.android.screen.bottomScreen.addPasswordScreen.AppPasswordScreen
 import com.pass.word.session.android.screen.bottomScreen.passwordScreen.PasswordScreen
 import com.pass.word.session.android.screen.bottomScreen.settingsScreen.SettingsScreen
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
@@ -41,7 +41,7 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
         mutableStateOf(
             listOf(
                 ScreensBottom("Password", component::openPasswordScreen, false),
-                ScreensBottom("Create new", component::openCreateNewScreen, false),
+                ScreensBottom("Add Password", component::openAddPasswordScreen, false),
                 ScreensBottom("Settings", component::openSettingsScreen, false),
             )
         )
@@ -60,7 +60,7 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                                         contentDescription = null,
                                     )
 
-                                    "Create new" -> Icon(
+                                    "Add Password" -> Icon(
                                         Icons.Default.Add,
                                         contentDescription = null
                                     )
@@ -99,7 +99,7 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                 ) { child ->
                     when (val instance = child.instance) {
                         is ScreenBottomMainComponent.Child.ScreenPassword -> PasswordScreen(instance.component)
-                        is ScreenBottomMainComponent.Child.ScreenCreateNew -> CreateNewScreen(
+                        is ScreenBottomMainComponent.Child.ScreenAddPassword -> AppPasswordScreen(
                             instance.component
                         )
 

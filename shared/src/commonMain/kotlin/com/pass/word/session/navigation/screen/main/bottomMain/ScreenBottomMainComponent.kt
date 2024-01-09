@@ -6,7 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.pass.word.session.data.model.PasswordItemModel
-import com.pass.word.session.navigation.screen.bottom.screenCreateNewComponent.ScreenCreateNewComponent
+import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
 import kotlinx.serialization.Serializable
@@ -31,8 +31,8 @@ class ScreenBottomMainComponent constructor(
         navigation.replaceAll(Configuration.ScreenPassword)
     }
 
-    fun openCreateNewScreen() {
-        navigation.replaceAll(Configuration.ScreenCreateNew)
+    fun openAddPasswordScreen() {
+        navigation.replaceAll(Configuration.ScreenAddPassword)
     }
 
     fun openSettingsScreen() {
@@ -53,8 +53,8 @@ class ScreenBottomMainComponent constructor(
                     })
             )
 
-            is Configuration.ScreenCreateNew -> Child.ScreenCreateNew(
-                ScreenCreateNewComponent(componentContext = context)
+            is Configuration.ScreenAddPassword -> Child.ScreenAddPassword(
+                ScreenAddPasswordComponent(componentContext = context)
             )
 
             is Configuration.ScreenSettings -> Child.ScreenSettings(
@@ -65,7 +65,7 @@ class ScreenBottomMainComponent constructor(
 
     sealed class Child {
         data class ScreenPassword(val component: ScreenPasswordComponent) : Child()
-        data class ScreenCreateNew(val component: ScreenCreateNewComponent) : Child()
+        data class ScreenAddPassword(val component: ScreenAddPasswordComponent) : Child()
         data class ScreenSettings(val component: ScreenSettingsComponent) : Child()
     }
 
@@ -74,7 +74,7 @@ class ScreenBottomMainComponent constructor(
         @Serializable
         data object ScreenPassword : Configuration()
         @Serializable
-        data object ScreenCreateNew : Configuration()
+        data object ScreenAddPassword : Configuration()
         @Serializable
         data object ScreenSettings : Configuration()
     }
