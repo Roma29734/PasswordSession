@@ -5,7 +5,10 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
@@ -50,7 +53,12 @@ class RootComponent constructor(
                 )
             )
             is Configuration.ScreenAuthentication -> Child.ScreenAuthentication(
-                ScreenAuthenticationComponent(componentContext = context)
+                ScreenAuthenticationComponent(
+                    componentContext = context,
+                    onNavigateToMainScreen = {
+                        navigation.replaceCurrent(Configuration.ScreenBottomMain)
+                    }
+                )
             )
         }
     }

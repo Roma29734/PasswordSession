@@ -3,9 +3,16 @@ package com.pass.word.session.navigation.screen.main.authentication
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
+@DelicateCoroutinesApi
 class ScreenAuthenticationComponent constructor(
     componentContext: ComponentContext,
+    private val onNavigateToMainScreen: () -> Unit
 ) : ComponentContext by componentContext {
 
     private var _passItem = MutableValue("")
@@ -25,11 +32,24 @@ class ScreenAuthenticationComponent constructor(
         listenersSnackBarShow.forEach { it.invoke(message) }
     }
 
+    private fun passCheck(passForCheck: String) {
+        // Тут получаем из бд пароль
+        GlobalScope.launch {
+            val pass = "1234"
+            if(pass == passForCheck) {
+                onNavigateToMainScreen()
+            } else {
+                showSnackBar("pass error")
+                _passItem.value = ""
+            }
+        }
+    }
+
     fun event(eventAuth: ScreenAuthStateEvent) {
         when (eventAuth) {
             is ScreenAuthStateEvent.StateBiometric -> {
                 if (eventAuth.successState) {
-                    showSnackBar("Good")
+                    onNavigateToMainScreen()
                 } else {
                     println("event state error message")
                     val errorMessage = eventAuth.errorMessage.toString()
@@ -37,7 +57,14 @@ class ScreenAuthenticationComponent constructor(
                 }
             }
             is ScreenAuthStateEvent.StateUpdatePassItem -> {
-                _passItem.value = eventAuth.number
+                CoroutineScope(Dispatchers.Main).launch {
+                    val oldValue = passItem.value
+                    val newValue = oldValue + eventAuth.number
+                    _passItem.value = newValue
+                    if(passItem.value.length == 4){
+                        passCheck(passItem.value)
+                    }
+                }
             }
         }
     }

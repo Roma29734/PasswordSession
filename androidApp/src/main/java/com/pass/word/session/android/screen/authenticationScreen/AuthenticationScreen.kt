@@ -99,10 +99,10 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                BoxItemCode("*")
-                BoxItemCode("*")
-                BoxItemCode("*")
-                BoxItemCode("*")
+                BoxItemCode(if(passItem.isNotEmpty()) "*" else "")
+                BoxItemCode(if(passItem.length >= 2 ) "*" else "")
+                BoxItemCode(if(passItem.length >= 3 ) "*" else "")
+                BoxItemCode(if(passItem.length >= 4 ) "*" else "")
             }
             Row(
                 modifier = Modifier
