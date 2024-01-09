@@ -1,4 +1,4 @@
-package com.pass.word.session.navigation.data.root
+package com.pass.word.session.data.root
 
 import com.pass.word.session.data.model.PasswordItemModel
 

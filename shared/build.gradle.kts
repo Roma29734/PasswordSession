@@ -41,6 +41,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             // more dep
             implementation(libs.kotlinXDataTime)
+        }
+        jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)
         }
         commonTest.dependencies {
@@ -68,7 +70,9 @@ android {
 }
 
 sqldelight {
-    database("AppDatabase") {
-        packageName = "com.pass.word.session.shared.cache"
+    databases {
+        create("Database") {
+            packageName.set("com.pass.word.session.cache")
+        }
     }
 }

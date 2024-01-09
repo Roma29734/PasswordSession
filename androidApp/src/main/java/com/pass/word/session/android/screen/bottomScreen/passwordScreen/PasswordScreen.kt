@@ -1,5 +1,6 @@
 package com.pass.word.session.android.screen.bottomScreen.passwordScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,10 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.data.root.getDaysOrMonthsOrYearsDifference
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
@@ -30,6 +33,9 @@ import com.pass.word.session.ui.CustomColor
 @Composable
 fun PasswordScreen(component: ScreenPasswordComponent) {
     val listItemModel: List<PasswordItemModel> by component.passwordListItem.subscribeAsState()
+    val context = LocalContext.current
+    component.readBd(DriverFactory(context))
+    Log.d("passScreen", "listModel - $listItemModel")
     Column(
         modifier = Modifier
             .fillMaxSize()
