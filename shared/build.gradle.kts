@@ -73,6 +73,7 @@ sqldelight {
     databases {
         create("Database") {
             packageName.set("com.pass.word.session.cache")
+            deriveSchemaFromMigrations = true
         }
     }
 }

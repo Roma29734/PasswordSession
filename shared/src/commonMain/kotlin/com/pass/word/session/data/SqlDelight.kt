@@ -18,11 +18,13 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
             dbQuery.removeAllPassItemTalbe()
         }
     }
+
     internal fun getAllPass(): List<PasswordItemModel> {
         return dbQuery.selectAllPassItemTalbe(::matPassSettings).executeAsList()
     }
 
     private fun matPassSettings(
+        id: Long,
         nameItemPassword: String,
         emailOrUserName: String,
         passwordItem: String,
@@ -37,8 +39,10 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
             changeData = changeData,
             urlSite = urlSite,
             descriptions = descriptions,
+            id = id.toInt()
         )
     }
+
     internal fun createPass(launches: List<PasswordItemModel>) {
         dbQuery.transaction {
             launches.forEach { launch ->

@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PasswordItemModel(
+    val id: Int,
     val nameItemPassword: String,
     val emailOrUserName: String,
     val passwordItem: String,

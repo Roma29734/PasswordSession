@@ -38,7 +38,8 @@ class ScreenAddPasswordComponent constructor(
             passwordItem = pass,
             changeData = "10.01.2024",
             urlSite = url.onCheckValidation(),
-            descriptions = descriptions.onCheckValidation()
+            descriptions = descriptions.onCheckValidation(),
+            id = 1,
         )
         val database = PersonalDatabase(databaseDriverFactory)
         database.createPass(listOf(model))

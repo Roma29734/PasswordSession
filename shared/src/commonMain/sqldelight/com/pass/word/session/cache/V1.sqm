@@ -1,0 +1,9 @@
+CREATE TABLE PassItemTable (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    nameItemPassword TEXT NOT NULL,
+    emailOrUserName TEXT NOT NULL,
+    passwordItem TEXT NOT NULL ,
+    changeData TEXT NOT NULL,
+    urlSite TEXT ,
+    descriptions TEXT
+);
