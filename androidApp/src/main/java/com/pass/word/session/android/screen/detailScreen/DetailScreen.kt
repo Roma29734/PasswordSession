@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 fun DetailScreen(component: ScreenDetailComponent) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -111,7 +111,17 @@ fun DetailScreen(component: ScreenDetailComponent) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp),
+                        .padding(start = 12.dp)
+                        .clickable {
+                            clipboardManager.setText(
+                                AnnotatedString(
+                                    ("${component.passDetailModel.nameItemPassword}:${component.passDetailModel.emailOrUserName}:${component.passDetailModel.passwordItem}${if (component.passDetailModel.urlSite != null) ":${component.passDetailModel.urlSite}" else ""}${if (component.passDetailModel.descriptions != null) ":${component.passDetailModel.descriptions}" else ""}")
+                                )
+                            )
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Copy complete")
+                            }
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
