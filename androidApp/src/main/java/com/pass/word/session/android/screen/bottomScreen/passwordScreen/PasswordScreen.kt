@@ -34,7 +34,7 @@ import com.pass.word.session.ui.CustomColor
 fun PasswordScreen(component: ScreenPasswordComponent) {
     val listItemModel: List<PasswordItemModel> by component.passwordListItem.subscribeAsState()
     val context = LocalContext.current
-//    component.readBd(DriverFactory(context))1
+    component.readBd(DriverFactory(context))
     Log.d("passScreen", "listModel - $listItemModel")
     Column(
         modifier = Modifier

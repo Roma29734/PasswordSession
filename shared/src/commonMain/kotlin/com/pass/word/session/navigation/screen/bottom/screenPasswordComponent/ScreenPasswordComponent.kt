@@ -19,11 +19,11 @@ class ScreenPasswordComponent constructor(
     val passwordListItem: Value<List<PasswordItemModel>> = _passwordListItem
 
     fun navigateToDetailEvent(model: PasswordItemModel) {
-        onNavigateToDetailComponent(model)    }
+        onNavigateToDetailComponent(model)
+    }
 
     fun readBd(databaseDriverFactory: DriverFactory) {
         val database = PersonalDatabase(databaseDriverFactory)
-
-        _passwordListItem.update { database.getAllLaunches() }
+        _passwordListItem.update { database.getAllPass() }
     }
 }
