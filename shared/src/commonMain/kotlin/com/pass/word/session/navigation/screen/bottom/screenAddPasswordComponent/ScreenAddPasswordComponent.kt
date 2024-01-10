@@ -1,6 +1,8 @@
 package com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
@@ -9,6 +11,21 @@ import com.pass.word.session.utilits.onCheckValidation
 class ScreenAddPasswordComponent constructor(
     componentContext: ComponentContext
 ) : ComponentContext by componentContext {
+
+    private var _textTitle = MutableValue("")
+    val textTitle: Value<String> = _textTitle
+
+    private var _textEmailOrUserName = MutableValue("")
+    val textEmailOrUserName: Value<String> = _textEmailOrUserName
+
+    private var _textPassword = MutableValue("")
+    val textPassword: Value<String> = _textPassword
+
+    private var _textUrl = MutableValue("")
+    val textUrl: Value<String> = _textUrl
+
+    private var _textDescriptions = MutableValue("")
+    val textDescriptions: Value<String> = _textDescriptions
 
     private val listenersPassCreate = mutableListOf<(message: String, complete: Boolean) -> Unit>()
 
@@ -25,42 +42,55 @@ class ScreenAddPasswordComponent constructor(
     }
 
     private fun addPassToDataBass(
-        title: String,
-        email: String,
-        pass: String,
-        url: String?,
-        descriptions: String?,
         databaseDriverFactory: DriverFactory
     ) {
         val model = PasswordItemModel(
-            nameItemPassword = title,
-            emailOrUserName = email,
-            passwordItem = pass,
+            nameItemPassword = textTitle.value,
+            emailOrUserName = textEmailOrUserName.value,
+            passwordItem = textPassword.value,
             changeData = "10.01.2024",
-            urlSite = url.onCheckValidation(),
-            descriptions = descriptions.onCheckValidation(),
+            urlSite = textUrl.value.onCheckValidation(),
+            descriptions = textDescriptions.value.onCheckValidation(),
             id = 1,
         )
         val database = PersonalDatabase(databaseDriverFactory)
         database.createPass(listOf(model))
+        _textTitle.value = ""
+        _textEmailOrUserName.value = ""
+        _textPassword.value = ""
+        _textUrl.value = ""
+        _textDescriptions.value = ""
         pluckPassCreate("Password a success created", true)
     }
 
     fun onEvent(eventAdd: ScreenAddPasswordStateEvent) {
         when (eventAdd) {
             is ScreenAddPasswordStateEvent.ClickButtonAddNewState -> {
-                if (eventAdd.title.isEmpty() || eventAdd.email.isEmpty() || eventAdd.pass.isEmpty()) {
+                if (textTitle.value.isEmpty() || textEmailOrUserName.value.isEmpty() || textPassword.value.isEmpty()) {
                     pluckPassCreate("Not all fields are filled in", false)
                 } else {
-                    addPassToDataBass(
-                        eventAdd.title,
-                        eventAdd.email,
-                        eventAdd.pass,
-                        eventAdd.url,
-                        eventAdd.descriptions,
-                        eventAdd.databaseDriverFactory
-                    )
+                    addPassToDataBass(eventAdd.databaseDriverFactory)
                 }
+            }
+
+            is ScreenAddPasswordStateEvent.UpdateTextTitle -> {
+                _textTitle.value = eventAdd.textTitle
+            }
+
+            is ScreenAddPasswordStateEvent.UpdateTextEmailORUserName -> {
+                _textEmailOrUserName.value = eventAdd.textEmailOrUserName
+            }
+
+            is ScreenAddPasswordStateEvent.UpdateTextPassword -> {
+                _textPassword.value = eventAdd.textPassword
+            }
+
+            is ScreenAddPasswordStateEvent.UpdateTextUrl -> {
+                _textUrl.value = eventAdd.textUrl
+            }
+
+            is ScreenAddPasswordStateEvent.UpdateTextDescriptions -> {
+                _textDescriptions.value = eventAdd.textDescriptions
             }
         }
     }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -35,8 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordStateEvent
@@ -48,12 +47,14 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
+
     val context = LocalContext.current
-    var textTitle by remember { mutableStateOf("") }
-    var textEmailUserName by remember { mutableStateOf("") }
-    var textPassword by remember { mutableStateOf("") }
-    var textUrl by remember { mutableStateOf("") }
-    var textDescriptions by remember { mutableStateOf("") }
+
+    val textTitle: String by component.textTitle.subscribeAsState()
+    val textEmailORUserName: String by component.textEmailOrUserName.subscribeAsState()
+    val textPassword: String by component.textPassword.subscribeAsState()
+    val textUrl: String by component.textUrl.subscribeAsState()
+    val textDescriptions: String by component.textDescriptions.subscribeAsState()
 
     val focusRequesterEmailUserName = remember { FocusRequester() }
     val focusRequesterTitle = remember { FocusRequester() }
@@ -67,13 +68,6 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
     DisposableEffect(component) {
         val listenerPassCreated: (message: String, complete: Boolean) -> Unit = { msg, complete ->
             scope.launch {
-                if(complete) {
-                    textTitle = ""
-                    textEmailUserName = ""
-                    textPassword = ""
-                    textUrl = ""
-                    textDescriptions = ""
-                }
                 snackBarHostState.showSnackbar(msg)
             }
         }
@@ -109,7 +103,7 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
             )
             OutlinedTextField(
                 value = textTitle,
-                onValueChange = { textTitle = it },
+                onValueChange = { component.onEvent(ScreenAddPasswordStateEvent.UpdateTextTitle(it)) },
                 textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,8 +131,14 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                 color = CustomColor().grayLight
             )
             OutlinedTextField(
-                value = textEmailUserName,
-                onValueChange = { textEmailUserName = it },
+                value = textEmailORUserName,
+                onValueChange = {
+                    component.onEvent(
+                        ScreenAddPasswordStateEvent.UpdateTextEmailORUserName(
+                            it
+                        )
+                    )
+                },
                 textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -165,7 +165,13 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
             )
             OutlinedTextField(
                 value = textPassword,
-                onValueChange = { textPassword = it },
+                onValueChange = {
+                    component.onEvent(
+                        ScreenAddPasswordStateEvent.UpdateTextPassword(
+                            it
+                        )
+                    )
+                },
                 textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -192,7 +198,7 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
             )
             OutlinedTextField(
                 value = textUrl,
-                onValueChange = { textUrl = it },
+                onValueChange = { component.onEvent(ScreenAddPasswordStateEvent.UpdateTextUrl(it)) },
                 textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -219,7 +225,13 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
             )
             OutlinedTextField(
                 value = textDescriptions,
-                onValueChange = { textDescriptions = it },
+                onValueChange = {
+                    component.onEvent(
+                        ScreenAddPasswordStateEvent.UpdateTextDescriptions(
+                            it
+                        )
+                    )
+                },
                 textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -242,14 +254,13 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
             Spacer(modifier = Modifier.size(64.dp))
 
             Button(
-                onClick = { component.onEvent(ScreenAddPasswordStateEvent.ClickButtonAddNewState(
-                    title = textTitle,
-                    email = textEmailUserName,
-                    pass = textPassword,
-                    url = textUrl,
-                    descriptions = textDescriptions,
-                    databaseDriverFactory = DriverFactory(context)
-                )) },
+                onClick = {
+                    component.onEvent(
+                        ScreenAddPasswordStateEvent.ClickButtonAddNewState(
+                            databaseDriverFactory = DriverFactory(context)
+                        )
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp),
