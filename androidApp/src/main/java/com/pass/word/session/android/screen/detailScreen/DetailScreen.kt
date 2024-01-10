@@ -1,17 +1,17 @@
 package com.pass.word.session.android.screen.detailScreen
 
 import android.annotation.SuppressLint
-import android.app.KeyguardManager
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -50,57 +50,127 @@ fun DetailScreen(component: ScreenDetailComponent) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(Color.Black),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                modifier = Modifier
-                    .clickable { component.onEvent(ScreenDetailEvent.ClickButtonBack) }
-                    .padding(start = 16.dp, top = 8.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_back_nav),
-                contentDescription = "Button back",
-                colorFilter = ColorFilter.tint(
-                    Color.White
+            Column {
+                Image(
+                    modifier = Modifier
+                        .clickable { component.onEvent(ScreenDetailEvent.ClickButtonBack) }
+                        .padding(start = 16.dp, top = 8.dp),
+                    painter = painterResource(id = R.drawable.ic_arrow_back_nav),
+                    contentDescription = "Button back",
+                    colorFilter = ColorFilter.tint(
+                        Color.White
+                    )
                 )
-            )
-
-            Text(
-                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp),
-                text = component.passDetailModel.nameItemPassword,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            BaseTextItem(
-                textTitle = "Email/Username",
-                textSubTitle = component.passDetailModel.emailOrUserName,
-                showSnacbarNandler = {scope.launch {
-                    snackbarHostState.showSnackbar("Copy")
-                }}
-            )
-            BaseTextItem(
-                textTitle = "Password",
-                textSubTitle = component.passDetailModel.passwordItem,
-                showSnacbarNandler = {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("Copy")
-                    }
-                }
-            )
-            if (component.passDetailModel.urlSite != null) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp),
+                    text = component.passDetailModel.nameItemPassword,
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyLarge
+                )
                 BaseTextItem(
-                    textTitle = "Url",
-                    textSubTitle = component.passDetailModel.urlSite.toString(),
+                    textTitle = "Email/Username",
+                    textSubTitle = component.passDetailModel.emailOrUserName,
                     showSnacbarNandler = {
                         scope.launch {
                             snackbarHostState.showSnackbar("Copy")
                         }
                     }
                 )
-            }
-            if (component.passDetailModel.descriptions != null) {
-                Descriptions(
-                    textTitle = "Descriptions",
-                    textSubTitle = component.passDetailModel.descriptions.toString()
+                BaseTextItem(
+                    textTitle = "Password",
+                    textSubTitle = component.passDetailModel.passwordItem,
+                    showSnacbarNandler = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Copy")
+                        }
+                    }
                 )
+                if (component.passDetailModel.urlSite != null) {
+                    BaseTextItem(
+                        textTitle = "Url",
+                        textSubTitle = component.passDetailModel.urlSite.toString(),
+                        showSnacbarNandler = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Copy")
+                            }
+                        }
+                    )
+                }
+                if (component.passDetailModel.descriptions != null) {
+                    Descriptions(
+                        textTitle = "Descriptions",
+                        textSubTitle = component.passDetailModel.descriptions.toString()
+                    )
+                }
+            }
+
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.ic_copy_sourse),
+                        contentDescription = "icons copy full",
+                        colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(
+                        text = "Copy everything",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = CustomColor().brandBlueLight
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(12.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.ic_edit),
+                        contentDescription = "icons edit",
+                        colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(
+                        text = "Edit",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = CustomColor().brandBlueLight
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(12.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.ic_delete),
+                        contentDescription = "icons edit",
+                        colorFilter = ColorFilter.tint(CustomColor().brandRedMain)
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(
+                        text = "Delete",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = CustomColor().brandRedMain
+                    )
+                }
+                Spacer(modifier = Modifier.size(16.dp))
             }
         }
 

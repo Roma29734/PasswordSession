@@ -65,14 +65,16 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     DisposableEffect(component) {
-        val listenerPassCreated: (String) -> Unit = {
+        val listenerPassCreated: (message: String, complete: Boolean) -> Unit = { msg, complete ->
             scope.launch {
-                snackBarHostState.showSnackbar(it)
-                textTitle = ""
-                textEmailUserName = ""
-                textPassword = ""
-                textUrl = ""
-                textDescriptions = ""
+                if(complete) {
+                    textTitle = ""
+                    textEmailUserName = ""
+                    textPassword = ""
+                    textUrl = ""
+                    textDescriptions = ""
+                }
+                snackBarHostState.showSnackbar(msg)
             }
         }
         component.subscribeListenerPassCreate(listenerPassCreated)
@@ -260,6 +262,5 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                 )
             }
         }
-
     }
 }

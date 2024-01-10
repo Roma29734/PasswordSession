@@ -4,24 +4,24 @@ import com.arkivanov.decompose.ComponentContext
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.utilits.onCheckValidation
 
 class ScreenAddPasswordComponent constructor(
     componentContext: ComponentContext
 ) : ComponentContext by componentContext {
 
+    private val listenersPassCreate = mutableListOf<(message: String, complete: Boolean) -> Unit>()
 
-    private val listenersPassCreate = mutableListOf<(message: String) -> Unit>()
-
-    fun subscribeListenerPassCreate(listener: (message: String) -> Unit) {
+    fun subscribeListenerPassCreate(listener: (message: String, complete: Boolean) -> Unit) {
         listenersPassCreate.add(listener)
     }
 
-    fun unsubscribeListenerPassCreate(listener: (message: String) -> Unit) {
+    fun unsubscribeListenerPassCreate(listener: (message: String, complete: Boolean) -> Unit) {
         listenersPassCreate.remove(listener)
     }
 
-    private fun pluckPassCreate(message: String) {
-        listenersPassCreate.forEach { it.invoke(message) }
+    private fun pluckPassCreate(message: String, complete: Boolean) {
+        listenersPassCreate.forEach { it.invoke(message, complete) }
     }
 
     private fun addPassToDataBass(
@@ -35,27 +35,31 @@ class ScreenAddPasswordComponent constructor(
         val model = PasswordItemModel(
             nameItemPassword = title,
             emailOrUserName = email,
-            changeData = "10.01.2024",
             passwordItem = pass,
-            urlSite = url,
-            descriptions = descriptions
+            changeData = "10.01.2024",
+            urlSite = url.onCheckValidation(),
+            descriptions = descriptions.onCheckValidation()
         )
         val database = PersonalDatabase(databaseDriverFactory)
         database.createPass(listOf(model))
-        pluckPassCreate("Password a success created")
+        pluckPassCreate("Password a success created", true)
     }
 
     fun onEvent(eventAdd: ScreenAddPasswordStateEvent) {
         when (eventAdd) {
             is ScreenAddPasswordStateEvent.ClickButtonAddNewState -> {
-                addPassToDataBass(
-                    eventAdd.title,
-                    eventAdd.email,
-                    eventAdd.pass,
-                    eventAdd.url,
-                    eventAdd.descriptions,
-                    eventAdd.databaseDriverFactory
-                )
+                if (eventAdd.title.isEmpty() || eventAdd.email.isEmpty() || eventAdd.pass.isEmpty()) {
+                    pluckPassCreate("Not all fields are filled in", false)
+                } else {
+                    addPassToDataBass(
+                        eventAdd.title,
+                        eventAdd.email,
+                        eventAdd.pass,
+                        eventAdd.url,
+                        eventAdd.descriptions,
+                        eventAdd.databaseDriverFactory
+                    )
+                }
             }
         }
     }
