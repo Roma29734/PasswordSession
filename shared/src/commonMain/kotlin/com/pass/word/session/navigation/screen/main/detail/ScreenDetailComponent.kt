@@ -11,11 +11,11 @@ class ScreenDetailComponent constructor(
     componentContext: ComponentContext,
     val passDetailModel: PasswordItemModel,
     private val onGoBack: () -> Unit,
+    private val onGoEditScreen: (passDetailModel: PasswordItemModel) -> Unit
 ): ComponentContext by componentContext {
 
     private var _stateOpenAlertDialog = MutableValue(false)
     val stateOpenAlertDialog: Value<Boolean> = _stateOpenAlertDialog
-
 
     private fun deleteItem(databaseDriverFactory: DriverFactory) {
         PersonalDatabase(databaseDriverFactory).deleteOneItem(passDetailModel.id)
@@ -33,6 +33,9 @@ class ScreenDetailComponent constructor(
             is ScreenDetailEvent.DeleteItemPass -> {
                 deleteItem(event.databaseDriverFactory)
                 onGoBack()
+            }
+            is ScreenDetailEvent.EditItemPass -> {
+                onGoEditScreen(passDetailModel)
             }
         }
     }

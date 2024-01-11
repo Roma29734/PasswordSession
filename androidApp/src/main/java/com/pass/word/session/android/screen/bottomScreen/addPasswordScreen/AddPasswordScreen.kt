@@ -268,7 +268,7 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                 colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
             ) {
                 Text(
-                    text = "Add new password",
+                    text = "add new password",
                     style = MaterialTheme.typography.displayMedium,
                     color = Color.White
                 )

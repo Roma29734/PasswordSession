@@ -162,7 +162,9 @@ fun DetailScreen(component: ScreenDetailComponent) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp),
+                        .padding(start = 12.dp)
+                        .clickable { component.onEvent(ScreenDetailEvent.EditItemPass) }
+                    ,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(

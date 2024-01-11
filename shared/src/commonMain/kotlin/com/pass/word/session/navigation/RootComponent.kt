@@ -13,6 +13,7 @@ import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
+import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
@@ -50,9 +51,11 @@ class RootComponent constructor(
                     passDetailModel = config.passDetailModel,
                     onGoBack = {
                         navigation.pop()
-                    }
+                    },
+                    onGoEditScreen = { navigation.pushNew(Configuration.ScreenEdit(it)) }
                 )
             )
+
             is Configuration.ScreenAuthentication -> Child.ScreenAuthentication(
                 ScreenAuthenticationComponent(
                     componentContext = context,
@@ -61,22 +64,38 @@ class RootComponent constructor(
                     }
                 )
             )
+
+            is Configuration.ScreenEdit -> Child.ScreenEdit(
+                ScreenEditComponent(
+                    componentContext = context,
+                    passDetailModel = config.passDetailModel,
+                    onGoBack = {navigation.pop()}
+                )
+            )
         }
     }
 
     sealed class Child {
         data class ScreenBottomMain(val component: ScreenBottomMainComponent) : Child()
         data class ScreenDetail(val component: ScreenDetailComponent) : Child()
-        data class ScreenAuthentication(val component: ScreenAuthenticationComponent): Child()
+        data class ScreenAuthentication @OptIn(DelicateCoroutinesApi::class) constructor(val component: ScreenAuthenticationComponent) :
+            Child()
+
+        data class ScreenEdit(val component: ScreenEditComponent) : Child()
     }
 
     @Serializable
     sealed class Configuration {
         @Serializable
         data object ScreenBottomMain : Configuration()
+
         @Serializable
         data class ScreenDetail(val passDetailModel: PasswordItemModel) : Configuration()
+
         @Serializable
-        data object ScreenAuthentication: Configuration()
+        data object ScreenAuthentication : Configuration()
+
+        @Serializable
+        data class ScreenEdit(val passDetailModel: PasswordItemModel) : Configuration()
     }
 }
