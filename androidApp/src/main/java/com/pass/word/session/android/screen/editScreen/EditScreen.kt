@@ -28,6 +28,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditEvent
 import com.pass.word.session.ui.CustomColor
@@ -43,7 +45,7 @@ import com.pass.word.session.ui.CustomColor
 @Composable
 fun EditScreen(component: ScreenEditComponent) {
 
-
+    val context = LocalContext.current
     val textTitle: String by component.textTitle.subscribeAsState()
     val textEmailORUserName: String by component.textEmailOrUserName.subscribeAsState()
     val textPassword: String by component.textPassword.subscribeAsState()
@@ -57,11 +59,12 @@ fun EditScreen(component: ScreenEditComponent) {
     val focusRequesterDescriptions = remember { FocusRequester() }
 
     Scaffold() {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black),
             verticalArrangement = Arrangement.SpaceBetween
-            ) {
+        ) {
             Column {
                 Image(
                     modifier = Modifier
@@ -237,15 +240,9 @@ fun EditScreen(component: ScreenEditComponent) {
             }
 
 
-//            Spacer(modifier = Modifier.size(64.dp))
-
             Button(
                 onClick = {
-//                    component.onEvent(
-//                        ScreenEditEvent.ClickButtonAddNewState(
-//                            databaseDriverFactory = DriverFactory(context)
-//                        )
-//                    )
+                    component.onEvent(ScreenEditEvent.ClickButtonUpdate(DriverFactory(context)))
                 },
                 modifier = Modifier
                     .fillMaxWidth()

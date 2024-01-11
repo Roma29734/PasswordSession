@@ -8,8 +8,6 @@ import com.pass.word.session.data.model.PasswordItemModel
 expect class DriverFactory {
     fun createDriver(): SqlDriver
 }
-
-
 internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
     private val database = Database(databaseDriverFactory.createDriver())
     private val dbQuery = database.appDatabaseQueries
@@ -64,5 +62,17 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
 
     internal fun deleteOneItem(id: Int) {
         dbQuery.deleteOneItem(id = id.toLong())
+    }
+
+    internal fun updatePassItem(model: PasswordItemModel) {
+        dbQuery.updateOneItem(
+            nameItemPassword = model.nameItemPassword,
+            emailOrUserName = model.emailOrUserName,
+            passwordItem = model.passwordItem,
+            changeData = model.changeData,
+            urlSite = model.urlSite,
+            descriptions = model.descriptions,
+            id = model.id.toLong()
+        )
     }
 }

@@ -4,7 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.utilits.onCheckValidation
 
 class ScreenEditComponent constructor(
     componentContext: ComponentContext,
@@ -46,6 +48,19 @@ class ScreenEditComponent constructor(
             }
             is ScreenEditEvent.UpdateTextDescriptions -> {
                 _textDescriptions.value = event.textDescriptions
+            }
+            is ScreenEditEvent.ClickButtonUpdate -> {
+                val model = PasswordItemModel(
+                    id = passDetailModel.id,
+                    nameItemPassword = textTitle.value,
+                    emailOrUserName = textEmailOrUserName.value,
+                    passwordItem = textPassword.value,
+                    changeData = passDetailModel.changeData,
+                    urlSite = textUrl.value.onCheckValidation(),
+                    descriptions = textDescriptions.value.onCheckValidation()
+                )
+                PersonalDatabase(event.databaseDriverFactory).updatePassItem(model)
+                onGoBack()
             }
         }
     }

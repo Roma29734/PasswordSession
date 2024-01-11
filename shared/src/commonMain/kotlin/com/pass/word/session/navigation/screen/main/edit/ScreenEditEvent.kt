@@ -1,5 +1,6 @@
 package com.pass.word.session.navigation.screen.main.edit
 
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordStateEvent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 
@@ -11,4 +12,5 @@ interface ScreenEditEvent {
     data class UpdateTextPassword(val textPassword: String) : ScreenEditEvent
     data class UpdateTextUrl(val textUrl: String) : ScreenEditEvent
     data class UpdateTextDescriptions(val textDescriptions: String) : ScreenEditEvent
+    data class ClickButtonUpdate(val databaseDriverFactory: DriverFactory): ScreenEditEvent
 }

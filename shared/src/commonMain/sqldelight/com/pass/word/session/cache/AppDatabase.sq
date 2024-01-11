@@ -13,3 +13,7 @@ FROM PassItemTable;
 deleteOneItem:
 DELETE FROM PassItemTable
 WHERE id=?;
+
+updateOneItem:
+UPDATE PassItemTable
+SET nameItemPassword=?, emailOrUserName=?, passwordItem=?,changeData=?,urlSite=?,descriptions=? WHERE id=?;
