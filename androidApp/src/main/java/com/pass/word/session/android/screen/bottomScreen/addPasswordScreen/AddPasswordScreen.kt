@@ -37,9 +37,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.detailScreen.AlertDialogDelete
+import com.pass.word.session.android.screen.viewComponent.OutlineInputText
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordStateEvent
+import com.pass.word.session.navigation.screen.main.edit.ScreenEditEvent
 import com.pass.word.session.ui.CustomColor
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
@@ -96,160 +98,75 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                 color = Color.White
             )
 
-            Text(
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                text = "Title",
-                style = MaterialTheme.typography.displaySmall,
-                color = CustomColor().grayLight
-            )
-            OutlinedTextField(
-                value = textTitle,
-                onValueChange = { component.onEvent(ScreenAddPasswordStateEvent.UpdateTextTitle(it)) },
-                textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
-                    .focusRequester(focusRequesterEmailUserName),
-                colors = OutlinedTextFieldDefaults.colors(
-                    cursorColor = Color.White,
-                    focusedBorderColor = Color.White, // цвет при получении фокуса
-                    unfocusedBorderColor = CustomColor().grayLight,  // цвет при отсутствии фокуса
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusRequesterTitle.requestFocus() }
-                )
 
+            OutlineInputText(
+                textInTitle = "Title",
+                outText = textTitle,
+                onValueChangeHandler = { component.onEvent(ScreenAddPasswordStateEvent.UpdateTextTitle(it)) },
+                focusRequester = focusRequesterTitle,
+                onNextHandler = {
+                    focusRequesterEmailUserName.requestFocus()
+                }, keyboardType = KeyboardType.Text
             )
-
-            Text(
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp),
-                text = "Email/UserName",
-                style = MaterialTheme.typography.displaySmall,
-                color = CustomColor().grayLight
-            )
-            OutlinedTextField(
-                value = textEmailORUserName,
-                onValueChange = {
+            Spacer(modifier = Modifier.size(8.dp))
+            OutlineInputText(
+                textInTitle = "Email/UserName",
+                outText = textEmailORUserName,
+                onValueChangeHandler = {
                     component.onEvent(
                         ScreenAddPasswordStateEvent.UpdateTextEmailORUserName(
                             it
                         )
                     )
                 },
-                textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
-                    .focusRequester(focusRequesterTitle),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White, // цвет при получении фокуса
-                    unfocusedBorderColor = CustomColor().grayLight,  // цвет при отсутствии фокуса
-                    cursorColor = Color.White
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusRequesterPassword.requestFocus() }
-                )
+                focusRequester = focusRequesterEmailUserName,
+                onNextHandler = {
+                    focusRequesterPassword.requestFocus()
+                }, keyboardType = KeyboardType.Email
             )
-            Text(
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp),
-                text = "Password",
-                style = MaterialTheme.typography.displaySmall,
-                color = CustomColor().grayLight
-            )
-            OutlinedTextField(
-                value = textPassword,
-                onValueChange = {
+            Spacer(modifier = Modifier.size(8.dp))
+            OutlineInputText(
+                textInTitle = "Password",
+                outText = textPassword,
+                onValueChangeHandler = {
                     component.onEvent(
                         ScreenAddPasswordStateEvent.UpdateTextPassword(
                             it
                         )
                     )
                 },
-                textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
-                    .focusRequester(focusRequesterPassword),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White, // цвет при получении фокуса
-                    unfocusedBorderColor = CustomColor().grayLight,  // цвет при отсутствии фокуса
-                    cursorColor = Color.White
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusRequesterUrl.requestFocus() }
-                )
+                focusRequester = focusRequesterPassword,
+                onNextHandler = {
+                    focusRequesterUrl.requestFocus()
+                }, keyboardType = KeyboardType.Password
             )
-            Text(
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp),
-                text = "Url",
-                style = MaterialTheme.typography.displaySmall,
-                color = CustomColor().grayLight
+            Spacer(modifier = Modifier.size(8.dp))
+            OutlineInputText(
+                textInTitle = "Url",
+                outText = textUrl,
+                onValueChangeHandler = {
+                    component.onEvent(ScreenAddPasswordStateEvent.UpdateTextUrl(it))
+                },
+                focusRequester = focusRequesterUrl,
+                onNextHandler = {
+                    focusRequesterDescriptions.requestFocus()
+                }, keyboardType = KeyboardType.Text
             )
-            OutlinedTextField(
-                value = textUrl,
-                onValueChange = { component.onEvent(ScreenAddPasswordStateEvent.UpdateTextUrl(it)) },
-                textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
-                    .focusRequester(focusRequesterUrl),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White, // цвет при получении фокуса
-                    unfocusedBorderColor = CustomColor().grayLight,  // цвет при отсутствии фокуса
-                    cursorColor = Color.White
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusRequesterDescriptions.requestFocus() }
-                )
-            )
-            Text(
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 16.dp),
-                text = "Descriptions",
-                style = MaterialTheme.typography.displaySmall,
-                color = CustomColor().grayLight
-            )
-            OutlinedTextField(
-                value = textDescriptions,
-                onValueChange = {
+            Spacer(modifier = Modifier.size(8.dp))
+            OutlineInputText(
+                textInTitle = "Descriptions",
+                outText = textDescriptions,
+                onValueChangeHandler = {
                     component.onEvent(
                         ScreenAddPasswordStateEvent.UpdateTextDescriptions(
                             it
                         )
                     )
                 },
-                textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
-                    .focusRequester(focusRequesterDescriptions),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White, // цвет при получении фокуса
-                    unfocusedBorderColor = CustomColor().grayLight,  // цвет при отсутствии фокуса
-                    cursorColor = Color.White
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusRequesterDescriptions.freeFocus() }
-                )
+                focusRequester = focusRequesterDescriptions,
+                onNextHandler = {
+                    focusRequesterDescriptions.freeFocus()
+                }, keyboardType = KeyboardType.Text
             )
 
             Spacer(modifier = Modifier.size(64.dp))
