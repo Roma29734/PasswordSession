@@ -9,3 +9,7 @@ DELETE FROM PassItemTable;
 selectAllPassItemTalbe:
 SELECT PassItemTable.*
 FROM PassItemTable;
+
+deleteOneItem:
+DELETE FROM PassItemTable
+WHERE id=?;

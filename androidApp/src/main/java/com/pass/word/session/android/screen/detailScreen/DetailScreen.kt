@@ -35,6 +35,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
@@ -47,6 +48,7 @@ fun DetailScreen(component: ScreenDetailComponent) {
     val snackbarHostState = remember { SnackbarHostState() }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val stateOpenAlertDialog: Boolean by component.stateOpenAlertDialog.subscribeAsState()
+    val context = LocalContext.current
 
     Scaffold(
         snackbarHost = {
@@ -56,7 +58,13 @@ fun DetailScreen(component: ScreenDetailComponent) {
         AlertDialogDelete(openDialog = stateOpenAlertDialog, onBackHandler = {
             component.onEvent(ScreenDetailEvent.ChangeStateOpenedAlertDialog(false))
         }, onConfirmHandler = {
-            component.onEvent(ScreenDetailEvent.DeleteItemPass)
+            component.onEvent(
+                ScreenDetailEvent.DeleteItemPass(
+                    databaseDriverFactory = DriverFactory(
+                        context
+                    )
+                )
+            )
         })
         Column(
             modifier = Modifier

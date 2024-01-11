@@ -3,6 +3,8 @@ package com.pass.word.session.navigation.screen.main.detail
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
 
 class ScreenDetailComponent constructor(
@@ -14,6 +16,11 @@ class ScreenDetailComponent constructor(
     private var _stateOpenAlertDialog = MutableValue(false)
     val stateOpenAlertDialog: Value<Boolean> = _stateOpenAlertDialog
 
+
+    private fun deleteItem(databaseDriverFactory: DriverFactory) {
+        PersonalDatabase(databaseDriverFactory).deleteOneItem(passDetailModel.id)
+    }
+
     fun onEvent(event: ScreenDetailEvent) {
         when(event) {
             is ScreenDetailEvent.ClickButtonBack -> { onGoBack() }
@@ -24,6 +31,7 @@ class ScreenDetailComponent constructor(
                 _stateOpenAlertDialog.value = event.newState
             }
             is ScreenDetailEvent.DeleteItemPass -> {
+                deleteItem(event.databaseDriverFactory)
                 onGoBack()
             }
         }

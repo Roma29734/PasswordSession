@@ -61,4 +61,8 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
             descriptions = launch.descriptions,
         )
     }
+
+    internal fun deleteOneItem(id: Int) {
+        dbQuery.deleteOneItem(id = id.toLong())
+    }
 }
