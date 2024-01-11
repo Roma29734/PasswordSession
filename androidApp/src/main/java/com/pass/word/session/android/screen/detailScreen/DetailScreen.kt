@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
@@ -49,6 +50,10 @@ fun DetailScreen(component: ScreenDetailComponent) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val stateOpenAlertDialog: Boolean by component.stateOpenAlertDialog.subscribeAsState()
     val context = LocalContext.current
+
+    val itemModel: PasswordItemModel by component.passwordItem.subscribeAsState()
+
+    component.getOneItem(DriverFactory(context = context))
 
     Scaffold(
         snackbarHost = {
@@ -85,13 +90,13 @@ fun DetailScreen(component: ScreenDetailComponent) {
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp),
-                    text = component.passDetailModel.nameItemPassword,
+                    text = itemModel.nameItemPassword,
                     color = Color.White,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 BaseTextItem(
                     textTitle = "Email/Username",
-                    textSubTitle = component.passDetailModel.emailOrUserName,
+                    textSubTitle = itemModel.emailOrUserName,
                     showSnacbarNandler = {
                         scope.launch {
                             snackbarHostState.showSnackbar("Copy")
@@ -100,17 +105,17 @@ fun DetailScreen(component: ScreenDetailComponent) {
                 )
                 BaseTextItem(
                     textTitle = "Password",
-                    textSubTitle = component.passDetailModel.passwordItem,
+                    textSubTitle = itemModel.passwordItem,
                     showSnacbarNandler = {
                         scope.launch {
                             snackbarHostState.showSnackbar("Copy")
                         }
                     }
                 )
-                if (component.passDetailModel.urlSite != null) {
+                if (itemModel.urlSite != null) {
                     BaseTextItem(
                         textTitle = "Url",
-                        textSubTitle = component.passDetailModel.urlSite.toString(),
+                        textSubTitle = itemModel.urlSite.toString(),
                         showSnacbarNandler = {
                             scope.launch {
                                 snackbarHostState.showSnackbar("Copy")
@@ -118,10 +123,10 @@ fun DetailScreen(component: ScreenDetailComponent) {
                         }
                     )
                 }
-                if (component.passDetailModel.descriptions != null) {
+                if (itemModel.descriptions != null) {
                     Descriptions(
                         textTitle = "Descriptions",
-                        textSubTitle = component.passDetailModel.descriptions.toString()
+                        textSubTitle = itemModel.descriptions.toString()
                     )
                 }
             }
@@ -134,7 +139,7 @@ fun DetailScreen(component: ScreenDetailComponent) {
                         .clickable {
                             clipboardManager.setText(
                                 AnnotatedString(
-                                    ("${component.passDetailModel.nameItemPassword}:${component.passDetailModel.emailOrUserName}:${component.passDetailModel.passwordItem}${if (component.passDetailModel.urlSite != null) ":${component.passDetailModel.urlSite}" else ""}${if (component.passDetailModel.descriptions != null) ":${component.passDetailModel.descriptions}" else ""}")
+                                    ("${itemModel.nameItemPassword}:${itemModel.emailOrUserName}:${itemModel.passwordItem}${if (itemModel.urlSite != null) ":${itemModel.urlSite}" else ""}${if (itemModel.descriptions != null) ":${itemModel.descriptions}" else ""}")
                                 )
                             )
                             scope.launch {
@@ -215,7 +220,6 @@ fun DetailScreen(component: ScreenDetailComponent) {
 @Composable
 fun BaseTextItem(textTitle: String, textSubTitle: String, showSnacbarNandler: () -> Unit) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
-    val mContext = LocalContext.current
     Row(
         modifier = Modifier
             .padding(start = 12.dp, bottom = 16.dp, end = 12.dp)

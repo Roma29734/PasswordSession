@@ -17,9 +17,18 @@ class ScreenDetailComponent constructor(
     private var _stateOpenAlertDialog = MutableValue(false)
     val stateOpenAlertDialog: Value<Boolean> = _stateOpenAlertDialog
 
+    private var _passwordItem: MutableValue<PasswordItemModel> =
+        MutableValue(passDetailModel)
+    val passwordItem: Value<PasswordItemModel> = _passwordItem
+
+    fun getOneItem(databaseDriverFactory: DriverFactory) {
+        _passwordItem.value = PersonalDatabase(databaseDriverFactory).getOneItemPass(passDetailModel.id)
+    }
+
     private fun deleteItem(databaseDriverFactory: DriverFactory) {
         PersonalDatabase(databaseDriverFactory).deleteOneItem(passDetailModel.id)
     }
+
 
     fun onEvent(event: ScreenDetailEvent) {
         when(event) {

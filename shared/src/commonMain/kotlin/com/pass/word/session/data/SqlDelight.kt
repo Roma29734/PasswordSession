@@ -21,6 +21,10 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
         return dbQuery.selectAllPassItemTalbe(::matPassSettings).executeAsList()
     }
 
+    internal fun getOneItemPass(id: Int): PasswordItemModel {
+        return dbQuery.selectOneItemPassItemTable(id.toLong(), ::matPassSettings).executeAsOne()
+    }
+
     private fun matPassSettings(
         id: Long,
         nameItemPassword: String,

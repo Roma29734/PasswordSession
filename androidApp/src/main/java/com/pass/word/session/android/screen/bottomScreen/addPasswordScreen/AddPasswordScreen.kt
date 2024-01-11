@@ -2,6 +2,7 @@ package com.pass.word.session.android.screen.bottomScreen.addPasswordScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -89,88 +90,96 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(Color.Black),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp),
-                text = "Add New Password",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
-            )
+            Column {
+
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp),
+                    text = "Add New Password",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
 
 
-            OutlineInputText(
-                textInTitle = "Title",
-                outText = textTitle,
-                onValueChangeHandler = { component.onEvent(ScreenAddPasswordStateEvent.UpdateTextTitle(it)) },
-                focusRequester = focusRequesterTitle,
-                onNextHandler = {
-                    focusRequesterEmailUserName.requestFocus()
-                }, keyboardType = KeyboardType.Text
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Email/UserName",
-                outText = textEmailORUserName,
-                onValueChangeHandler = {
-                    component.onEvent(
-                        ScreenAddPasswordStateEvent.UpdateTextEmailORUserName(
-                            it
+                OutlineInputText(
+                    textInTitle = "Title",
+                    outText = textTitle,
+                    onValueChangeHandler = {
+                        component.onEvent(
+                            ScreenAddPasswordStateEvent.UpdateTextTitle(
+                                it
+                            )
                         )
-                    )
-                },
-                focusRequester = focusRequesterEmailUserName,
-                onNextHandler = {
-                    focusRequesterPassword.requestFocus()
-                }, keyboardType = KeyboardType.Email
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Password",
-                outText = textPassword,
-                onValueChangeHandler = {
-                    component.onEvent(
-                        ScreenAddPasswordStateEvent.UpdateTextPassword(
-                            it
+                    },
+                    focusRequester = focusRequesterTitle,
+                    onNextHandler = {
+                        focusRequesterEmailUserName.requestFocus()
+                    }, keyboardType = KeyboardType.Text
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Email/UserName",
+                    outText = textEmailORUserName,
+                    onValueChangeHandler = {
+                        component.onEvent(
+                            ScreenAddPasswordStateEvent.UpdateTextEmailORUserName(
+                                it
+                            )
                         )
-                    )
-                },
-                focusRequester = focusRequesterPassword,
-                onNextHandler = {
-                    focusRequesterUrl.requestFocus()
-                }, keyboardType = KeyboardType.Password
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Url",
-                outText = textUrl,
-                onValueChangeHandler = {
-                    component.onEvent(ScreenAddPasswordStateEvent.UpdateTextUrl(it))
-                },
-                focusRequester = focusRequesterUrl,
-                onNextHandler = {
-                    focusRequesterDescriptions.requestFocus()
-                }, keyboardType = KeyboardType.Text
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Descriptions",
-                outText = textDescriptions,
-                onValueChangeHandler = {
-                    component.onEvent(
-                        ScreenAddPasswordStateEvent.UpdateTextDescriptions(
-                            it
+                    },
+                    focusRequester = focusRequesterEmailUserName,
+                    onNextHandler = {
+                        focusRequesterPassword.requestFocus()
+                    }, keyboardType = KeyboardType.Email
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Password",
+                    outText = textPassword,
+                    onValueChangeHandler = {
+                        component.onEvent(
+                            ScreenAddPasswordStateEvent.UpdateTextPassword(
+                                it
+                            )
                         )
-                    )
-                },
-                focusRequester = focusRequesterDescriptions,
-                onNextHandler = {
-                    focusRequesterDescriptions.freeFocus()
-                }, keyboardType = KeyboardType.Text
-            )
+                    },
+                    focusRequester = focusRequesterPassword,
+                    onNextHandler = {
+                        focusRequesterUrl.requestFocus()
+                    }, keyboardType = KeyboardType.Password
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Url",
+                    outText = textUrl,
+                    onValueChangeHandler = {
+                        component.onEvent(ScreenAddPasswordStateEvent.UpdateTextUrl(it))
+                    },
+                    focusRequester = focusRequesterUrl,
+                    onNextHandler = {
+                        focusRequesterDescriptions.requestFocus()
+                    }, keyboardType = KeyboardType.Text
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Descriptions",
+                    outText = textDescriptions,
+                    onValueChangeHandler = {
+                        component.onEvent(
+                            ScreenAddPasswordStateEvent.UpdateTextDescriptions(
+                                it
+                            )
+                        )
+                    },
+                    focusRequester = focusRequesterDescriptions,
+                    onNextHandler = {
+                        focusRequesterDescriptions.freeFocus()
+                    }, keyboardType = KeyboardType.Text
+                )
 
-            Spacer(modifier = Modifier.size(64.dp))
-
+            }
             Button(
                 onClick = {
                     component.onEvent(
@@ -181,7 +190,7 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
                 colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
             ) {
                 Text(
