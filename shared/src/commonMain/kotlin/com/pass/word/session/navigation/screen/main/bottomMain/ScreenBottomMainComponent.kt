@@ -11,13 +11,11 @@ import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.Sc
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
 import kotlinx.serialization.Serializable
 
-
 class ScreenBottomMainComponent constructor(
     componentContext: ComponentContext,
     private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit
 ) : ComponentContext by componentContext {
     private val navigation = StackNavigation<Configuration>()
-
 
     val childStack = childStack(
         source = navigation,

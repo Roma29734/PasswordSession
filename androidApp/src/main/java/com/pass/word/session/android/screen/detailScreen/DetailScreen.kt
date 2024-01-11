@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -30,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
@@ -42,11 +46,18 @@ fun DetailScreen(component: ScreenDetailComponent) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val stateOpenAlertDialog: Boolean by component.stateOpenAlertDialog.subscribeAsState()
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
     ) {
+        AlertDialogDelete(openDialog = stateOpenAlertDialog, onBackHandler = {
+            component.onEvent(ScreenDetailEvent.ChangeStateOpenedAlertDialog(false))
+        }, onConfirmHandler = {
+            component.onEvent(ScreenDetailEvent.DeleteItemPass)
+        })
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -164,7 +175,10 @@ fun DetailScreen(component: ScreenDetailComponent) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 12.dp),
+                        .padding(start = 12.dp)
+                        .clickable {
+                            component.onEvent(ScreenDetailEvent.ChangeStateOpenedAlertDialog(true))
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
@@ -237,6 +251,67 @@ fun Descriptions(textTitle: String, textSubTitle: String) {
             text = textSubTitle,
             style = MaterialTheme.typography.displayMedium,
             color = Color.White
+        )
+    }
+}
+
+@Composable
+fun AlertDialogDelete(
+    openDialog: Boolean,
+    onBackHandler: () -> Unit,
+    onConfirmHandler: () -> Unit
+) {
+    if (openDialog) {
+        AlertDialog(
+            // on dialog dismiss we are setting
+            // our dialog value to false.
+            onDismissRequest = { onBackHandler() },
+
+            // below line is use to display title of our dialog
+            // box and we are setting text color to white.
+            title = { Text(text = "Delete the password?", color = Color.White) },
+
+            // below line is use to display
+            // description to our alert dialog.
+            text = {
+                Text(
+                    "Are you sure you want to delete the password? It will be impossible to restore it",
+                    color = Color.White
+                )
+            },
+
+            // in below line we are displaying
+            // our confirm button.
+            confirmButton = {
+                // below line we are adding on click
+                // listener for our confirm button.
+                TextButton(
+                    onClick = {
+                        onBackHandler()
+                        onConfirmHandler()
+                    }
+                ) {
+                    // in this line we are adding
+                    // text for our confirm button.
+                    Text("Delete", color = Color.White)
+                }
+            },
+            // in below line we are displaying
+            // our dismiss button.
+            dismissButton = {
+                // in below line we are displaying
+                // our text button
+                TextButton(
+                    // adding on click listener for this button
+                    onClick = {
+                        onBackHandler()
+                    }
+                ) {
+                    // adding text to our button.
+                    Text("Cancel", color = Color.White)
+                }
+            },
+            containerColor = CustomColor().brandBlueLight,
         )
     }
 }
