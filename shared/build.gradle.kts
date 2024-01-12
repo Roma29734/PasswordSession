@@ -41,6 +41,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             // more dep
             implementation(libs.kotlinXDataTime)
+            implementation(libs.russhwolfSettongs)
+            implementation(libs.russhwolfMultiplatform)
         }
         jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)

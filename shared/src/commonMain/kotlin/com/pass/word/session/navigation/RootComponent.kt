@@ -5,10 +5,10 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.pushNew
-import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
+import com.pass.word.session.data.getParamsBoolean
+import com.pass.word.session.data.keyAuthPass
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
@@ -25,10 +25,14 @@ class RootComponent constructor(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = Configuration.ScreenAuthentication,
+        initialConfiguration = if(getStateAuthParams()) Configuration.ScreenAuthentication else Configuration.ScreenBottomMain,
         handleBackButton = true,
         childFactory = ::createChild
     )
+
+    private fun getStateAuthParams(): Boolean {
+        return getParamsBoolean(keyAuthPass) ?: false
+    }
 
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     private fun createChild(
@@ -69,7 +73,7 @@ class RootComponent constructor(
                 ScreenEditComponent(
                     componentContext = context,
                     passDetailModel = config.passDetailModel,
-                    onGoBack = {navigation.pop()}
+                    onGoBack = { navigation.pop() }
                 )
             )
         }
