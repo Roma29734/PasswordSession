@@ -3,6 +3,8 @@ package com.pass.word.session.navigation.screen.main.authentication
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.pass.word.session.data.getParamsString
+import com.pass.word.session.data.keyAuthPass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +37,7 @@ class ScreenAuthenticationComponent constructor(
     private fun passCheck(passForCheck: String) {
         // Тут получаем из бд пароль
         GlobalScope.launch {
-            val pass = "1234"
+            val pass = getParamsString(keyAuthPass)
             if(pass == passForCheck) {
                 onNavigateToMainScreen()
             } else {

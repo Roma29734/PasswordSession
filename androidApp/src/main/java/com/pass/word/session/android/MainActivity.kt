@@ -19,6 +19,7 @@ import com.pass.word.session.android.screen.authenticationScreen.AuthenticationS
 import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
 import com.pass.word.session.android.screen.detailScreen.DetailScreen
 import com.pass.word.session.android.screen.editScreen.EditScreen
+import com.pass.word.session.android.screen.initialGreeting.InitialGreetingScreen
 import com.pass.word.session.navigation.RootComponent
 import com.pass.word.session.ui.MyCustomAppTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -49,6 +50,9 @@ class MainActivity : ComponentActivity() {
                                 component = instance.component
                             )
                             is RootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
+                            is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
+                                component = instance.component
+                            )
                         }
                     }
                 }

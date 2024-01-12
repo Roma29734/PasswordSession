@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.android.screen.viewComponent.BoxItemCode
+import com.pass.word.session.android.screen.viewComponent.ButtonNumber
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthStateEvent
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.ui.CustomColor
@@ -182,37 +184,6 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
 }
 
 
-@Composable
-fun BoxItemCode(itemText: String) {
-    Box(
-        Modifier
-            .size(48.dp)
-            .border(2.dp,color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = itemText,
-            color = Color.White, style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@Composable
-fun ButtonNumber(textButton: Int, clickHandler: (Int) -> Unit) {
-    Box(
-        Modifier
-            .size(64.dp)
-            .background(CustomColor().brandBlueLight, RoundedCornerShape(600.dp))
-            .clickable { clickHandler(textButton) },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = textButton.toString(),
-            color = Color.White,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
 
 private fun checkBiometrick(
     context: Context,

@@ -38,5 +38,10 @@ val typography = Typography(
         fontSize = 14.sp,
         fontFamily = poppinsFont,
         fontWeight = FontWeight.SemiBold
+    ),
+    displayLarge = TextStyle(
+        fontSize = 22.sp,
+        fontFamily = poppinsFont,
+        fontWeight = FontWeight.SemiBold
     )
 )
