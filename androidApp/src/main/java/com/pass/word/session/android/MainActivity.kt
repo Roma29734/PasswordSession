@@ -1,8 +1,12 @@
 package com.pass.word.session.android
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +29,6 @@ import com.pass.word.session.ui.MyCustomAppTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 class MainActivity : ComponentActivity() {
-
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,4 +62,40 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // in this method we are checking if the request code
+        // which we have passed 101 is same.
+        if (requestCode == 101) {
+            // if request code is 101 and permissions are granted.
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // on below line we are displaying a toast message.
+                Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                // on below line we are displaying a toast message.
+                Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    override fun shouldShowRequestPermissionRationale(
+        permission: String) : Boolean
+    {
+
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            super.shouldShowRequestPermissionRationale(permission)
+        } else {
+            false
+        }
+    }
+
 }

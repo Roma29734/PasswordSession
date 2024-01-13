@@ -49,4 +49,6 @@ dependencies {
 //    decompose
     implementation(libs.decomposeJetpack)
     implementation(libs.decompose)
+//    moko
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 }
