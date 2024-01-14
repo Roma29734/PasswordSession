@@ -1,10 +1,13 @@
 package com.pass.word.session.navigation.screen.main.bottomMain
 
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordComponent
 import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
@@ -16,6 +19,14 @@ class ScreenBottomMainComponent constructor(
     private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit,
     private val onNavigateToChangePasswordComponent: () -> Unit,
 ) : ComponentContext by componentContext {
+
+    private var _selectedItem = MutableValue(0)
+    val selectedItem: Value<Int> = _selectedItem
+
+    fun updateSelectedItem(newItem: Int) {
+        _selectedItem.value = newItem
+    }
+
     private val navigation = StackNavigation<Configuration>()
 
     val childStack = childStack(

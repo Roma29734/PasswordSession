@@ -22,7 +22,10 @@ class ScreenDetailComponent constructor(
     val passwordItem: Value<PasswordItemModel> = _passwordItem
 
     fun getOneItem(databaseDriverFactory: DriverFactory) {
-        _passwordItem.value = PersonalDatabase(databaseDriverFactory).getOneItemPass(passDetailModel.id)
+        val result = PersonalDatabase(databaseDriverFactory).getOneItemPass(passDetailModel.id)
+        if(result != null) {
+            _passwordItem.value = result
+        }
     }
 
     private fun deleteItem(databaseDriverFactory: DriverFactory) {

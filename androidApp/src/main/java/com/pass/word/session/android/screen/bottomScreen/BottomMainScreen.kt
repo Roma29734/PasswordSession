@@ -27,6 +27,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.bottomScreen.addPasswordScreen.AppPasswordScreen
 import com.pass.word.session.android.screen.bottomScreen.passwordScreen.PasswordScreen
@@ -36,7 +37,8 @@ import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun BottomMainScreen(component: ScreenBottomMainComponent) {
-    var selectedItem by remember { mutableIntStateOf(0) }
+//    var selectedItem by remember { mutableIntStateOf(0) }
+    val selectedItem by component.selectedItem.subscribeAsState()
     val screens by remember {
         mutableStateOf(
             listOf(
@@ -46,6 +48,7 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
             )
         )
     }
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -74,7 +77,8 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                             label = { Text(text = screensBottom.name) },
                             selected = selectedItem == index,
                             onClick = {
-                                selectedItem = index
+                                component.updateSelectedItem(index)
+//                                selectedItem = index
                                 screensBottom.openScreen()
                             },
                             colors = NavigationBarItemDefaults.colors(

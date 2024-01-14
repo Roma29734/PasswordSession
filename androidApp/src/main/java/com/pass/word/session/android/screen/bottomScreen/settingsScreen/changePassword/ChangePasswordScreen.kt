@@ -63,6 +63,7 @@ fun ChangePasswordScreen(component: ScreenChangePasswordComponent) {
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
+
         }
         Row(
             modifier = Modifier

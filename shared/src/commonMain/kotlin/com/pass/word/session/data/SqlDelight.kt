@@ -8,6 +8,7 @@ import com.pass.word.session.data.model.PasswordItemModel
 expect class DriverFactory {
     fun createDriver(): SqlDriver
 }
+
 internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
     private val database = Database(databaseDriverFactory.createDriver())
     private val dbQuery = database.appDatabaseQueries
@@ -21,8 +22,13 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
         return dbQuery.selectAllPassItemTalbe(::matPassSettings).executeAsList()
     }
 
-    internal fun getOneItemPass(id: Int): PasswordItemModel {
-        return dbQuery.selectOneItemPassItemTable(id.toLong(), ::matPassSettings).executeAsOne()
+    internal fun getOneItemPass(id: Int): PasswordItemModel? {
+        return try {
+            val result = dbQuery.selectOneItemPassItemTable(id.toLong(), ::matPassSettings).executeAsOne()
+            result
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun matPassSettings(
