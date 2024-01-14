@@ -2,6 +2,7 @@ package com.pass.word.session.android.screen.bottomScreen.addPasswordScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -38,6 +40,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.detailScreen.AlertDialogDelete
+import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.OutlineInputText
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.bottom.screenAddPasswordComponent.ScreenAddPasswordComponent
@@ -180,25 +183,35 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                 )
 
             }
-            Button(
-                onClick = {
+            MainComponentButton(
+                text = "add new password",
+                clickHandler = {
                     component.onEvent(
                         ScreenAddPasswordStateEvent.ClickButtonAddNewState(
                             databaseDriverFactory = DriverFactory(context)
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-                colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
-            ) {
-                Text(
-                    text = "add new password",
-                    style = MaterialTheme.typography.displayMedium,
-                    color = Color.White
-                )
-            }
+                        ))
+                }
+            )
+
+//            Button(
+//                onClick = {
+//                    component.onEvent(
+//                        ScreenAddPasswordStateEvent.ClickButtonAddNewState(
+//                            databaseDriverFactory = DriverFactory(context)
+//                        )
+//                    )
+//                },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+//                colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
+//            ) {
+//                Text(
+//                    text = "add new password",
+//                    style = MaterialTheme.typography.displayMedium,
+//                    color = Color.White
+//                )
+//            }
         }
     }
 }
