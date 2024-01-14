@@ -93,8 +93,15 @@ class RootComponent constructor(
                     }
                 )
             )
+
             is Configuration.ScreenChangePasswordRootComponent -> Child.ScreenChangePasswordRootComponent(
-                ChangePasswordRootComponent(componentContext = context, onBackNavigation = {navigation.pop()})
+                ChangePasswordRootComponent(
+                    componentContext = context,
+                    onBackNavigation = { navigation.pop() },
+                    onNextNavigation = {
+                        navigation.replaceAll(Configuration.ScreenAuthentication)
+                    }
+                )
             )
         }
     }
@@ -107,7 +114,8 @@ class RootComponent constructor(
 
         data class ScreenEdit(val component: ScreenEditComponent) : Child()
         data class ScreenInitialGreeting(val component: InitialGreetingRootComponent) : Child()
-        data class ScreenChangePasswordRootComponent(val component: ChangePasswordRootComponent): Child()
+        data class ScreenChangePasswordRootComponent(val component: ChangePasswordRootComponent) :
+            Child()
     }
 
     @Serializable
@@ -128,6 +136,6 @@ class RootComponent constructor(
         data object ScreenInitialGreeting : Configuration()
 
         @Serializable
-        data object ScreenChangePasswordRootComponent: Configuration()
+        data object ScreenChangePasswordRootComponent : Configuration()
     }
 }

@@ -4,12 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import kotlinx.serialization.Serializable
 
 class ChangePasswordRootComponent constructor(
     componentContext: ComponentContext,
-    private val onBackNavigation: () -> Unit
+    private val onBackNavigation: () -> Unit,
+    private val onNextNavigation: () -> Unit,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
@@ -38,7 +40,13 @@ class ChangePasswordRootComponent constructor(
             )
 
             is Configuration.ScreenChangePassword -> Child.ScreenChangePassword(
-                ScreenChangePasswordComponent(componentContext = context)
+                ScreenChangePasswordComponent(
+                    componentContext = context,
+                    onBackNavigation = { navigation.pop() },
+                    onNextScreenNavigation = {
+                        onNextNavigation()
+                    }
+                )
             )
         }
     }
