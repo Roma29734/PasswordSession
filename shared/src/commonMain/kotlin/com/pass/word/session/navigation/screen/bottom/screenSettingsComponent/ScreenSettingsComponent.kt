@@ -4,7 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.pass.word.session.utilits.createAndSaveJsonFile
 
 class ScreenSettingsComponent constructor(
-    private val componentContext: ComponentContext
+    private val componentContext: ComponentContext,
+    private val onNavigateToChangePasswordComponent: () -> Unit,
 ) : ComponentContext by componentContext {
 
 
@@ -22,9 +23,17 @@ class ScreenSettingsComponent constructor(
         listenerToastPush.forEach { it.invoke(message) }
     }
 
-    fun clickToButtonDownloadPass(context: Any) {
-        createAndSaveJsonFile(context, "examplePass.json")
-        pluckListenerToastPush("File Download Success")
+
+    fun onEvent(event: ScreenSettingsStateEvent) {
+        when(event) {
+            is ScreenSettingsStateEvent.ClickToButtonDownloadPass -> {
+                createAndSaveJsonFile(event.context, "examplePass.json")
+                pluckListenerToastPush("File Download Success")
+            }
+            is ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent -> {
+                onNavigateToChangePasswordComponent()
+            }
+        }
     }
 
 }

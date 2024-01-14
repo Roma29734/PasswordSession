@@ -21,6 +21,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.arkivanov.decompose.retainedComponent
 import com.pass.word.session.android.screen.authenticationScreen.AuthenticationScreen
 import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
+import com.pass.word.session.android.screen.bottomScreen.settingsScreen.changePassword.ChangePasswordRoot
 import com.pass.word.session.android.screen.detailScreen.DetailScreen
 import com.pass.word.session.android.screen.editScreen.EditScreen
 import com.pass.word.session.android.screen.initialGreeting.InitialGreetingScreen
@@ -54,6 +55,9 @@ class MainActivity : ComponentActivity() {
                             )
                             is RootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
                             is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
+                                component = instance.component
+                            )
+                            is RootComponent.Child.ScreenChangePasswordRootComponent -> ChangePasswordRoot(
                                 component = instance.component
                             )
                         }

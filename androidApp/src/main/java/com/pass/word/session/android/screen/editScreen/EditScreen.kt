@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.OutlineInputText
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
@@ -154,21 +155,13 @@ fun EditScreen(component: ScreenEditComponent) {
                 )
             }
 
-            Button(
-                onClick = {
+            MainComponentButton(
+                text = "apply changes",
+                clickHandler = {
                     component.onEvent(ScreenEditEvent.ClickButtonUpdate(DriverFactory(context)))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-                colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
-            ) {
-                Text(
-                    text = "apply changes",
-                    style = MaterialTheme.typography.displayMedium,
-                    color = Color.White
-                )
-            }
+                }
+            )
+
         }
     }
 }

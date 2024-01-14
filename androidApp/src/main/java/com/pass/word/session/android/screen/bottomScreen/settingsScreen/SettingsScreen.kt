@@ -3,7 +3,6 @@ package com.pass.word.session.android.screen.bottomScreen.settingsScreen
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
@@ -36,13 +35,13 @@ import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
+import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsStateEvent
 import com.pass.word.session.ui.CustomColor
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun SettingsScreen(component: ScreenSettingsComponent) {
-
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -85,7 +84,9 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
                 ItemSettingsMenu(
                     image = painterResource(id = R.drawable.ic_security_lock),
                     text = "change password",
-                    clickHandler = {}
+                    clickHandler = {
+                        component.onEvent(ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent)
+                    }
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemSettingsMenu(
@@ -108,7 +109,7 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
             MainComponentButton(
                 text = "download password",
                 clickHandler = {
-                    component.clickToButtonDownloadPass(context)
+                    component.onEvent(ScreenSettingsStateEvent.ClickToButtonDownloadPass(context))
                 }
             )
         }
@@ -116,9 +117,8 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
     }
 }
 
-
 fun openCustomTab(url: String, context: Context) {
-    val package_name = "com.android.chrome"
+    val packageName = "com.android.chrome"
 
     val activity = (context as? Activity)
     val builder = CustomTabsIntent.Builder()
@@ -129,15 +129,9 @@ fun openCustomTab(url: String, context: Context) {
     val customBuilder = builder.build()
 
     // on below line we are checking if the package name is null or not.
-    if (package_name != null) {
-        customBuilder.intent.setPackage(package_name)
+    customBuilder.intent.setPackage(packageName)
 
-        customBuilder.launchUrl(context, Uri.parse(url))
-    } else {
-        val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-
-        activity?.startActivity(i)
-    }
+    customBuilder.launchUrl(context, Uri.parse(url))
 }
 
 @Composable

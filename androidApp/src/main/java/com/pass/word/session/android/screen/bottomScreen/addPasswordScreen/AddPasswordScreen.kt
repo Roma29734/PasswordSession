@@ -192,26 +192,6 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                         ))
                 }
             )
-
-//            Button(
-//                onClick = {
-//                    component.onEvent(
-//                        ScreenAddPasswordStateEvent.ClickButtonAddNewState(
-//                            databaseDriverFactory = DriverFactory(context)
-//                        )
-//                    )
-//                },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-//                colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
-//            ) {
-//                Text(
-//                    text = "add new password",
-//                    style = MaterialTheme.typography.displayMedium,
-//                    color = Color.White
-//                )
-//            }
         }
     }
 }

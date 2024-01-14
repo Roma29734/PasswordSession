@@ -14,6 +14,7 @@ import com.pass.word.session.data.keyAuthPass
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
+import com.pass.word.session.navigation.screen.main.changePassword.ChangePasswordRootComponent
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.InitialGreetingRootComponent
@@ -49,6 +50,9 @@ class RootComponent constructor(
                     componentContext = context,
                     onNavigateToDetailComponent = { model ->
                         navigation.pushNew(Configuration.ScreenDetail(model))
+                    },
+                    onNavigateToChangePasswordComponent = {
+                        navigation.pushNew(Configuration.ScreenChangePasswordRootComponent)
                     }
                 )
             )
@@ -89,6 +93,9 @@ class RootComponent constructor(
                     }
                 )
             )
+            is Configuration.ScreenChangePasswordRootComponent -> Child.ScreenChangePasswordRootComponent(
+                ChangePasswordRootComponent(componentContext = context, onBackNavigation = {navigation.pop()})
+            )
         }
     }
 
@@ -100,6 +107,7 @@ class RootComponent constructor(
 
         data class ScreenEdit(val component: ScreenEditComponent) : Child()
         data class ScreenInitialGreeting(val component: InitialGreetingRootComponent) : Child()
+        data class ScreenChangePasswordRootComponent(val component: ChangePasswordRootComponent): Child()
     }
 
     @Serializable
@@ -118,5 +126,8 @@ class RootComponent constructor(
 
         @Serializable
         data object ScreenInitialGreeting : Configuration()
+
+        @Serializable
+        data object ScreenChangePasswordRootComponent: Configuration()
     }
 }
