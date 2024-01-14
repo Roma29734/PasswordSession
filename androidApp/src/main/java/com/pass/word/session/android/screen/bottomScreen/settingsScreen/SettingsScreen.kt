@@ -1,6 +1,11 @@
 package com.pass.word.session.android.screen.bottomScreen.settingsScreen
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.webkit.WebView
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +30,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.pass.word.session.android.R
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.ui.CustomColor
@@ -62,21 +68,47 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
             ItemSettingsMenu(
                 image = painterResource(id = R.drawable.ic_logo_telegram),
                 text = "telegram",
-                clickHandler = {}
+                clickHandler = {
+                    openCustomTab("https://t.me/apkPublicPrograms", context)
+                }
             )
             Spacer(modifier = Modifier.size(16.dp))
             ItemSettingsMenu(
                 image = painterResource(id = R.drawable.ic_logo_git_hub),
                 text = "gitHub",
-                clickHandler = {}
+                clickHandler = {
+                    openCustomTab("https://github.com/Roma29734/PasswordSession", context)
+                }
             )
         }
 
         ItemSettingsDownloadMenu(clickHandler = {
             component.clickToButtonDownloadPass(context)
         })
+    }
+}
 
 
+fun openCustomTab(url: String, context: Context) {
+    val package_name = "com.android.chrome"
+
+    val activity = (context as? Activity)
+    val builder = CustomTabsIntent.Builder()
+
+    builder.setShowTitle(true)
+    builder.setInstantAppsEnabled(true)
+
+    val customBuilder = builder.build()
+
+    // on below line we are checking if the package name is null or not.
+    if (package_name != null) {
+        customBuilder.intent.setPackage(package_name)
+
+        customBuilder.launchUrl(context, Uri.parse(url))
+    } else {
+        val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+
+        activity?.startActivity(i)
     }
 }
 
