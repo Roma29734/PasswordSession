@@ -92,7 +92,7 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Enter your authentication code ${passItem}",
+                text = "Enter your authentication code",
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.White
             )
