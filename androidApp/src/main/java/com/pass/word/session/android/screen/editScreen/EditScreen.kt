@@ -19,16 +19,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +47,7 @@ import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditEvent
 import com.pass.word.session.ui.CustomColor
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -59,8 +65,30 @@ fun EditScreen(component: ScreenEditComponent) {
     val focusRequesterPassword = remember { FocusRequester() }
     val focusRequesterUrl = remember { FocusRequester() }
     val focusRequesterDescriptions = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
-    Scaffold() {
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    DisposableEffect(component) {
+        val listenerPassCreated: (message: String) -> Unit = { msg ->
+            scope.launch {
+                snackBarHostState.showSnackbar(msg)
+            }
+        }
+        component.subscribeListenerPush(listenerPassCreated)
+
+        onDispose {
+            // Отписка при уничтожении экрана
+            component.unsubscribeListenerPush(listenerPassCreated)
+        }
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -150,7 +178,7 @@ fun EditScreen(component: ScreenEditComponent) {
                     },
                     focusRequester = focusRequesterDescriptions,
                     onNextHandler = {
-                        focusRequesterDescriptions.freeFocus()
+                        focusManager.clearFocus()
                     }, keyboardType = KeyboardType.Text
                 )
             }

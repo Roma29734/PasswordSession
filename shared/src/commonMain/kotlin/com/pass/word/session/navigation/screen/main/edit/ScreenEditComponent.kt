@@ -3,7 +3,6 @@ package com.pass.word.session.navigation.screen.main.edit
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.update
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.utilits.onCheckValidation
@@ -29,6 +28,20 @@ class ScreenEditComponent constructor(
     private var _textDescriptions = MutableValue(passDetailModel.descriptions ?: "")
     val textDescriptions: Value<String> = _textDescriptions
 
+    private val listenersPassCreate = mutableListOf<(message: String) -> Unit>()
+
+    fun subscribeListenerPush(listener: (message: String) -> Unit) {
+        listenersPassCreate.add(listener)
+    }
+
+    fun unsubscribeListenerPush(listener: (message: String) -> Unit) {
+        listenersPassCreate.remove(listener)
+    }
+
+    private fun pluckListenerPush(message: String) {
+        listenersPassCreate.forEach { it.invoke(message) }
+    }
+
     fun onEvent(event: ScreenEditEvent) {
         when(event) {
             is ScreenEditEvent.ClickButtonBack -> {
@@ -50,17 +63,21 @@ class ScreenEditComponent constructor(
                 _textDescriptions.value = event.textDescriptions
             }
             is ScreenEditEvent.ClickButtonUpdate -> {
-                val model = PasswordItemModel(
-                    id = passDetailModel.id,
-                    nameItemPassword = textTitle.value,
-                    emailOrUserName = textEmailOrUserName.value,
-                    passwordItem = textPassword.value,
-                    changeData = passDetailModel.changeData,
-                    urlSite = textUrl.value.onCheckValidation(),
-                    descriptions = textDescriptions.value.onCheckValidation()
-                )
-                PersonalDatabase(event.databaseDriverFactory).updatePassItem(model)
-                onGoBack()
+                if(textTitle.value.isEmpty() || textEmailOrUserName.value.isEmpty() || textPassword.value.isEmpty()) {
+                    pluckListenerPush("The first three fields must be filled in")
+                } else {
+                    val model = PasswordItemModel(
+                        id = passDetailModel.id,
+                        nameItemPassword = textTitle.value,
+                        emailOrUserName = textEmailOrUserName.value,
+                        passwordItem = textPassword.value,
+                        changeData = passDetailModel.changeData,
+                        urlSite = textUrl.value.onCheckValidation(),
+                        descriptions = textDescriptions.value.onCheckValidation()
+                    )
+                    PersonalDatabase(event.databaseDriverFactory).updatePassItem(model)
+                    onGoBack()
+                }
             }
         }
     }

@@ -34,6 +34,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -68,6 +69,7 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
     val focusRequesterPassword = remember { FocusRequester() }
     val focusRequesterUrl = remember { FocusRequester() }
     val focusRequesterDescriptions = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -178,7 +180,8 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
                     },
                     focusRequester = focusRequesterDescriptions,
                     onNextHandler = {
-                        focusRequesterDescriptions.freeFocus()
+                        focusManager.clearFocus()
+//                        focusRequesterDescriptions.freeFocus()
                     }, keyboardType = KeyboardType.Text
                 )
 
