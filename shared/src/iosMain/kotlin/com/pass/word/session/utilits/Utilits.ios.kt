@@ -1,6 +1,7 @@
 package com.pass.word.session.utilits
 
 import androidx.compose.runtime.Composable
+import kotlinx.serialization.json.JsonObject
 
 @Composable
 actual fun showToast(message: String) {
@@ -15,6 +16,6 @@ actual fun showToast(message: String) {
 //    TODO()
 //}
 //
-actual fun createAndSaveJsonFile(context: Any, fileName: String) {
+actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: JsonObject) {
     TODO()
 }

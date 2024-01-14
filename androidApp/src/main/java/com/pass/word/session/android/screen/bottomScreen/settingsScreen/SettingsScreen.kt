@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.navigation.screen.bottom.screenSettingsComponent.ScreenSettingsStateEvent
 import com.pass.word.session.ui.CustomColor
@@ -109,7 +110,7 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
             MainComponentButton(
                 text = "download password",
                 clickHandler = {
-                    component.onEvent(ScreenSettingsStateEvent.ClickToButtonDownloadPass(context))
+                    component.onEvent(ScreenSettingsStateEvent.ClickToButtonDownloadPass(context, DriverFactory(context)))
                 }
             )
         }

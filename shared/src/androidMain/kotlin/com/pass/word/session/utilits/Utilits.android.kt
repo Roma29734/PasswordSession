@@ -12,9 +12,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import java.io.File
+
 
 @Composable
 actual fun showToast(message: String) {
@@ -22,18 +21,13 @@ actual fun showToast(message: String) {
     Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
 }
 @RequiresApi(Build.VERSION_CODES.Q)
-actual fun createAndSaveJsonFile(context: Any, fileName: String) {
+actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: JsonObject) {
     try {
-
-        val jsonObject: JsonObject = buildJsonObject {
-            put("key1", "value1")
-            put("key2", "value2")
-        }
 
         val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(downloadsDir, fileName)
 
-        file.writeText(Json.encodeToString(JsonObject.serializer(), jsonObject))
+        file.writeText(Json.encodeToString(JsonObject.serializer(), savedJson))
 
         val values = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
@@ -46,7 +40,7 @@ actual fun createAndSaveJsonFile(context: Any, fileName: String) {
 
         uri?.let {
             resolver.openOutputStream(it)?.use { outputStream ->
-                outputStream.write(Json.encodeToString(JsonObject.serializer(), jsonObject).toByteArray())
+                outputStream.write(Json.encodeToString(JsonObject.serializer(), savedJson).toByteArray())
             }
             Log.d("createAndSaveJsonFile", "complete")
         }

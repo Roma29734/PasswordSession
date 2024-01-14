@@ -1,6 +1,8 @@
 package com.pass.word.session.navigation.screen.bottom.screenSettingsComponent
 
 import com.arkivanov.decompose.ComponentContext
+import com.pass.word.session.data.PersonalDatabase
+import com.pass.word.session.utilits.convertListToJsonObject
 import com.pass.word.session.utilits.createAndSaveJsonFile
 
 class ScreenSettingsComponent constructor(
@@ -27,7 +29,9 @@ class ScreenSettingsComponent constructor(
     fun onEvent(event: ScreenSettingsStateEvent) {
         when(event) {
             is ScreenSettingsStateEvent.ClickToButtonDownloadPass -> {
-                createAndSaveJsonFile(event.context, "examplePass.json")
+                val result = convertListToJsonObject(PersonalDatabase(event.databaseDriverFactory).getAllPass())
+                println("jsonResult - $result")
+                createAndSaveJsonFile(event.context, "examplePass.json", result)
                 pluckListenerToastPush("File Download Success")
             }
             is ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent -> {
