@@ -72,10 +72,10 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            BoxItemCode(if (passItem.isNotEmpty()) "*" else "")
-            BoxItemCode(if (passItem.length >= 2) "*" else "")
-            BoxItemCode(if (passItem.length >= 3) "*" else "")
-            BoxItemCode(if (passItem.length >= 4) "*" else "")
+            BoxItemCode(if (passItem.isNotEmpty()) "•" else "")
+            BoxItemCode(if (passItem.length >= 2) "•" else "")
+            BoxItemCode(if (passItem.length >= 3) "•" else "")
+            BoxItemCode(if (passItem.length >= 4) "•" else "")
         }
         Row(
             modifier = Modifier

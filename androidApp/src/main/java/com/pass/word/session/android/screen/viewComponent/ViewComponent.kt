@@ -56,9 +56,9 @@ fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler:
         keyboardActions = KeyboardActions(
             onNext = { onNextHandler() }
         )
-
     )
 }
+
 @Composable
 fun BoxItemCode(itemText: String) {
     Box(
