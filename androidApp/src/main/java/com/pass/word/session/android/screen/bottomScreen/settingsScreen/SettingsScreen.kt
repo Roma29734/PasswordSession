@@ -121,7 +121,6 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
 fun openCustomTab(url: String, context: Context) {
     val packageName = "com.android.chrome"
 
-    val activity = (context as? Activity)
     val builder = CustomTabsIntent.Builder()
 
     builder.setShowTitle(true)
