@@ -95,7 +95,7 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black),
+                .background(color = MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {

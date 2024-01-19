@@ -30,7 +30,7 @@ fun WarningScreen(component: ScreenWarningComponent) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(color = MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

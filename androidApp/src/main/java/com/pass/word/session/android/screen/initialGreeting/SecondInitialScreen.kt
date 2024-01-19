@@ -27,7 +27,7 @@ fun SecondInitialScreen(component: ScreenSecondInitialComponent) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(color = MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -122,11 +122,11 @@ fun ImportPasswordScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black),
+                .background(color = MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
 
-            if(component.stateBack) {
+            if (component.stateBack) {
                 Image(
                     modifier = Modifier
                         .clickable { component.event(ScreenImportPasswordEvent.ClickBackButton) }
@@ -141,7 +141,10 @@ fun ImportPasswordScreen(
                 Spacer(modifier = Modifier.size(48.dp))
             }
 
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
                 if (stateShowCompleteView) {
                     Image(

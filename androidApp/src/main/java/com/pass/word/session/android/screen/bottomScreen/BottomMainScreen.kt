@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -86,19 +87,19 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                                 unselectedTextColor = CustomColor().grayLight,
                                 selectedTextColor = CustomColor().brandBlueLight,
                                 unselectedIconColor = CustomColor().grayLight,
-                                indicatorColor = Color.Black
+                                indicatorColor = MaterialTheme.colorScheme.background
                             )
                         )
                     }
                 },
-                containerColor = Color.Black,
+                containerColor = MaterialTheme.colorScheme.background,
             )
         },
         content = { innerpadding ->
             Column(modifier = Modifier.padding(innerpadding)) {
                 Children(
                     stack = component.childStack,
-                    modifier = Modifier.background(Color.Black),
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                     animation = stackAnimation(fade() + scale()),
                 ) { child ->
                     when (val instance = child.instance) {

@@ -86,7 +86,7 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
     ) {
         Column(
             modifier = Modifier
-                .background(Color.Black)
+                .background(color = MaterialTheme.colorScheme.background)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -257,12 +257,11 @@ private fun checkBiometrick(
             val biometricPrompt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 BiometricPrompt
                     .Builder(context)
-                    .setTitle("Allow Biometric Authentication")
-                    .setSubtitle("You will no longer required username and password during login")
-                    .setDescription("We use biometric authentication to protect your data")
+                    .setTitle("Authentication is required")
+                    .setSubtitle("Password Session")
+//                    .setDescription("We use biometric authentication to protect your data")
                     .setNegativeButton("Not Now", context.mainExecutor) { dialogInterface, i ->
                         notifyUser("Authentication cancelled")
-
                     }
                     .build()
             } else {

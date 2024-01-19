@@ -39,7 +39,7 @@ fun PasswordScreen(component: ScreenPasswordComponent) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp),
