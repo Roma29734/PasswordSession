@@ -129,53 +129,60 @@ fun ImportPasswordScreen(
 
             Spacer(modifier = Modifier.size(48.dp))
 
-            Column (modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
                 if (stateShowCompleteView) {
                     Image(
                         modifier = Modifier.size(128.dp),
                         painter = painterResource(id = R.drawable.ic_complete),
                         contentDescription = "ic complete",
-                        colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
+                        colorFilter = ColorFilter.tint(CustomColor().brandGreen)
                     )
-                }
-                Spacer(modifier = Modifier.size(32.dp))
-
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    text = "You can import your passwords, for this you need to provide permission",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.size(32.dp))
-                Button(
-                    onClick = {
-                        val intenst = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                            addCategory(Intent.CATEGORY_OPENABLE)
-                            type = "application/json"
-                        }
-                        someActivityResultLauncher.launch(intenst)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-                    colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
-                ) {
                     Text(
-                        text = "Import",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = Color.White
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                        text = "Import complete!",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
                     )
+                } else {
+                    Spacer(modifier = Modifier.size(32.dp))
+
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                        text = "You can import your passwords, for this you need to provide permission",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.size(32.dp))
+                    Button(
+                        onClick = {
+                            val intenst = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                addCategory(Intent.CATEGORY_OPENABLE)
+                                type = "application/json"
+                            }
+                            someActivityResultLauncher.launch(intenst)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+                        colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
+                    ) {
+                        Text(
+                            text = "Import",
+                            style = MaterialTheme.typography.displayMedium,
+                            color = Color.White
+                        )
+                    }
                 }
             }
-
-
             MainComponentButton(
                 "Next"
             ) { component.event(ScreenImportPasswordEvent.ClickButtonNext) }
         }
-
     }
+
 }
+

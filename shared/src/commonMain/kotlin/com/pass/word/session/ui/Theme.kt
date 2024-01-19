@@ -25,5 +25,6 @@ data class CustomColor(
     val grayLight: Color = Color(0xFF5D5D61),
     val brandBlueLight: Color = Color(0xFF0C98FF),
     val accentDark: Color = Color(0xFF1C1C1E),
-    val brandRedMain: Color = Color(0xFFFF4D3F)
+    val brandRedMain: Color = Color(0xFFFF4D3F),
+    val brandGreen: Color = Color(0xFF49F78E)
 )
