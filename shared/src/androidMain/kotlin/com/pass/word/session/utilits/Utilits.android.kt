@@ -13,6 +13,12 @@ import androidx.annotation.RequiresApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import java.io.File
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 
 @Composable
@@ -20,11 +26,13 @@ actual fun showToast(message: String) {
     val mContext = LocalContext.current
     Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
 }
+
 @RequiresApi(Build.VERSION_CODES.Q)
 actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: JsonObject) {
     try {
 
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val downloadsDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(downloadsDir, fileName)
 
         file.writeText(Json.encodeToString(JsonObject.serializer(), savedJson))
@@ -40,7 +48,9 @@ actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: Json
 
         uri?.let {
             resolver.openOutputStream(it)?.use { outputStream ->
-                outputStream.write(Json.encodeToString(JsonObject.serializer(), savedJson).toByteArray())
+                outputStream.write(
+                    Json.encodeToString(JsonObject.serializer(), savedJson).toByteArray()
+                )
             }
             Log.d("createAndSaveJsonFile", "complete")
         }
@@ -50,3 +60,9 @@ actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: Json
         e.printStackTrace()
     }
 }
+
+
+
+
+
+

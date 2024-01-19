@@ -1,5 +1,7 @@
 package com.pass.word.session.android.screen.initialGreeting
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,29 +19,27 @@ import com.pass.word.session.ui.MyCustomAppTheme
 fun InitialGreetingScreen(component: InitialGreetingRootComponent) {
 
     val childStack by component.childStack.subscribeAsState()
-    MyCustomAppTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Children(
-                stack = childStack,
-                animation = stackAnimation(slide())
-            ) { child ->
-                when (val instance = child.instance) {
-                    is InitialGreetingRootComponent.Child.ScreenFirstInitial -> FirstInitialScreen(
-                        component = instance.component
-                    )
 
-                    is InitialGreetingRootComponent.Child.ScreenEnterInitialPassAuth -> EnterInitialPassAuthScreen(
-                        component = instance.component
-                    )
+    Children(
+        stack = childStack,
+        animation = stackAnimation(slide())
+    ) { child ->
+        when (val instance = child.instance) {
+            is InitialGreetingRootComponent.Child.ScreenFirstInitial -> FirstInitialScreen(
+                component = instance.component
+            )
 
-                    is InitialGreetingRootComponent.Child.ScreenSecondInitial -> SecondInitialScreen(
-                        component = instance.component
-                    )
-                }
-            }
+            is InitialGreetingRootComponent.Child.ScreenEnterInitialPassAuth -> EnterInitialPassAuthScreen(
+                component = instance.component
+            )
+
+            is InitialGreetingRootComponent.Child.ScreenSecondInitial -> SecondInitialScreen(
+                component = instance.component
+            )
+
+            is InitialGreetingRootComponent.Child.ScreenImportPassword -> ImportPasswordScreen(
+                component = instance.component,
+            )
         }
     }
 

@@ -5,9 +5,13 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth.ScreenEnterInitialPassAuthComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenFirstInitial.ScreenFirstInitialComponent
+import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenSecondInitial.ScreenSecondInitialComponent
 import kotlinx.serialization.Serializable
 
@@ -42,18 +46,28 @@ class InitialGreetingRootComponent constructor(
                 ScreenEnterInitialPassAuthComponent(
                     componentContext = context,
                     clickButtonBack = { navigation.pop() },
-                    navigateToNext = { navigation.pushNew(Configuration.ScreenSecondInitial) }
+                    navigateToNext = { navigation.replaceAll(Configuration.ScreenSecondInitial) }
                 )
             )
 
             is Configuration.ScreenSecondInitial -> Child.ScreenSecondInitial(
                 ScreenSecondInitialComponent(
                     componentContext = context,
-                    onNavigateToMainScreen = {
+                    onNavigateToNextScreen = {
+                        navigation.replaceAll(Configuration.ScreenImportPassword)
+                    }
+                )
+            )
+
+            is Configuration.ScreenImportPassword -> Child.ScreenImportPassword(
+                ScreenImportPasswordComponent(
+                    componentContext = context,
+                    onNextScreen = {
                         navigateToAuthScreen()
                     }
                 )
             )
+
         }
     }
 
@@ -63,6 +77,7 @@ class InitialGreetingRootComponent constructor(
             Child()
 
         data class ScreenSecondInitial(val component: ScreenSecondInitialComponent) : Child()
+        data class ScreenImportPassword(val component: ScreenImportPasswordComponent): Child()
     }
 
     @Serializable
@@ -75,5 +90,8 @@ class InitialGreetingRootComponent constructor(
 
         @Serializable
         data object ScreenSecondInitial : Configuration()
+
+        @Serializable
+        data object ScreenImportPassword: Configuration()
     }
 }

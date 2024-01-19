@@ -1,7 +1,10 @@
 package com.pass.word.session.android
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
@@ -9,10 +12,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
@@ -28,11 +34,17 @@ import com.pass.word.session.android.screen.initialGreeting.InitialGreetingScree
 import com.pass.word.session.navigation.RootComponent
 import com.pass.word.session.ui.MyCustomAppTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
             val root = retainedComponent {
                 RootComponent(it)
@@ -55,7 +67,7 @@ class MainActivity : ComponentActivity() {
                             )
                             is RootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
                             is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
-                                component = instance.component
+                                component = instance.component,
                             )
                             is RootComponent.Child.ScreenChangePasswordRootComponent -> ChangePasswordRoot(
                                 component = instance.component
@@ -66,40 +78,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        // in this method we are checking if the request code
-        // which we have passed 101 is same.
-        if (requestCode == 101) {
-            // if request code is 101 and permissions are granted.
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                // on below line we are displaying a toast message.
-                Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show()
-            } else {
-                // on below line we are displaying a toast message.
-                Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    @SuppressLint("ObsoleteSdkInt")
-    override fun shouldShowRequestPermissionRationale(
-        permission: String) : Boolean
-    {
-
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            super.shouldShowRequestPermissionRationale(permission)
-        } else {
-            false
-        }
-    }
-
 }

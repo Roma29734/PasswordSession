@@ -4,10 +4,10 @@ import com.arkivanov.decompose.ComponentContext
 
 class ScreenSecondInitialComponent constructor(
     componentContext: ComponentContext,
-    private val onNavigateToMainScreen: () -> Unit
+    private val onNavigateToNextScreen: () -> Unit
 ) : ComponentContext by componentContext {
 
     fun navigateToMainScreen() {
-        onNavigateToMainScreen()
+        onNavigateToNextScreen()
     }
 }

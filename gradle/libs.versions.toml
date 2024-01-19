@@ -11,6 +11,7 @@ kotlinXDataTime = "0.5.0"
 sqlDelight = "2.0.1"
 russhwolfVersion ="1.1.1"
 browserVersion = "1.3.0"
+activityKtx = "1.8.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -30,6 +31,7 @@ sqlDelightJvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "s
 russhwolfSettongs = { module = "com.russhwolf:multiplatform-settings", version.ref = "russhwolfVersion"}
 russhwolfMultiplatform = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "russhwolfVersion"}
 browserAndroid = { module ="androidx.browser:browser", version.ref="browserVersion"}
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
