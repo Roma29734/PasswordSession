@@ -8,6 +8,7 @@ import com.pass.word.session.utilits.createAndSaveJsonFile
 class ScreenSettingsComponent constructor(
     private val componentContext: ComponentContext,
     private val onNavigateToChangePasswordComponent: () -> Unit,
+    private val onNavigateToImportPasswordComponent: () -> Unit
 ) : ComponentContext by componentContext {
 
 
@@ -36,6 +37,9 @@ class ScreenSettingsComponent constructor(
             }
             is ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent -> {
                 onNavigateToChangePasswordComponent()
+            }
+            is ScreenSettingsStateEvent.OnNavigateToImportPassword -> {
+                onNavigateToImportPasswordComponent()
             }
         }
     }

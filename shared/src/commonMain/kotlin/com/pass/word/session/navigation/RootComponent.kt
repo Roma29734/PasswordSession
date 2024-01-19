@@ -18,6 +18,7 @@ import com.pass.word.session.navigation.screen.main.changePassword.ChangePasswor
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.InitialGreetingRootComponent
+import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
@@ -53,6 +54,9 @@ class RootComponent constructor(
                     },
                     onNavigateToChangePasswordComponent = {
                         navigation.pushNew(Configuration.ScreenChangePasswordRootComponent)
+                    },
+                    onNavigateToImportPasswordComponent = {
+                        navigation.pushNew(Configuration.ScreenImportPassword)
                     }
                 )
             )
@@ -103,6 +107,13 @@ class RootComponent constructor(
                     }
                 )
             )
+
+            is Configuration.ScreenImportPassword -> Child.ScreenImportPassword(
+                ScreenImportPasswordComponent(
+                    componentContext = context,
+                    onNextScreen = { navigation.pop() }
+                )
+            )
         }
     }
 
@@ -116,6 +127,8 @@ class RootComponent constructor(
         data class ScreenInitialGreeting(val component: InitialGreetingRootComponent) : Child()
         data class ScreenChangePasswordRootComponent(val component: ChangePasswordRootComponent) :
             Child()
+
+        data class ScreenImportPassword(val component: ScreenImportPasswordComponent) : Child()
     }
 
     @Serializable
@@ -137,5 +150,8 @@ class RootComponent constructor(
 
         @Serializable
         data object ScreenChangePasswordRootComponent : Configuration()
+
+        @Serializable
+        data object ScreenImportPassword : Configuration()
     }
 }

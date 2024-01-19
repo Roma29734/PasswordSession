@@ -69,12 +69,11 @@ fun ImportPasswordScreen(
             scope.launch {
                 snackBarHostState.showSnackbar(msg)
             }
-
         }
+
         component.subscribeListenerEvent(listenerPassCreated)
 
         onDispose {
-            // Отписка при уничтожении экрана
             component.unsubscribeListenerEvent(listenerPassCreated)
         }
     }

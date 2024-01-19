@@ -18,6 +18,7 @@ class ScreenBottomMainComponent constructor(
     componentContext: ComponentContext,
     private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit,
     private val onNavigateToChangePasswordComponent: () -> Unit,
+    private val onNavigateToImportPasswordComponent: () -> Unit
 ) : ComponentContext by componentContext {
 
     private var _selectedItem = MutableValue(0)
@@ -70,7 +71,8 @@ class ScreenBottomMainComponent constructor(
             is Configuration.ScreenSettings -> Child.ScreenSettings(
                 ScreenSettingsComponent(
                     componentContext = context,
-                    onNavigateToChangePasswordComponent = { onNavigateToChangePasswordComponent() }
+                    onNavigateToChangePasswordComponent = { onNavigateToChangePasswordComponent() },
+                    onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() }
                 )
             )
         }

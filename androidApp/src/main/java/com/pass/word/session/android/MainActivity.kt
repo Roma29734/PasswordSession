@@ -30,6 +30,7 @@ import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
 import com.pass.word.session.android.screen.bottomScreen.settingsScreen.changePassword.ChangePasswordRoot
 import com.pass.word.session.android.screen.detailScreen.DetailScreen
 import com.pass.word.session.android.screen.editScreen.EditScreen
+import com.pass.word.session.android.screen.initialGreeting.ImportPasswordScreen
 import com.pass.word.session.android.screen.initialGreeting.InitialGreetingScreen
 import com.pass.word.session.navigation.RootComponent
 import com.pass.word.session.ui.MyCustomAppTheme
@@ -43,7 +44,6 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         setContent {
             val root = retainedComponent {
@@ -65,11 +65,17 @@ class MainActivity : ComponentActivity() {
                             is RootComponent.Child.ScreenAuthentication -> AuthenticationScreen(
                                 component = instance.component
                             )
+
                             is RootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
                             is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
                                 component = instance.component,
                             )
+
                             is RootComponent.Child.ScreenChangePasswordRootComponent -> ChangePasswordRoot(
+                                component = instance.component
+                            )
+
+                            is RootComponent.Child.ScreenImportPassword -> ImportPasswordScreen(
                                 component = instance.component
                             )
                         }

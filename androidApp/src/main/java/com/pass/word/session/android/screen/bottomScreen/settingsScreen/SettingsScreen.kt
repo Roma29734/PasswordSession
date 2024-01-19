@@ -82,6 +82,15 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
 
                 Spacer(modifier = Modifier.size(16.dp))
 
+
+                ItemSettingsMenu(
+                    image = painterResource(id = R.drawable.ic_import),
+                    text = "import password",
+                    clickHandler = {
+                        component.onEvent(ScreenSettingsStateEvent.OnNavigateToImportPassword)
+                    }
+                )
+                Spacer(modifier = Modifier.size(16.dp))
                 ItemSettingsMenu(
                     image = painterResource(id = R.drawable.ic_security_lock),
                     text = "change password",
@@ -110,7 +119,12 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
             MainComponentButton(
                 text = "download password",
                 clickHandler = {
-                    component.onEvent(ScreenSettingsStateEvent.ClickToButtonDownloadPass(context, DriverFactory(context)))
+                    component.onEvent(
+                        ScreenSettingsStateEvent.ClickToButtonDownloadPass(
+                            context,
+                            DriverFactory(context)
+                        )
+                    )
                 }
             )
         }
