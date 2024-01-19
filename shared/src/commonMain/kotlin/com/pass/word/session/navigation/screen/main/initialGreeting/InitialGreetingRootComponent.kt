@@ -64,7 +64,8 @@ class InitialGreetingRootComponent constructor(
                     componentContext = context,
                     onNextScreen = {
                         navigateToAuthScreen()
-                    }
+                    },
+                    onBackHandler = null
                 )
             )
 

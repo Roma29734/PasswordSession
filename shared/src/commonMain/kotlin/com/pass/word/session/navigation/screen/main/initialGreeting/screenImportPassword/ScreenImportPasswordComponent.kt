@@ -12,11 +12,14 @@ import kotlinx.serialization.json.Json
 
 class ScreenImportPasswordComponent constructor(
     componentContext: ComponentContext,
+    private val onBackHandler: (() -> Unit)?,
     private val onNextScreen: () -> Unit,
 ) : ComponentContext by componentContext {
 
     private var _stateShowCompleteView = MutableValue(false)
     val stateShowCompleteView: Value<Boolean> = _stateShowCompleteView
+
+    val stateBack = onBackHandler != null
 
     private val listenerEvent = mutableListOf<(message: String) -> Unit>()
 
@@ -48,6 +51,9 @@ class ScreenImportPasswordComponent constructor(
                     pluckListenerEvent("The wrong file is selected")
                     println("error - $e")
                 }
+            }
+            is ScreenImportPasswordEvent.ClickBackButton -> {
+                onBackHandler?.let { it() }
             }
         }
     }

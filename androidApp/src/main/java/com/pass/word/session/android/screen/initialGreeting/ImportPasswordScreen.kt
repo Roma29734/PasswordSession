@@ -9,6 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +43,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordEvent
 import com.pass.word.session.ui.CustomColor
@@ -122,13 +124,24 @@ fun ImportPasswordScreen(
                 .fillMaxSize()
                 .background(Color.Black),
             verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            if(component.stateBack) {
+                Image(
+                    modifier = Modifier
+                        .clickable { component.event(ScreenImportPasswordEvent.ClickBackButton) }
+                        .padding(start = 16.dp, top = 8.dp),
+                    painter = painterResource(id = R.drawable.ic_arrow_back_nav),
+                    contentDescription = "Button back",
+                    colorFilter = ColorFilter.tint(
+                        Color.White
+                    )
+                )
+            } else {
+                Spacer(modifier = Modifier.size(48.dp))
+            }
 
-            Spacer(modifier = Modifier.size(48.dp))
-
-            Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
                 if (stateShowCompleteView) {
                     Image(

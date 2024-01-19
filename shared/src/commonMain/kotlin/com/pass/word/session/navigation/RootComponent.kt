@@ -111,7 +111,8 @@ class RootComponent constructor(
             is Configuration.ScreenImportPassword -> Child.ScreenImportPassword(
                 ScreenImportPasswordComponent(
                     componentContext = context,
-                    onNextScreen = { navigation.pop() }
+                    onNextScreen = { navigation.replaceAll(Configuration.ScreenBottomMain) },
+                    onBackHandler = { navigation.pop() }
                 )
             )
         }
