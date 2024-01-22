@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.utilits.getThisLocalTime
 import com.pass.word.session.utilits.onCheckValidation
 
 class ScreenAddPasswordComponent constructor(
@@ -44,11 +45,12 @@ class ScreenAddPasswordComponent constructor(
     private fun addPassToDataBass(
         databaseDriverFactory: DriverFactory
     ) {
+        val localDate = getThisLocalTime()
         val model = PasswordItemModel(
             nameItemPassword = textTitle.value,
             emailOrUserName = textEmailOrUserName.value,
             passwordItem = textPassword.value,
-            changeData = "10.01.2024",
+            changeData = localDate,
             urlSite = textUrl.value.onCheckValidation(),
             descriptions = textDescriptions.value.onCheckValidation(),
             id = 1,

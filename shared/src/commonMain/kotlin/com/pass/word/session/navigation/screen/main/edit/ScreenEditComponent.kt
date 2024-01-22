@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.utilits.getThisLocalTime
 import com.pass.word.session.utilits.onCheckValidation
 
 class ScreenEditComponent constructor(
@@ -66,12 +67,13 @@ class ScreenEditComponent constructor(
                 if(textTitle.value.isEmpty() || textEmailOrUserName.value.isEmpty() || textPassword.value.isEmpty()) {
                     pluckListenerPush("The first three fields must be filled in")
                 } else {
+                    val localDate = getThisLocalTime()
                     val model = PasswordItemModel(
                         id = passDetailModel.id,
                         nameItemPassword = textTitle.value,
                         emailOrUserName = textEmailOrUserName.value,
                         passwordItem = textPassword.value,
-                        changeData = passDetailModel.changeData,
+                        changeData = localDate,
                         urlSite = textUrl.value.onCheckValidation(),
                         descriptions = textDescriptions.value.onCheckValidation()
                     )

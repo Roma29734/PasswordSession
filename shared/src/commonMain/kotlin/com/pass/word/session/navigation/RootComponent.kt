@@ -19,6 +19,7 @@ import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.InitialGreetingRootComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
+import com.pass.word.session.utilits.getThisLocalTime
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
@@ -36,6 +37,7 @@ class RootComponent constructor(
     )
 
     private fun getStateAuthParams(): Boolean {
+        getThisLocalTime()
         val itemPass = getParamsString(keyAuthPass)
         return itemPass?.isNotEmpty() ?: false
     }
