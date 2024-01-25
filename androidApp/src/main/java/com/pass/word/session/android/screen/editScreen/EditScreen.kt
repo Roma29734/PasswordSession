@@ -43,6 +43,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.OutlineInputText
+import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.main.edit.ScreenEditEvent
@@ -96,16 +97,9 @@ fun EditScreen(component: ScreenEditComponent) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Image(
-                    modifier = Modifier
-                        .clickable { component.onEvent(ScreenEditEvent.ClickButtonBack) }
-                        .padding(start = 16.dp, top = 8.dp),
-                    painter = painterResource(id = R.drawable.ic_arrow_back_nav),
-                    contentDescription = "Button back",
-                    colorFilter = ColorFilter.tint(
-                        Color.White
-                    )
-                )
+                UpBarButtonBack(onBackHandler = {
+                    component.onEvent(ScreenEditEvent.ClickButtonBack)
+                })
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp),
                     text = "Edit",

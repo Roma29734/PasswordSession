@@ -28,6 +28,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.BoxItemCode
 import com.pass.word.session.android.screen.viewComponent.ButtonNumber
+import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.navigation.screen.main.changePassword.ChangePasswordEvent
 import com.pass.word.session.navigation.screen.main.changePassword.ScreenChangePasswordComponent
 
@@ -43,16 +44,9 @@ fun ChangePasswordScreen(component: ScreenChangePasswordComponent) {
     ) {
 
         Column {
-            Image(
-                modifier = Modifier
-                    .clickable { component.onEvent(ChangePasswordEvent.ClickButtonBack) }
-                    .padding(start = 16.dp, top = 8.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_back_nav),
-                contentDescription = "Button back",
-                colorFilter = ColorFilter.tint(
-                    Color.White
-                )
-            )
+            UpBarButtonBack(onBackHandler = {
+                component.onEvent(ChangePasswordEvent.ClickButtonBack)
+            })
 
             Spacer(modifier = Modifier.size(48.dp))
 

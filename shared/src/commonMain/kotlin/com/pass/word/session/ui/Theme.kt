@@ -7,6 +7,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 
 expect fun acmeTypography(): Typography
@@ -28,6 +29,7 @@ fun MyCustomAppTheme(
         content = content,
         colorScheme = colorScheme
     )
+
 }
 
 data class CustomColor(

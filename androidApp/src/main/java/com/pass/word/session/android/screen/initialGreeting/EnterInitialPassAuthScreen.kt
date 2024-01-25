@@ -1,8 +1,6 @@
 package com.pass.word.session.android.screen.initialGreeting
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,14 +18,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
-import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.BoxItemCode
 import com.pass.word.session.android.screen.viewComponent.ButtonNumber
+import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth.ScreenEnterInitialPassAuthComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth.ScreenEnterInitialPassAuthEvent
 
@@ -44,16 +40,9 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
     ) {
 
         Column {
-            Image(
-                modifier = Modifier
-                    .clickable { component.onEvent(ScreenEnterInitialPassAuthEvent.ClickButtonBack) }
-                    .padding(start = 16.dp, top = 8.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_back_nav),
-                contentDescription = "Button back",
-                colorFilter = ColorFilter.tint(
-                    Color.White
-                )
-            )
+            UpBarButtonBack(onBackHandler = {
+                component.onEvent(ScreenEnterInitialPassAuthEvent.ClickButtonBack)
+            })
 
             Spacer(modifier = Modifier.size(48.dp))
 

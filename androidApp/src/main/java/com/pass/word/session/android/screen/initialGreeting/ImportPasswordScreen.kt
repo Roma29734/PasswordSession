@@ -7,6 +7,12 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,10 +32,13 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +51,7 @@ import androidx.lifecycle.MutableLiveData
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
+import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
@@ -64,6 +74,23 @@ fun ImportPasswordScreen(
 
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+
+    var visibleState: Boolean by remember {
+        mutableStateOf(false)
+    }
+
+    var visibleCompleteImportState: Boolean by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(Unit) {
+        visibleState = true
+    }
+
+    LaunchedEffect(stateShowCompleteView) {
+        if(stateShowCompleteView) {
+            visibleCompleteImportState = true
+        }
+    }
 
     DisposableEffect(component) {
         val listenerPassCreated: (message: String) -> Unit = { msg ->
@@ -127,16 +154,9 @@ fun ImportPasswordScreen(
         ) {
 
             if (component.stateBack) {
-                Image(
-                    modifier = Modifier
-                        .clickable { component.event(ScreenImportPasswordEvent.ClickBackButton) }
-                        .padding(start = 16.dp, top = 8.dp),
-                    painter = painterResource(id = R.drawable.ic_arrow_back_nav),
-                    contentDescription = "Button back",
-                    colorFilter = ColorFilter.tint(
-                        Color.White
-                    )
-                )
+                UpBarButtonBack(onBackHandler = {
+                    component.event(ScreenImportPasswordEvent.ClickBackButton)
+                })
             } else {
                 Spacer(modifier = Modifier.size(48.dp))
             }
@@ -147,49 +167,93 @@ fun ImportPasswordScreen(
             ) {
 
                 if (stateShowCompleteView) {
-                    Image(
-                        modifier = Modifier.size(128.dp),
-                        painter = painterResource(id = R.drawable.ic_complete),
-                        contentDescription = "ic complete",
-                        colorFilter = ColorFilter.tint(CustomColor().brandGreen)
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        text = "Import complete!",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
+                    AnimatedVisibility(
+                        visible = visibleCompleteImportState,
+                        enter = fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 600,
+                                easing = LinearEasing
+                            )
+                        ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                    ) {
+                        Image(
+                            modifier = Modifier.size(128.dp),
+                            painter = painterResource(id = R.drawable.ic_complete),
+                            contentDescription = "ic complete",
+                            colorFilter = ColorFilter.tint(CustomColor().brandGreen)
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = visibleCompleteImportState,
+                        enter = fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 600,
+                                easing = LinearEasing
+                            )
+                        ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            text = "Import complete!",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 } else {
                     Spacer(modifier = Modifier.size(32.dp))
 
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        text = "You can import your passwords, for this you need to provide permission",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.size(32.dp))
-                    Button(
-                        onClick = {
-                            val intenst = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                                addCategory(Intent.CATEGORY_OPENABLE)
-                                type = "application/json"
-                            }
-                            someActivityResultLauncher.launch(intenst)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-                        colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
+                    AnimatedVisibility(
+                        visible = visibleState,
+                        enter = fadeIn(
+                            animationSpec = tween(
+                                durationMillis = 600,
+                                easing = LinearEasing
+                            )
+                        ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 300)),
                     ) {
                         Text(
-                            text = "Import",
-                            style = MaterialTheme.typography.displayMedium,
-                            color = Color.White
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            text = "You can import your passwords, for this you need to provide permission",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
                         )
+                    }
+
+                    Spacer(modifier = Modifier.size(32.dp))
+                    AnimatedVisibility(
+                        visible = visibleState,
+                        enter = scaleIn(
+                            animationSpec = tween(
+                                durationMillis = 150,
+                                easing = LinearEasing
+                            )
+                        ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                    ) {
+                        Button(
+                            onClick = {
+                                val intenst = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                    addCategory(Intent.CATEGORY_OPENABLE)
+                                    type = "application/json"
+                                }
+                                someActivityResultLauncher.launch(intenst)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+                            colors = ButtonDefaults.buttonColors(CustomColor().brandBlueLight)
+                        ) {
+                            Text(
+                                text = "Import",
+                                style = MaterialTheme.typography.displayMedium,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
             }
@@ -200,4 +264,3 @@ fun ImportPasswordScreen(
     }
 
 }
-

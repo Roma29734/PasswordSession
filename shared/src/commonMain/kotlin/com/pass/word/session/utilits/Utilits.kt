@@ -38,7 +38,6 @@ fun convertListToJsonObject(passwordList: List<PasswordItemModel>): JsonObject {
     }
 }
 
-
 fun getThisLocalTime(): String {
     return try {
         val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())

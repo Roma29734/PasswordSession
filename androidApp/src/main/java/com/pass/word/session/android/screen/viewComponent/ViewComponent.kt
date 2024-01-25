@@ -1,11 +1,13 @@
 package com.pass.word.session.android.screen.viewComponent
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,10 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.pass.word.session.android.R
+import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
 
 @Composable
@@ -106,6 +112,23 @@ fun MainComponentButton(text: String, clickHandler: () -> Unit) {
             text = text,
             style = MaterialTheme.typography.displayMedium,
             color = Color.White
+        )
+    }
+}
+
+
+@Composable
+fun UpBarButtonBack(onBackHandler: () -> Unit) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Image(
+            modifier = Modifier
+                .clickable { onBackHandler() }
+                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            painter = painterResource(id = R.drawable.ic_arrow_back_nav),
+            contentDescription = "Button back",
+            colorFilter = ColorFilter.tint(
+                Color.White
+            )
         )
     }
 }

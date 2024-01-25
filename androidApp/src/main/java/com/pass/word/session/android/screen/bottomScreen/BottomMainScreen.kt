@@ -38,7 +38,6 @@ import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun BottomMainScreen(component: ScreenBottomMainComponent) {
-//    var selectedItem by remember { mutableIntStateOf(0) }
     val selectedItem by component.selectedItem.subscribeAsState()
     val screens by remember {
         mutableStateOf(
@@ -79,7 +78,6 @@ fun BottomMainScreen(component: ScreenBottomMainComponent) {
                             selected = selectedItem == index,
                             onClick = {
                                 component.updateSelectedItem(index)
-//                                selectedItem = index
                                 screensBottom.openScreen()
                             },
                             colors = NavigationBarItemDefaults.colors(

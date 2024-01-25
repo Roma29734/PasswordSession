@@ -1,30 +1,20 @@
 package com.pass.word.session.android
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.CancellationSignal
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.arkivanov.decompose.retainedComponent
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.pass.word.session.android.screen.authenticationScreen.AuthenticationScreen
 import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
 import com.pass.word.session.android.screen.bottomScreen.settingsScreen.changePassword.ChangePasswordRoot
@@ -33,19 +23,27 @@ import com.pass.word.session.android.screen.editScreen.EditScreen
 import com.pass.word.session.android.screen.initialGreeting.ImportPasswordScreen
 import com.pass.word.session.android.screen.initialGreeting.InitialGreetingScreen
 import com.pass.word.session.navigation.RootComponent
+import com.pass.word.session.ui.CustomColor
 import com.pass.word.session.ui.MyCustomAppTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
+            val systemUiController = rememberSystemUiController()
+            SideEffect {
+                systemUiController.setStatusBarColor(
+                    color = CustomColor().mainBlue,
+                    darkIcons = false
+                )
+                systemUiController.setNavigationBarColor(
+                    color = CustomColor().mainBlue,
+                    darkIcons = false
+                )
+            }
             val root = retainedComponent {
                 RootComponent(it)
             }

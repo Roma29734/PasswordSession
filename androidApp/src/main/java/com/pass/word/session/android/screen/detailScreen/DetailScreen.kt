@@ -35,6 +35,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
@@ -78,16 +79,9 @@ fun DetailScreen(component: ScreenDetailComponent) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Image(
-                    modifier = Modifier
-                        .clickable { component.onEvent(ScreenDetailEvent.ClickButtonBack) }
-                        .padding(start = 16.dp, top = 8.dp),
-                    painter = painterResource(id = R.drawable.ic_arrow_back_nav),
-                    contentDescription = "Button back",
-                    colorFilter = ColorFilter.tint(
-                        Color.White
-                    )
-                )
+                UpBarButtonBack(onBackHandler = {
+                    component.onEvent(ScreenDetailEvent.ClickButtonBack)
+                })
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp),
                     text = itemModel.nameItemPassword,
