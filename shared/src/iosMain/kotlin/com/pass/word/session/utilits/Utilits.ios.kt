@@ -20,3 +20,7 @@ actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: Json
     TODO()
 }
 
+
+actual fun vibrationResponse(time: Int, context: Any) {
+
+}

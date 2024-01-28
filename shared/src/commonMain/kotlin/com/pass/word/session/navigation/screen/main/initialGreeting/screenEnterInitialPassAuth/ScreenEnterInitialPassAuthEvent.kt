@@ -4,5 +4,5 @@ import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthSta
 
 interface ScreenEnterInitialPassAuthEvent {
     data object ClickButtonBack: ScreenEnterInitialPassAuthEvent
-    data class StateUpdatePassItem(val newCod: Int): ScreenEnterInitialPassAuthEvent
+    data class StateUpdatePassItem(val newCod: Int, val context: Any): ScreenEnterInitialPassAuthEvent
 }

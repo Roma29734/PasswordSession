@@ -57,3 +57,6 @@ fun Int.toDateSimpleFormat(): String {
     if(this >= 10) return this.toString()
     return "0$this"
 }
+
+
+expect fun vibrationResponse(time: Int, context: Any)

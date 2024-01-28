@@ -5,6 +5,13 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.keyAuthPass
 import com.pass.word.session.data.putToParams
+import com.pass.word.session.utilits.vibrationResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ScreenEnterInitialPassAuthComponent constructor(
     componentContext: ComponentContext,
@@ -14,6 +21,27 @@ class ScreenEnterInitialPassAuthComponent constructor(
     private var _passItem = MutableValue("")
     val passItem: Value<String> = _passItem
 
+    private var _stateEnterPass = MutableStateFlow(false)
+    val stateEnterPass get() = _stateEnterPass
+
+    private var firstEnterPass = MutableStateFlow("")
+
+
+    private val listenersPassEnter = mutableListOf<(String) -> Unit>()
+
+    fun subscribeListenerSnackBar(listener: (String) -> Unit) {
+        listenersPassEnter.add(listener)
+    }
+
+    fun unsubscribeListenerSnackBar(listener: (String) -> Unit) {
+        listenersPassEnter.remove(listener)
+    }
+
+    private fun callPassEnter(message: String) {
+        listenersPassEnter.forEach { it.invoke(message) }
+    }
+
+
     fun onEvent(event: ScreenEnterInitialPassAuthEvent) {
         when (event) {
             is ScreenEnterInitialPassAuthEvent.ClickButtonBack -> {
@@ -21,12 +49,30 @@ class ScreenEnterInitialPassAuthComponent constructor(
             }
 
             is ScreenEnterInitialPassAuthEvent.StateUpdatePassItem -> {
+                vibrationResponse(20, event.context)
                 val oldValue = passItem.value
                 val newValue = oldValue + event.newCod
                 _passItem.value = newValue
                 if (passItem.value.length == 4) {
-                    passItem.value.putToParams(keyAuthPass)
-                    navigateToNext()
+                    if(_stateEnterPass.value) {
+                        if(_passItem.value == firstEnterPass.value) {
+                            navigateToNext()
+                            passItem.value.putToParams(keyAuthPass)
+                        } else {
+                            println("eror pass ${firstEnterPass.value}")
+                            callPassEnter("Passwords don't match")
+                            vibrationResponse(400, event.context)
+                            _passItem.value = ""
+                            _stateEnterPass.update { false }
+                        }
+                    } else {
+                        firstEnterPass.update { passItem.value }
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(500)
+                            _passItem.value = ""
+                            _stateEnterPass.update { true }
+                        }
+                    }
                 }
             }
         }

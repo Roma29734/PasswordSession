@@ -13,12 +13,8 @@ import androidx.annotation.RequiresApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import java.io.File
-import android.Manifest
-import android.app.Activity
-import android.content.pm.PackageManager
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
+import android.os.VibrationEffect
+import android.os.Vibrator
 
 
 @Composable
@@ -58,6 +54,16 @@ actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: Json
     } catch (e: Exception) {
         Log.d("createAndSaveJsonFile", "${e.message}")
         e.printStackTrace()
+    }
+}
+
+actual fun vibrationResponse(time: Int, context: Any) {
+    val contextResolver = (context as Context)
+    val vibrator = contextResolver.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    if (Build.VERSION.SDK_INT >= 26) {
+        vibrator.vibrate(VibrationEffect.createOneShot(time.toLong(), VibrationEffect.DEFAULT_AMPLITUDE))
+    } else {
+        vibrator.vibrate(time.toLong())
     }
 }
 
