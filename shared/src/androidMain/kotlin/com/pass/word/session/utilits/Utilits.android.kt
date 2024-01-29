@@ -1,11 +1,16 @@
 package com.pass.word.session.utilits
 
+import android.Manifest
+import android.app.KeyguardManager
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
+import android.os.CancellationSignal
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
@@ -15,6 +20,7 @@ import kotlinx.serialization.json.JsonObject
 import java.io.File
 import android.os.VibrationEffect
 import android.os.Vibrator
+import androidx.core.app.ActivityCompat
 
 
 @Composable
@@ -67,6 +73,101 @@ actual fun vibrationResponse(time: Int, context: Any) {
     }
 }
 
+
+actual fun checkUseBiometric(
+    context: Any,
+    onAction: (successState: Boolean, message: String?) -> Unit,
+){
+
+    val contextRealy = (context as Context)
+    var cancellationSignal: CancellationSignal? = null
+
+    fun notifyUser(message: String) {
+        Log.d("BIOMETRIC", message)
+    }
+
+    fun getCancelletionSignal(): CancellationSignal {
+        cancellationSignal = CancellationSignal()
+        cancellationSignal?.setOnCancelListener {
+            notifyUser("Ath Cancelled via Signal")
+        }
+
+        return cancellationSignal as CancellationSignal
+    }
+
+
+    val authenticationCalBack: BiometricPrompt.AuthenticationCallback =
+        @RequiresApi(Build.VERSION_CODES.P)
+        object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+                onAction(false, "Authentication Error $errorCode")
+                notifyUser("Authentication Error $errorCode")
+                super.onAuthenticationError(errorCode, errString)
+            }
+
+            override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+                super.onAuthenticationHelp(helpCode, helpString)
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
+                notifyUser("Authentication Succeeded")
+                onAction(true, null)
+                super.onAuthenticationSucceeded(result)
+            }
+        }
+
+    fun checkBiometricSupport(context: Context): Boolean {
+        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+
+        if (!keyguardManager.isDeviceSecure) {
+            onAction(false, "Lock screen security not enabled in the settings")
+            notifyUser("Lock screen security not enabled in the settings")
+            return false
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.USE_BIOMETRIC
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notifyUser("Fingerprint authentication permission not enabled")
+            return false
+        }
+
+        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun launchBiometric() {
+        if (checkBiometricSupport(contextRealy)) {
+            val biometricPrompt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                BiometricPrompt
+                    .Builder(contextRealy)
+                    .setTitle("Authentication is required")
+                    .setSubtitle("Password Session")
+//                    .setDescription("We use biometric authentication to protect your data")
+                    .setNegativeButton("Not Now", contextRealy.mainExecutor) { dialogInterface, i ->
+                        notifyUser("Authentication cancelled")
+                    }
+                    .build()
+            } else {
+                TODO("VERSION.SDK_INT < P")
+            }
+            biometricPrompt.authenticate(
+                getCancelletionSignal(),
+                contextRealy.mainExecutor,
+                authenticationCalBack
+            )
+
+        }
+    }
+    launchBiometric()
+}
 
 
 

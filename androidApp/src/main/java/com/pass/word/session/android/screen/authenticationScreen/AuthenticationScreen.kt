@@ -1,18 +1,9 @@
 package com.pass.word.session.android.screen.authenticationScreen
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.KeyguardManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.hardware.biometrics.BiometricPrompt
-import android.os.Build
-import android.os.CancellationSignal
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -41,14 +31,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.BoxItemCode
 import com.pass.word.session.android.screen.viewComponent.ButtonNumber
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthStateEvent
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
-import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.utilits.checkUseBiometric
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -68,7 +57,7 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
     DisposableEffect(component) {
         val listenerSnackBarShow: (String) -> Unit = {
             scope.launch {
-                snackBarHostState.showSnackbar("$it")
+                snackBarHostState.showSnackbar(it)
             }
         }
         component.subscribeListenerSnackBar(listenerSnackBarShow)
@@ -77,6 +66,21 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
             // Отписка при уничтожении экрана
             component.unsubscribeListenerSnackBar(listenerSnackBarShow)
         }
+    }
+
+    DisposableEffect(Unit) {
+
+        checkUseBiometric(context = context, onAction = { successState: Boolean, message: String? ->
+            component.event(
+                ScreenAuthStateEvent.ReactionToFirstBiometrics(
+                    successState = successState,
+                    errorMessage = message,
+                    context = context
+                )
+            )
+        })
+
+        onDispose {}
     }
 
     Scaffold(
@@ -103,10 +107,10 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                BoxItemCode(if(passItem.isNotEmpty()) "•" else "")
-                BoxItemCode(if(passItem.length >= 2 ) "•" else "")
-                BoxItemCode(if(passItem.length >= 3 ) "•" else "")
-                BoxItemCode(if(passItem.length >= 4 ) "•" else "")
+                BoxItemCode(if (passItem.isNotEmpty()) "•" else "")
+                BoxItemCode(if (passItem.length >= 2) "•" else "")
+                BoxItemCode(if (passItem.length >= 3) "•" else "")
+                BoxItemCode(if (passItem.length >= 4) "•" else "")
             }
             Row(
                 modifier = Modifier
@@ -116,9 +120,29 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 ButtonNumber(1) {
-                    component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
-                ButtonNumber(2) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
-                ButtonNumber(3) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
+                ButtonNumber(2) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
+                ButtonNumber(3) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
             }
             Row(
                 modifier = Modifier
@@ -127,9 +151,30 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                ButtonNumber(4) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
-                ButtonNumber(5) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
-                ButtonNumber(6) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
+                ButtonNumber(4) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
+                ButtonNumber(5) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
+                ButtonNumber(6) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
             }
             Row(
                 modifier = Modifier
@@ -138,9 +183,30 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                ButtonNumber(7) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
-                ButtonNumber(8) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
-                ButtonNumber(9) { component.event(ScreenAuthStateEvent.StateUpdatePassItem(it.toString())) }
+                ButtonNumber(7) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
+                ButtonNumber(8) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
+                ButtonNumber(9) {
+                    component.event(
+                        ScreenAuthStateEvent.StateUpdatePassItem(
+                            it.toString(),
+                            context
+                        )
+                    )
+                }
             }
             Row(
                 modifier = Modifier
@@ -156,7 +222,7 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 ButtonNumber(textButton = 0) {
                     component.event(
                         ScreenAuthStateEvent.StateUpdatePassItem(
-                            it.toString()
+                            it.toString(), context
                         )
                     )
                 }
@@ -165,11 +231,12 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                         .size(64.dp)
                         .padding(start = 16.dp)
                         .clickable {
-                            checkBiometrick(context, onAction = { successState, message ->
+                            checkUseBiometric(context, onAction = { successState, message ->
                                 component.event(
-                                    ScreenAuthStateEvent.StateBiometric(
+                                    ScreenAuthStateEvent.ReactionToFollowingBiometrics(
                                         successState = successState,
-                                        errorMessage = message
+                                        errorMessage = message,
+                                        context = context
                                     )
                                 )
                             })
@@ -181,99 +248,4 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
             }
         }
     }
-}
-
-
-
-private fun checkBiometrick(
-    context: Context,
-    onAction: (successState: Boolean, message: String?) -> Unit,
-) {
-    var cancellationSignal: CancellationSignal? = null
-
-    fun notifyUser(message: String) {
-        Log.d("BIOMETRIC", message)
-    }
-
-    fun getCancelletionSignal(): CancellationSignal {
-        cancellationSignal = CancellationSignal()
-        cancellationSignal?.setOnCancelListener {
-            notifyUser("Ath Cancelled via Signal")
-        }
-
-        return cancellationSignal as CancellationSignal
-    }
-
-
-    val authenticationCalBack: BiometricPrompt.AuthenticationCallback =
-        @RequiresApi(Build.VERSION_CODES.P)
-        object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                onAction(false, "Authentication Error $errorCode")
-                notifyUser("Authentication Error $errorCode")
-                super.onAuthenticationError(errorCode, errString)
-            }
-
-            override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                super.onAuthenticationHelp(helpCode, helpString)
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-            }
-
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                notifyUser("Authentication Succeeded")
-                onAction(true, null)
-                super.onAuthenticationSucceeded(result)
-            }
-        }
-
-    fun checkBiometricSupport(context: Context): Boolean {
-        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-
-        if (!keyguardManager.isDeviceSecure) {
-            onAction(false, "Lock screen security not enabled in the settings")
-            notifyUser("Lock screen security not enabled in the settings")
-            return false
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.USE_BIOMETRIC
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            notifyUser("Fingerprint authentication permission not enabled")
-            return false
-        }
-
-        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    fun launchBiometric() {
-        if (checkBiometricSupport(context)) {
-            val biometricPrompt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                BiometricPrompt
-                    .Builder(context)
-                    .setTitle("Authentication is required")
-                    .setSubtitle("Password Session")
-//                    .setDescription("We use biometric authentication to protect your data")
-                    .setNegativeButton("Not Now", context.mainExecutor) { dialogInterface, i ->
-                        notifyUser("Authentication cancelled")
-                    }
-                    .build()
-            } else {
-                TODO("VERSION.SDK_INT < P")
-            }
-            biometricPrompt.authenticate(
-                getCancelletionSignal(),
-                context.mainExecutor,
-                authenticationCalBack
-            )
-
-        }
-    }
-    launchBiometric()
 }

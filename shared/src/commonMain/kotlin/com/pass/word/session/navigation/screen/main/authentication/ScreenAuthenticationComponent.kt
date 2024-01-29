@@ -3,12 +3,17 @@ package com.pass.word.session.navigation.screen.main.authentication
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.doOnCreate
+import com.arkivanov.essenty.lifecycle.subscribe
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyAuthPass
+import com.pass.word.session.utilits.vibrationResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @DelicateCoroutinesApi
@@ -26,6 +31,8 @@ class ScreenAuthenticationComponent constructor(
         listenersSnackBarShow.add(listener)
     }
 
+    private var pass: String? = null
+
     fun unsubscribeListenerSnackBar(listener: (String) -> Unit) {
         listenersSnackBarShow.remove(listener)
     }
@@ -34,40 +41,61 @@ class ScreenAuthenticationComponent constructor(
         listenersSnackBarShow.forEach { it.invoke(message) }
     }
 
-    private fun passCheck(passForCheck: String) {
-        // Тут получаем из бд пароль
-        GlobalScope.launch {
-            val pass = getParamsString(keyAuthPass)
-            if(pass == passForCheck) {
-                onNavigateToMainScreen()
-            } else {
-                showSnackBar("pass error")
-                _passItem.value = ""
-            }
-        }
-    }
-
     fun event(eventAuth: ScreenAuthStateEvent) {
         when (eventAuth) {
-            is ScreenAuthStateEvent.StateBiometric -> {
+            is ScreenAuthStateEvent.ReactionToFollowingBiometrics -> {
+                println("pass $pass")
                 if (eventAuth.successState) {
+                    _passItem.value = pass.orEmpty()
                     onNavigateToMainScreen()
+                    vibrationResponse(50, eventAuth.context)
                 } else {
                     println("event state error message")
                     val errorMessage = eventAuth.errorMessage.toString()
                     showSnackBar(errorMessage)
+                    vibrationResponse(400, eventAuth.context)
                 }
             }
+
+            is ScreenAuthStateEvent.ReactionToFirstBiometrics -> {
+                if(eventAuth.successState) {
+                    _passItem.value = pass.orEmpty()
+                    onNavigateToMainScreen()
+                    vibrationResponse (50, eventAuth.context)
+                }
+            }
+
             is ScreenAuthStateEvent.StateUpdatePassItem -> {
+                vibrationResponse(20, eventAuth.context)
                 CoroutineScope(Dispatchers.Main).launch {
                     val oldValue = passItem.value
                     val newValue = oldValue + eventAuth.number
                     _passItem.value = newValue
                     if(passItem.value.length == 4){
-                        passCheck(passItem.value)
+                        GlobalScope.launch {
+                            delay(300)
+                            if(pass == passItem.value) {
+                                onNavigateToMainScreen()
+                            } else {
+                                showSnackBar("pass error")
+                                _passItem.value = ""
+                                vibrationResponse(400, eventAuth.context)
+                            }
+                        }
                     }
                 }
             }
+        }
+    }
+
+    init {
+        lifecycle.run {
+            subscribe(
+                onCreate = {
+                    pass = getParamsString(keyAuthPass)
+                    println("pass $pass")
+                }
+            )
         }
     }
 }

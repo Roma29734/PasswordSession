@@ -33,8 +33,8 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.viewComponent.BoxItemCode
 import com.pass.word.session.android.screen.viewComponent.ButtonNumber
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth.ScreenEnterPassComponent
-import com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth.ScreenEnterPassEvent
+import com.pass.word.session.navigation.screen.main.screenEnterPass.ScreenEnterPassComponent
+import com.pass.word.session.navigation.screen.main.screenEnterPass.ScreenEnterPassEvent
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition", "UnusedMaterial3ScaffoldPaddingParameter")

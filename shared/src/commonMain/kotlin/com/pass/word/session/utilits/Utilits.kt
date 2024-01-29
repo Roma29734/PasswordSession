@@ -60,3 +60,9 @@ fun Int.toDateSimpleFormat(): String {
 
 
 expect fun vibrationResponse(time: Int, context: Any)
+
+
+expect fun checkUseBiometric(
+    context: Any,
+    onAction: (successState: Boolean, message: String?) -> Unit,
+)

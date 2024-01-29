@@ -1,4 +1,4 @@
-package com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth
+package com.pass.word.session.navigation.screen.main.screenEnterPass
 
 interface ScreenEnterPassEvent {
     data object ClickButtonBack: ScreenEnterPassEvent

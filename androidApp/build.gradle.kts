@@ -65,5 +65,4 @@ dependencies {
     implementation(libs.browserAndroid)
 
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
-
 }

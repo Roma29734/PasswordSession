@@ -52,6 +52,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.sqlDelightAndroid)
+            implementation(libs.androidx.activity.compose)
         }
         iosMain.dependencies {
             implementation(libs.sqlDelightNative)

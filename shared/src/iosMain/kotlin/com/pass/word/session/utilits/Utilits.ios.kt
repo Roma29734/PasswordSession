@@ -24,3 +24,11 @@ actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: Json
 actual fun vibrationResponse(time: Int, context: Any) {
 
 }
+
+
+actual fun checkUseBiometric(
+    context: Any,
+    onAction: (successState: Boolean, message: String?) -> Unit,
+) {
+    TODO()
+}
