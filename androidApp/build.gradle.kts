@@ -20,6 +20,17 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
+    android.signingConfigs {
+        create("release") {
+            storeFile = file("my-release-key.jks")
+            storePassword = "12345678"
+            keyAlias = "my-key-alias"
+            keyPassword = "12345678"
+            storeType = "jks"
+        }
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -28,6 +39,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
