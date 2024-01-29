@@ -1,4 +1,4 @@
-package com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth
+package com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
@@ -13,11 +13,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ScreenEnterInitialPassAuthComponent constructor(
+class ScreenEnterPassComponent constructor(
     componentContext: ComponentContext,
     private val clickButtonBack: () -> Unit,
     private val navigateToNext: () -> Unit
 ) : ComponentContext by componentContext {
+
     private var _passItem = MutableValue("")
     val passItem: Value<String> = _passItem
 
@@ -25,7 +26,6 @@ class ScreenEnterInitialPassAuthComponent constructor(
     val stateEnterPass get() = _stateEnterPass
 
     private var firstEnterPass = MutableStateFlow("")
-
 
     private val listenersPassEnter = mutableListOf<(String) -> Unit>()
 
@@ -42,13 +42,13 @@ class ScreenEnterInitialPassAuthComponent constructor(
     }
 
 
-    fun onEvent(event: ScreenEnterInitialPassAuthEvent) {
+    fun onEvent(event: ScreenEnterPassEvent) {
         when (event) {
-            is ScreenEnterInitialPassAuthEvent.ClickButtonBack -> {
+            is ScreenEnterPassEvent.ClickButtonBack -> {
                 clickButtonBack()
             }
 
-            is ScreenEnterInitialPassAuthEvent.StateUpdatePassItem -> {
+            is ScreenEnterPassEvent.StateUpdatePassItem -> {
                 vibrationResponse(20, event.context)
                 val oldValue = passItem.value
                 val newValue = oldValue + event.newCod

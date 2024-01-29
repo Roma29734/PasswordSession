@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
+import com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth.ScreenEnterPassComponent
 import kotlinx.serialization.Serializable
 
 class ChangePasswordRootComponent constructor(
@@ -24,7 +25,6 @@ class ChangePasswordRootComponent constructor(
         childFactory = ::createChild
     )
 
-
     @OptIn(ExperimentalDecomposeApi::class)
     private fun createChild(
         config: Configuration,
@@ -40,10 +40,10 @@ class ChangePasswordRootComponent constructor(
             )
 
             is Configuration.ScreenChangePassword -> Child.ScreenChangePassword(
-                ScreenChangePasswordComponent(
+                ScreenEnterPassComponent(
                     componentContext = context,
-                    onBackNavigation = { navigation.pop() },
-                    onNextScreenNavigation = {
+                    clickButtonBack = { navigation.pop() },
+                    navigateToNext = {
                         onNextNavigation()
                     }
                 )
@@ -54,7 +54,7 @@ class ChangePasswordRootComponent constructor(
 
     sealed class Child {
         data class ScreenWarning(val component: ScreenWarningComponent) : Child()
-        data class ScreenChangePassword(val component: ScreenChangePasswordComponent) : Child()
+        data class ScreenChangePassword(val component: ScreenEnterPassComponent) : Child()
     }
 
     @Serializable

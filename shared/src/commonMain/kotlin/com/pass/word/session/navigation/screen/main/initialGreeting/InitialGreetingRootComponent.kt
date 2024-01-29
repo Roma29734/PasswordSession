@@ -5,11 +5,9 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceAll
-import com.arkivanov.decompose.router.stack.replaceCurrent
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth.ScreenEnterInitialPassAuthComponent
+import com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth.ScreenEnterPassComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenFirstInitial.ScreenFirstInitialComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenSecondInitial.ScreenSecondInitialComponent
@@ -43,7 +41,7 @@ class InitialGreetingRootComponent constructor(
             )
 
             is Configuration.ScreenEnterInitialPassAuth -> Child.ScreenEnterInitialPassAuth(
-                ScreenEnterInitialPassAuthComponent(
+                ScreenEnterPassComponent(
                     componentContext = context,
                     clickButtonBack = { navigation.pop() },
                     navigateToNext = { navigation.replaceAll(Configuration.ScreenSecondInitial) }
@@ -74,7 +72,7 @@ class InitialGreetingRootComponent constructor(
 
     sealed class Child {
         data class ScreenFirstInitial(val component: ScreenFirstInitialComponent) : Child()
-        data class ScreenEnterInitialPassAuth(val component: ScreenEnterInitialPassAuthComponent) :
+        data class ScreenEnterInitialPassAuth(val component: ScreenEnterPassComponent) :
             Child()
 
         data class ScreenSecondInitial(val component: ScreenSecondInitialComponent) : Child()

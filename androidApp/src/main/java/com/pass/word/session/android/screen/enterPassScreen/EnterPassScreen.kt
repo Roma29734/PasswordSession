@@ -1,4 +1,4 @@
-package com.pass.word.session.android.screen.initialGreeting
+package com.pass.word.session.android.screen.enterPassScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -33,13 +33,13 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.viewComponent.BoxItemCode
 import com.pass.word.session.android.screen.viewComponent.ButtonNumber
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth.ScreenEnterInitialPassAuthComponent
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterInitialPassAuth.ScreenEnterInitialPassAuthEvent
+import com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth.ScreenEnterPassComponent
+import com.pass.word.session.navigation.screen.main.screenEnterInitialPassAuth.ScreenEnterPassEvent
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
+fun EnterPassScreen(component: ScreenEnterPassComponent) {
 
 
     val passItem: String by component.passItem.subscribeAsState()
@@ -78,7 +78,7 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
 
             Column {
                 UpBarButtonBack(onBackHandler = {
-                    component.onEvent(ScreenEnterInitialPassAuthEvent.ClickButtonBack)
+                    component.onEvent(ScreenEnterPassEvent.ClickButtonBack)
                 })
 
                 Spacer(modifier = Modifier.size(48.dp))
@@ -127,7 +127,7 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
                 ) {
                     ButtonNumber(1) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it,
                                 context
                             )
@@ -135,14 +135,14 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
                     }
                     ButtonNumber(2) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
                     }
                     ButtonNumber(3) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
@@ -157,21 +157,21 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
                 ) {
                     ButtonNumber(4) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
                     }
                     ButtonNumber(5) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
                     }
                     ButtonNumber(6) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
@@ -186,21 +186,21 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
                 ) {
                     ButtonNumber(7) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
                     }
                     ButtonNumber(8) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
                     }
                     ButtonNumber(9) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
@@ -219,7 +219,7 @@ fun EnterInitialPassAuthScreen(component: ScreenEnterInitialPassAuthComponent) {
                     )
                     ButtonNumber(textButton = 0) {
                         component.onEvent(
-                            ScreenEnterInitialPassAuthEvent.StateUpdatePassItem(
+                            ScreenEnterPassEvent.StateUpdatePassItem(
                                 it, context
                             )
                         )
