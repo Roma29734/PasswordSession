@@ -47,7 +47,6 @@ class ScreenEnterPassComponent constructor(
             is ScreenEnterPassEvent.ClickButtonBack -> {
                 clickButtonBack()
             }
-
             is ScreenEnterPassEvent.StateUpdatePassItem -> {
                 vibrationResponse(20, event.context)
                 val oldValue = passItem.value
@@ -56,8 +55,8 @@ class ScreenEnterPassComponent constructor(
                 if (passItem.value.length == 4) {
                     if(_stateEnterPass.value) {
                         if(_passItem.value == firstEnterPass.value) {
-                            navigateToNext()
                             passItem.value.putToParams(keyAuthPass)
+                            navigateToNext()
                         } else {
                             println("eror pass ${firstEnterPass.value}")
                             callPassEnter("Passwords don't match")

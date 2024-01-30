@@ -91,7 +91,7 @@ class ScreenAuthenticationComponent constructor(
     init {
         lifecycle.run {
             subscribe(
-                onCreate = {
+                onResume = {
                     pass = getParamsString(keyAuthPass)
                     println("pass $pass")
                 }
