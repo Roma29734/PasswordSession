@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "PasswordSession"
 include(":androidApp")
 include(":shared")
+include(":desktop")

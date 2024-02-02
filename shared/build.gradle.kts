@@ -59,6 +59,12 @@ kotlin {
         }
 
     }
+
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
 }
 
 android {
