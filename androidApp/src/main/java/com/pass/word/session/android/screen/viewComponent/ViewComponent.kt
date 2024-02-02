@@ -36,6 +36,7 @@ import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler: (text: String) -> Unit, focusRequester: FocusRequester, onNextHandler: () -> Unit, keyboardType: KeyboardType) {
+
     Text(
         modifier = Modifier.padding(start = 12.dp, end = 12.dp),
         text = textInTitle,

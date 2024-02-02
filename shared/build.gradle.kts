@@ -31,7 +31,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             //put your multiplatform dependencies here
-            implementation(libs.decompose)
+//            implementation(libs.decompose)
+            implementation ("com.arkivanov.decompose:decompose:2.2.0-compose-experimental")
+            implementation ("com.arkivanov.decompose:extensions-compose-jetbrains:2.2.0-compose-experimental")
             implementation(libs.kotlinx.serialization.json)
             implementation(compose.runtime)
             implementation(compose.foundation)

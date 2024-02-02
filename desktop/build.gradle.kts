@@ -24,7 +24,7 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 api(compose.runtime)
                 api(compose.foundation)
-                api(compose.material)
+                api(compose.material3)
                 api(compose.ui)
                 api(compose.materialIconsExtended)
 
