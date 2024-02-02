@@ -8,22 +8,38 @@ import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.data.root.LocalDataRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 class ScreenPasswordComponent constructor(
     componentContext: ComponentContext,
     private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit
 ) : ComponentContext by componentContext {
 
-    private var _passwordListItem: MutableValue<List<PasswordItemModel>> =
-        MutableValue(LocalDataRepository().getPasswordItem())
-    val passwordListItem: Value<List<PasswordItemModel>> = _passwordListItem
+
+    private var _stateShowedIcon = MutableValue(false)
+    val stateShowedIcon: Value<Boolean> = _stateShowedIcon
+
+    private var _passwordListItem = MutableStateFlow<List<PasswordItemModel>?>(null)
+    val passwordListItem get() = _passwordListItem
+
 
     fun navigateToDetailEvent(model: PasswordItemModel) {
         onNavigateToDetailComponent(model)
     }
 
     fun readBd(databaseDriverFactory: DriverFactory) {
-        val database = PersonalDatabase(databaseDriverFactory)
-        _passwordListItem.update { database.getAllPass() }
+        try {
+            val database = PersonalDatabase(databaseDriverFactory).getAllPass()
+            if(database.isEmpty()) {
+                _stateShowedIcon.value = true
+                return
+            }
+            _stateShowedIcon.value = false
+            _passwordListItem.update { database }
+        } catch (e: Exception) {
+            println("Erro pass screen - ${e.message}")
+            _stateShowedIcon.value = true
+        }
     }
 }

@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,10 +36,16 @@ import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun PasswordScreen(component: ScreenPasswordComponent) {
-    val listItemModel: List<PasswordItemModel> by component.passwordListItem.subscribeAsState()
+    val listItemModel: List<PasswordItemModel>? by component.passwordListItem.collectAsState()
     val context = LocalContext.current
-    component.readBd(DriverFactory(context))
+    val stateShowedIcon: Boolean by component.stateShowedIcon.subscribeAsState()
+
     Log.d("passScreen", "listModel - $listItemModel")
+
+//    SideEffect {
+    component.readBd(DriverFactory(context))
+//    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,17 +57,46 @@ fun PasswordScreen(component: ScreenPasswordComponent) {
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge
         )
-        getDaysOrMonthsOrYearsDifference("06.01.2024")
-        LazyColumn {
-            items(count = listItemModel.size) { countItem ->
-                ItemPasswordView(
-                    nameItem = listItemModel[countItem].nameItemPassword,
-                    emailItem = listItemModel[countItem].emailOrUserName,
-                    changeData = listItemModel[countItem].changeData,
-                    oncLick = {component.navigateToDetailEvent(listItemModel[countItem])}
+
+
+        if (!stateShowedIcon) {
+            LazyColumn {
+                if (listItemModel != null) {
+
+                    items(count = listItemModel!!.size) { countItem ->
+                        ItemPasswordView(
+                            nameItem = listItemModel!![countItem].nameItemPassword,
+                            emailItem = listItemModel!![countItem].emailOrUserName,
+                            changeData = listItemModel!![countItem].changeData,
+                            oncLick = { component.navigateToDetailEvent(listItemModel!![countItem]) }
+                        )
+
+                    }
+                } else {
+                    items(count = 0) {}
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(250.dp),
+                    painter = painterResource(id = R.drawable.key_variant_tow),
+                    contentDescription = "iconstEmpty notes",
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = 24.dp),
+                    text = "You don't have any saved passwords",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
+
     }
 }
 
@@ -66,7 +105,8 @@ fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String, on
     Row(
         modifier = Modifier
             .padding(start = 12.dp, bottom = 16.dp, end = 12.dp)
-            .fillMaxWidth().clickable{oncLick()},
+            .fillMaxWidth()
+            .clickable { oncLick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

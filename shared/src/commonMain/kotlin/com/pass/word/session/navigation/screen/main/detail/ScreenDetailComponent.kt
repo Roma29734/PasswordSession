@@ -6,6 +6,9 @@ import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ScreenDetailComponent constructor(
     componentContext: ComponentContext,
@@ -43,8 +46,10 @@ class ScreenDetailComponent constructor(
                 _stateOpenAlertDialog.value = event.newState
             }
             is ScreenDetailEvent.DeleteItemPass -> {
-                deleteItem(event.databaseDriverFactory)
-                onGoBack()
+                GlobalScope.launch {
+                    deleteItem(event.databaseDriverFactory)
+                    onGoBack()
+                }
             }
             is ScreenDetailEvent.EditItemPass -> {
                 onGoEditScreen(passDetailModel)
