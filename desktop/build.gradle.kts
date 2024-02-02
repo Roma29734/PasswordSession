@@ -27,7 +27,10 @@ kotlin {
                 api(compose.material)
                 api(compose.ui)
                 api(compose.materialIconsExtended)
-//                implementation(libs.decompose)
+
+                // decompose
+                implementation(libs.decompose)
+                implementation(libs.decomposeJetbrains)
 
 
                 implementation(project(":shared"))

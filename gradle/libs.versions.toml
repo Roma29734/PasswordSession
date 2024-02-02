@@ -24,6 +24,7 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 decomposeJetpack = { module = "com.arkivanov.decompose:extensions-compose-jetpack", version.ref = "decompose" }
+decomposeJetbrains = { module ="com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose"}
 kotlinXDataTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinXDataTime" }
 sqlDelightAndroid = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelightNative = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
