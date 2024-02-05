@@ -9,6 +9,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import com.pass.word.session.utilits.Platform
 
 expect fun acmeTypography(): Typography
 
@@ -22,13 +23,21 @@ fun MyCustomAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val typography = acmeTypography()
 
-    MaterialTheme(
-        typography = typography,
-        content = content,
-        colorScheme = colorScheme
-    )
+    if(Platform().platform == "Desktop") {
+        MaterialTheme(
+            content = content,
+            colorScheme = colorScheme
+        )
+    } else {
+        val typography = acmeTypography()
+        MaterialTheme(
+            typography = typography,
+            content = content,
+            colorScheme = colorScheme
+        )
+    }
+
 
 }
 

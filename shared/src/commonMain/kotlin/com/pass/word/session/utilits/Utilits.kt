@@ -66,3 +66,7 @@ expect fun checkUseBiometric(
     context: Any,
     onAction: (successState: Boolean, message: String?) -> Unit,
 )
+
+expect class Platform() {
+    val platform: String
+}

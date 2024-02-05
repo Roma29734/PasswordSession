@@ -32,3 +32,7 @@ actual fun checkUseBiometric(
 ) {
     TODO()
 }
+
+actual class Platform actual constructor() {
+    actual val platform: String = "IOS" // Укажите платформу явным образом
+}

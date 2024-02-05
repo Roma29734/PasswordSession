@@ -14,15 +14,21 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pass.word.session.navigation.screen.main.initialGreeting.screenFirstInitial.ScreenFirstInitialComponent
 import com.pass.word.session.ui.CustomColor
+import java.awt.image.BufferedImage
+import java.io.File
+import javax.imageio.ImageIO
 
 
 @Composable
@@ -35,12 +41,13 @@ fun FirstInitialScreen(component: ScreenFirstInitialComponent) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-//        Image(
-//            modifier = Modifier.size(128.dp),
-//            painter = painterResource(id = R.drawable.ic_security_lock),
-//            contentDescription = "ic_security_lock",
-//            colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
-//        )
+
+        val image = remember { imageFromFile(File("E:\\otherProject\\PasswordSession\\shared\\src\\commonMain\\resources\\drawable\\key_variant_tow.png")) }
+        Image(
+            modifier = Modifier.size(128.dp),
+            bitmap = image,
+            contentDescription = "ic_security_lock",
+        )
         Spacer(modifier = Modifier.size(64.dp))
 
         Text(
@@ -68,5 +75,9 @@ fun FirstInitialScreen(component: ScreenFirstInitialComponent) {
             )
         }
     }
+}
+
+fun imageFromFile(file: File): ImageBitmap {
+    return org.jetbrains.skia.Image.makeFromEncoded(file.readBytes()).toComposeImageBitmap()
 }
 

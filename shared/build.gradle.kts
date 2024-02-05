@@ -80,6 +80,7 @@ android {
     }
 }
 
+
 sqldelight {
     databases {
         create("Database") {
