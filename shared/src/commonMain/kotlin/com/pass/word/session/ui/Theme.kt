@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.Color
 
 expect fun acmeTypography(): Typography
 
-
 val colorScheme = darkColorScheme(
     background = CustomColor().mainBlue
 )
@@ -29,7 +28,6 @@ fun MyCustomAppTheme(
         content = content,
         colorScheme = colorScheme
     )
-
 }
 
 data class CustomColor(

@@ -32,7 +32,7 @@ class ScreenAuthenticationComponent constructor(
     }
 
     private var pass: String? = null
-
+    var clickState = false
     fun unsubscribeListenerSnackBar(listener: (String) -> Unit) {
         listenersSnackBarShow.remove(listener)
     }
@@ -72,12 +72,23 @@ class ScreenAuthenticationComponent constructor(
                     val newValue = oldValue + eventAuth.number
                     _passItem.value = newValue
                     if(passItem.value.length == 4){
-                        GlobalScope.launch {
-                            delay(300)
+                        println("clickState afterClick - $clickState")
+                        if(!clickState) {
+                            clickState = true
+                            GlobalScope.launch {
+                                delay(300)
+                                if(pass == passItem.value) {
+                                    onNavigateToMainScreen()
+                                } else {
+                                    showSnackBar("pass error")
+                                    _passItem.value = ""
+                                    vibrationResponse(400, eventAuth.context)
+                                }
+                            }
+                        } else {
                             if(pass == passItem.value) {
                                 onNavigateToMainScreen()
                             } else {
-                                showSnackBar("pass error")
                                 _passItem.value = ""
                                 vibrationResponse(400, eventAuth.context)
                             }

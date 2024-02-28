@@ -58,6 +58,8 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
         val listenerSnackBarShow: (String) -> Unit = {
             scope.launch {
                 snackBarHostState.showSnackbar(it)
+                println("setUp state clic to false")
+                component.clickState = false
             }
         }
         component.subscribeListenerSnackBar(listenerSnackBarShow)
