@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -43,6 +44,16 @@ kotlin {
             implementation(libs.kotlinXDataTime)
             implementation(libs.russhwolfSettongs)
             implementation(libs.russhwolfMultiplatform)
+
+            // ton
+            implementation(libs.tonTvm)
+            implementation(libs.tonTlb)
+            implementation(libs.tonTlbHashMap)
+            implementation(libs.tonTlbBlock)
+            implementation(libs.tonCrypto)
+            implementation(libs.tonAdnl)
+            implementation(libs.tonContract)
+            implementation(libs.tonLiteClient)
         }
         jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)

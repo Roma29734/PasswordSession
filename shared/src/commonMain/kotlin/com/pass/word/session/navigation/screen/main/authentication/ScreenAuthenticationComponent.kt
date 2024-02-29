@@ -3,11 +3,10 @@ package com.pass.word.session.navigation.screen.main.authentication
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.lifecycle.Lifecycle
-import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.subscribe
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyAuthPass
+import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.vibrationResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
