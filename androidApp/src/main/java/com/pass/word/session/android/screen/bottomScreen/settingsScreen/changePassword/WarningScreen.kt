@@ -89,7 +89,7 @@ fun WarningScreen(component: ScreenWarningComponent) {
             )
         }
 
-        MainComponentButton(text = "continue") { component.onNextNavigate() }
+        MainComponentButton(text = "continue", true) { component.onNextNavigate() }
 
     }
 }

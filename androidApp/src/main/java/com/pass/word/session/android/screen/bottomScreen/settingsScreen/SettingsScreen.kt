@@ -116,17 +116,14 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
                 )
             }
 
-            MainComponentButton(
-                text = "download password",
-                clickHandler = {
-                    component.onEvent(
-                        ScreenSettingsStateEvent.ClickToButtonDownloadPass(
-                            context,
-                            DriverFactory(context)
-                        )
+            MainComponentButton(text = "download password", true) {
+                component.onEvent(
+                    ScreenSettingsStateEvent.ClickToButtonDownloadPass(
+                        context,
+                        DriverFactory(context)
                     )
-                }
-            )
+                )
+            }
         }
 
     }

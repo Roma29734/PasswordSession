@@ -30,6 +30,8 @@ class ScreenAuthenticationComponent constructor(
         listenersSnackBarShow.add(listener)
     }
 
+
+
     private var pass: String? = null
     var clickState = false
     fun unsubscribeListenerSnackBar(listener: (String) -> Unit) {

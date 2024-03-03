@@ -6,6 +6,7 @@ import com.russhwolf.settings.get
 val settings: Settings = Settings()
 
 internal const val keyAuthPass: String = "KEY_AUTH_PASS"
+internal const val keyWalletSeed: String = "KEY_WALLET_SEED"
 
 fun getParamsInt(key: String): Int? {
     return settings[key]

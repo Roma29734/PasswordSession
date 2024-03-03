@@ -44,6 +44,7 @@ kotlin {
             implementation(libs.kotlinXDataTime)
             implementation(libs.russhwolfSettongs)
             implementation(libs.russhwolfMultiplatform)
+            implementation(libs.logging)
 
             // ton
             implementation(libs.tonTvm)

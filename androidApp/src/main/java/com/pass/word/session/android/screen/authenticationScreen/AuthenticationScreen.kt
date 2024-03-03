@@ -21,6 +21,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -39,7 +41,9 @@ import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthSta
 import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.utilits.checkUseBiometric
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.ton.tonkotlinusecase.toAddrString
 
 @OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
@@ -49,6 +53,12 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val passItem: String by component.passItem.subscribeAsState()
+
+    LaunchedEffect(Unit) {
+        launch(Dispatchers.IO) {
+            Log.d("tagLogger", "Вызывается sideEffect")
+        }
+    }
 
     component.passItem.observe {
         Log.d("authScreen", "item $it")

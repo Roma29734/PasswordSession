@@ -5,6 +5,9 @@ import com.pass.word.session.data.model.PasswordItemModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json.Default.encodeToString
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
@@ -66,3 +69,16 @@ expect fun checkUseBiometric(
     context: Any,
     onAction: (successState: Boolean, message: String?) -> Unit,
 )
+
+@Serializable
+data class Data(val items: List<String>)
+
+fun listToStringJson(list: List<String>): String {
+    val data = Data(list)
+    return Json.encodeToString(Data.serializer(), data)
+}
+
+fun jsonStringToList(jsonString: String): List<String> {
+    val data = Json.decodeFromString(Data.serializer(), jsonString)
+    return data.items
+}

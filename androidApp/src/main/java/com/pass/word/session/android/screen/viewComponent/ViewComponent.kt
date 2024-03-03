@@ -35,7 +35,14 @@ import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
 
 @Composable
-fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler: (text: String) -> Unit, focusRequester: FocusRequester, onNextHandler: () -> Unit, keyboardType: KeyboardType) {
+fun OutlineInputText(
+    textInTitle: String,
+    outText: String,
+    onValueChangeHandler: (text: String) -> Unit,
+    focusRequester: FocusRequester,
+    onNextHandler: () -> Unit,
+    keyboardType: KeyboardType
+) {
     Text(
         modifier = Modifier.padding(start = 12.dp, end = 12.dp),
         text = textInTitle,
@@ -44,7 +51,7 @@ fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler:
     )
     OutlinedTextField(
         value = outText,
-        onValueChange = { onValueChangeHandler(it)},
+        onValueChange = { onValueChangeHandler(it) },
         textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
         modifier = Modifier
             .fillMaxWidth()
@@ -70,7 +77,7 @@ fun BoxItemCode(itemText: String) {
     Box(
         Modifier
             .size(48.dp)
-            .border(2.dp,color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
+            .border(2.dp, color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -98,14 +105,14 @@ fun ButtonNumber(textButton: Int, clickHandler: (Int) -> Unit) {
 }
 
 @Composable
-fun MainComponentButton(text: String, clickHandler: () -> Unit) {
+fun MainComponentButton(text: String, enabledState: Boolean, clickHandler: () -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
-            .background(CustomColor().brandBlueLight)
-            .clickable { clickHandler() },
+            .background(if (enabledState) CustomColor().brandBlueLight else CustomColor().grayLight)
+            .clickable(enabledState) { clickHandler() },
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             modifier = Modifier.padding(12.dp),
@@ -115,7 +122,6 @@ fun MainComponentButton(text: String, clickHandler: () -> Unit) {
         )
     }
 }
-
 
 @Composable
 fun UpBarButtonBack(onBackHandler: () -> Unit) {

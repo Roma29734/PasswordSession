@@ -39,6 +39,7 @@ class RootComponent constructor(
     private fun getStateAuthParams(): Boolean {
         getThisLocalTime()
         val itemPass = getParamsString(keyAuthPass)
+        return false
         return itemPass?.isNotEmpty() ?: false
     }
 

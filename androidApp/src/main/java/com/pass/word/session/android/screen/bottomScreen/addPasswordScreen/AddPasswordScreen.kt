@@ -188,13 +188,14 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
             }
             MainComponentButton(
                 text = "add new password",
-                clickHandler = {
-                    component.onEvent(
-                        ScreenAddPasswordStateEvent.ClickButtonAddNewState(
-                            databaseDriverFactory = DriverFactory(context)
-                        ))
-                }
-            )
+                true
+            ) {
+                component.onEvent(
+                    ScreenAddPasswordStateEvent.ClickButtonAddNewState(
+                        databaseDriverFactory = DriverFactory(context)
+                    )
+                )
+            }
         }
     }
 }

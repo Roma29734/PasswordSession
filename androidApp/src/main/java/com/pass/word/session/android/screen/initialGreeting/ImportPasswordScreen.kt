@@ -258,7 +258,7 @@ fun ImportPasswordScreen(
                 }
             }
             MainComponentButton(
-                "Next"
+                "Next", true
             ) { component.event(ScreenImportPasswordEvent.ClickButtonNext) }
         }
     }

@@ -179,10 +179,10 @@ fun EditScreen(component: ScreenEditComponent) {
 
             MainComponentButton(
                 text = "apply changes",
-                clickHandler = {
-                    component.onEvent(ScreenEditEvent.ClickButtonUpdate(DriverFactory(context)))
-                }
-            )
+                true
+            ) {
+                component.onEvent(ScreenEditEvent.ClickButtonUpdate(DriverFactory(context)))
+            }
 
         }
     }
