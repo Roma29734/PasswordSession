@@ -1,27 +1,21 @@
 package com.pass.word.session.tonCore.contract
 
 import kotlinx.coroutines.delay
+import org.lighthousegames.logging.logging
 import org.ton.api.tonnode.TonNodeBlockIdExt
-import org.ton.bigint.BigInt
 import org.ton.block.AccountActive
 import org.ton.block.AccountInfo
-import org.ton.block.AddrNone
 import org.ton.block.AddrStd
 import org.ton.block.MsgAddress
-import org.ton.block.MutableVmStack
 import org.ton.block.VmStack
 import org.ton.block.VmStackValue
 import org.ton.cell.Cell
-import org.ton.cell.CellBuilder
-import org.ton.cell.storeRef
 import org.ton.lite.client.LiteClient
 import org.ton.tlb.loadTlb
-import org.ton.tonkotlinusecase.LiteServerAccountId
+import com.pass.word.session.tonCore.LiteServerAccountId
 import org.ton.tonkotlinusecase.constants.ContractMethods
-import org.ton.tonkotlinusecase.loadRemainingBits
-import org.ton.tonkotlinusecase.loadRemainingBitsAll
-import org.ton.tonkotlinusecase.toAddrString
-import org.ton.tonkotlinusecase.toSlice
+import com.pass.word.session.tonCore.toAddrString
+import com.pass.word.session.tonCore.toSlice
 
 open class LiteContract(
     override val liteClient: LiteClient
@@ -37,27 +31,33 @@ open class LiteContract(
         lastBlockId: TonNodeBlockIdExt? = null,
         params: List<VmStackValue> = listOf()
     ): VmStack {
-        return if (lastBlockId != null && params.isNotEmpty())
-            liteClient.runSmcMethod(
+        return if (lastBlockId != null && params.isNotEmpty()) {
+            println("runSmcRetryLogs firtIF - $lastBlockId $params")
+            return liteClient.runSmcMethod(
                 address = LiteServerAccountId(address),
                 methodName = method,
                 blockId = lastBlockId,
                 params = params
             )
-        else if (lastBlockId != null)
-            liteClient.runSmcMethod(
+        } else if (lastBlockId != null) {
+            println("runSmcRetryLogs secondIF - $lastBlockId $params")
+            return liteClient.runSmcMethod(
                 address = LiteServerAccountId(address),
                 methodName = method,
                 blockId = lastBlockId
             )
-        else if (params.isNotEmpty())
-            liteClient.runSmcMethod(
+        } else if (params.isNotEmpty()) {
+
+            println("runSmcRetryLogs thirdIF - $lastBlockId $params ${LiteServerAccountId(address)}")
+            return liteClient.runSmcMethod(
                 address = LiteServerAccountId(address),
                 methodName = method,
                 params = params
             )
-        else
+        } else {
+            println("runSmcRetryLogs fourIF - $lastBlockId $params")
             liteClient.runSmcMethod(address = LiteServerAccountId(address), methodName = method)
+        }
     }
 
     // I do not use AOP or spring-retry because of current class-architecture
@@ -75,22 +75,24 @@ open class LiteContract(
         var result: VmStack? = null
         var retryCount = 0
         var ex: Exception? = null
+        logging().i("runSmcMethod") { "result firstEs - $result, retryCount - $retryCount" }
         while (result == null && retryCount < 4) {
             if (retryCount > 0) {
                 delay(100)
 //                println("Retry $retryCount $method for ${address.toAddrString()}")
             }
             try {
-                result = runSmcRetry(address, method, lastBlockId, params)
+                val predREsult = runSmcRetry(address, method, lastBlockId, params)
+                logging().i("runSmcMethod") { "result try block - $predREsult, retryCount - $retryCount" }
+                result = predREsult
             } catch (e: Exception) {
+                logging().i("runSmcMethod") { "result errorBlock - ${e.message}, retryCount - $retryCount" }
                 ex = e
             }
             retryCount++
         }
         if (result == null && ex != null) {
-            //error message
-//            logger.warn("Error in $method for ${address.toAddrString()}")
-//            logger.warn(ex.message)
+            logging().i("runSmcMethod") { "result ifChecked - $result, retryCount - $retryCount" }
             println("Error in $method for ${address.toAddrString()}")
             println(ex.message)
         }
@@ -132,30 +134,53 @@ open class LiteContract(
         address: AddrStd,
         lastBlockId: TonNodeBlockIdExt? = null,
         addressWallet: AddrStd
-    ) {
-        runSmc(
+    ): String? {
+        println("LLLAsdastBlockId - $lastBlockId")
+
+        val returnedVmStack = runSmc(
             address, "get_address_pass",
             lastBlockId, params = listOf(
-//                VmStackValue.of(),
                 VmStackValue.of(addressWallet.toSlice())
             )
-        )?.let { stact ->
-            println("getDataItem depth - ${stact.depth}")
-            if (stact.depth != 5) {
+        )
+        if (returnedVmStack != null) {
+            println("getDataItem depth - ${returnedVmStack.depth}")
+            if (returnedVmStack.depth != 5) {
 
             }
-//            liteClient.sendMessage(body = Message(body = Either(x =2, y = 1)))
-//            stact.toMutableVmStack()
+            val resultAddress = returnedVmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress).toAddrString()
             println(
-                "getDataItem - ${
-                    stact.toMutableVmStack().popSlice().loadTlb(MsgAddress).toAddrString()
-                }"
+                "getDataItem - $resultAddress"
             )
-            println("getDataItem - $stact")
+            println("getDataItem - $returnedVmStack")
+            return resultAddress
+        } else {
+            return null
         }
     }
 
+    suspend fun getItemPassFromChildContract(
+        address: AddrStd,
+        lastBlockId: TonNodeBlockIdExt? = null,
+    ): String? {
+        val returnedVmStack = runSmc(
+            address, "get_wallet_data",
+            lastBlockId, params = listOf()
+        )
+
+        return if(returnedVmStack != null) {
+            val firstItem = returnedVmStack.toMutableVmStack().popCell().bits.toByteArray().decodeToString()
+            val secondItem = returnedVmStack.toMutableVmStack().popCell().refs.first().bits.toByteArray().decodeToString()
+            logging().i("liteCOntractRest") { "getItemPassFromChildContract result $firstItem$secondItem" }
+            if(secondItem.isEmpty()) {
+                return firstItem
+            } else {
+                return firstItem + secondItem
+            }
+        } else {
+            null
+        }
+    }
 
     override fun createDataInit() = Cell.empty()
-
 }

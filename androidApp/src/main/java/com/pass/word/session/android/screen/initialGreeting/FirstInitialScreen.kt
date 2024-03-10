@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenFirstInitial.ScreenFirstInitialComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenFirstInitial.ScreenFirstInitialComponent
 import com.pass.word.session.ui.CustomColor
 
 @Composable

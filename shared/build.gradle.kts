@@ -55,6 +55,7 @@ kotlin {
             implementation(libs.tonAdnl)
             implementation(libs.tonContract)
             implementation(libs.tonLiteClient)
+
         }
         jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)

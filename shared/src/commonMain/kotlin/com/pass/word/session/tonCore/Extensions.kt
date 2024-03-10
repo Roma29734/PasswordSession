@@ -1,4 +1,4 @@
-package org.ton.tonkotlinusecase
+package com.pass.word.session.tonCore
 
 import org.ton.bitstring.BitString
 import org.ton.block.*
@@ -60,7 +60,9 @@ fun AddrStd.toSlice() = CellBuilder.createCell {
     storeTlb(MsgAddress, this@toSlice)
 }.beginParse()
 
+const val NANOCOIN: Long = 1_000_000_000
 
+fun Double.toNano(): Long = (this * NANOCOIN).toLong()
 
 fun ByteArray.toSnakeData(): SnakeData {
     val chunks = this.asList().chunked(127)

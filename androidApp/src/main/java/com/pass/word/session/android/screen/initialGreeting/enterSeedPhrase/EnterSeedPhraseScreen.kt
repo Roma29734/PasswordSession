@@ -47,9 +47,9 @@ import androidx.compose.ui.window.Dialog
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterSeedPhrase.ScreenEnterSeedPhraseComponent
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterSeedPhrase.ScreenEnterSeedPhraseEvent
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenEnterSeedPhrase.StateLoadSeedPhrase
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.ScreenEnterSeedPhraseComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.ScreenEnterSeedPhraseEvent
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.StateLoadSeedPhrase
 import com.pass.word.session.ui.CustomColor
 
 @Composable
@@ -255,7 +255,6 @@ fun CustomDialogUI(
                     )
                 }
             }
-
         }
     }
 }

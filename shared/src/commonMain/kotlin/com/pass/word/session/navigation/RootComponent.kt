@@ -4,22 +4,13 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
-import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
-import com.pass.word.session.data.getParamsBoolean
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyAuthPass
-import com.pass.word.session.data.model.PasswordItemModel
-import com.pass.word.session.navigation.screen.main.authentication.ScreenAuthenticationComponent
-import com.pass.word.session.navigation.screen.main.bottomMain.ScreenBottomMainComponent
-import com.pass.word.session.navigation.screen.main.changePassword.ChangePasswordRootComponent
-import com.pass.word.session.navigation.screen.main.detail.ScreenDetailComponent
-import com.pass.word.session.navigation.screen.main.edit.ScreenEditComponent
-import com.pass.word.session.navigation.screen.main.initialGreeting.InitialGreetingRootComponent
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
-import com.pass.word.session.utilits.getThisLocalTime
+import com.pass.word.session.data.keyWalletSeed
+import com.pass.word.session.navigation.screen.localDivisionRoot.LocalDivisionRootComponent
+import com.pass.word.session.navigation.screen.initialGreeting.InitialGreetingRootComponent
+import com.pass.word.session.navigation.screen.multiDivisionRoot.MultiDivisionRootComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
@@ -31,16 +22,20 @@ class RootComponent constructor(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = if (getStateAuthParams()) Configuration.ScreenAuthentication else Configuration.ScreenInitialGreeting,
+        initialConfiguration = checkStateAppLoading(),
         handleBackButton = true,
         childFactory = ::createChild
     )
 
-    private fun getStateAuthParams(): Boolean {
-        getThisLocalTime()
-        val itemPass = getParamsString(keyAuthPass)
-        return false
-        return itemPass?.isNotEmpty() ?: false
+    private fun checkStateAppLoading(): Configuration {
+
+        getParamsString(keyAuthPass) ?: return Configuration.ScreenInitialGreeting
+
+        if (getParamsString(keyWalletSeed) == null) {
+            return Configuration.LocalDivisionRoot
+        }
+
+        return Configuration.MultiDivisionRoot
     }
 
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
@@ -49,113 +44,50 @@ class RootComponent constructor(
         context: ComponentContext
     ): Child {
         return when (config) {
-            Configuration.ScreenBottomMain -> Child.ScreenBottomMain(
-                ScreenBottomMainComponent(
-                    componentContext = context,
-                    onNavigateToDetailComponent = { model ->
-                        navigation.pushNew(Configuration.ScreenDetail(model))
-                    },
-                    onNavigateToChangePasswordComponent = {
-                        navigation.pushNew(Configuration.ScreenChangePasswordRootComponent)
-                    },
-                    onNavigateToImportPasswordComponent = {
-                        navigation.pushNew(Configuration.ScreenImportPassword)
-                    }
-                )
-            )
 
-            is Configuration.ScreenDetail -> Child.ScreenDetail(
-                ScreenDetailComponent(
-                    componentContext = context,
-                    passDetailModel = config.passDetailModel,
-                    onGoBack = {
-                        navigation.pop()
-                    },
-                    onGoEditScreen = { navigation.pushNew(Configuration.ScreenEdit(it)) }
-                )
-            )
-
-            is Configuration.ScreenAuthentication -> Child.ScreenAuthentication(
-                ScreenAuthenticationComponent(
-                    componentContext = context,
-                    onNavigateToMainScreen = {
-                        navigation.replaceCurrent(Configuration.ScreenBottomMain)
-                    }
-                )
-            )
-
-            is Configuration.ScreenEdit -> Child.ScreenEdit(
-                ScreenEditComponent(
-                    componentContext = context,
-                    passDetailModel = config.passDetailModel,
-                    onGoBack = { navigation.pop() }
-                )
-            )
 
             is Configuration.ScreenInitialGreeting -> Child.ScreenInitialGreeting(
                 InitialGreetingRootComponent(
                     componentContext = context,
                     navigateToAuthScreen = {
-                        navigation.replaceCurrent(Configuration.ScreenAuthentication)
+                        if(it) {
+                            navigation.replaceCurrent(Configuration.MultiDivisionRoot)
+                        } else {
+                            navigation.replaceCurrent(Configuration.LocalDivisionRoot)
+                        }
                     }
                 )
             )
 
-            is Configuration.ScreenChangePasswordRootComponent -> Child.ScreenChangePasswordRootComponent(
-                ChangePasswordRootComponent(
-                    componentContext = context,
-                    onBackNavigation = { navigation.pop() },
-                    onNextNavigation = {
-                        navigation.replaceAll(Configuration.ScreenAuthentication)
-                    }
-                )
+            is Configuration.LocalDivisionRoot -> Child.LocalDivisionRoot(
+                LocalDivisionRootComponent(componentContext = context)
             )
 
-            is Configuration.ScreenImportPassword -> Child.ScreenImportPassword(
-                ScreenImportPasswordComponent(
-                    componentContext = context,
-                    onNextScreen = { navigation.replaceAll(Configuration.ScreenBottomMain) },
-                    onBackHandler = { navigation.pop() }
-                )
+            is Configuration.MultiDivisionRoot -> Child.MultiDivisionRoot(
+                MultiDivisionRootComponent(componentContext = context)
             )
         }
     }
 
     sealed class Child {
-        data class ScreenBottomMain(val component: ScreenBottomMainComponent) : Child()
-        data class ScreenDetail(val component: ScreenDetailComponent) : Child()
-        data class ScreenAuthentication @OptIn(DelicateCoroutinesApi::class) constructor(val component: ScreenAuthenticationComponent) :
-            Child()
 
-        data class ScreenEdit(val component: ScreenEditComponent) : Child()
         data class ScreenInitialGreeting(val component: InitialGreetingRootComponent) : Child()
-        data class ScreenChangePasswordRootComponent(val component: ChangePasswordRootComponent) :
-            Child()
 
-        data class ScreenImportPassword(val component: ScreenImportPasswordComponent) : Child()
+        data class LocalDivisionRoot(val component: LocalDivisionRootComponent) : Child()
+
+        data class MultiDivisionRoot(val component: MultiDivisionRootComponent) : Child()
     }
 
     @Serializable
     sealed class Configuration {
-        @Serializable
-        data object ScreenBottomMain : Configuration()
-
-        @Serializable
-        data class ScreenDetail(val passDetailModel: PasswordItemModel) : Configuration()
-
-        @Serializable
-        data object ScreenAuthentication : Configuration()
-
-        @Serializable
-        data class ScreenEdit(val passDetailModel: PasswordItemModel) : Configuration()
 
         @Serializable
         data object ScreenInitialGreeting : Configuration()
 
         @Serializable
-        data object ScreenChangePasswordRootComponent : Configuration()
+        data object LocalDivisionRoot : Configuration()
 
         @Serializable
-        data object ScreenImportPassword : Configuration()
+        data object MultiDivisionRoot : Configuration()
     }
 }

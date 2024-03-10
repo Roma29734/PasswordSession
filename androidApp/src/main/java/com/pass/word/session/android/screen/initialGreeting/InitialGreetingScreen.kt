@@ -9,7 +9,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.initialGreeting.choosingType.ChoosingTypeScreen
 import com.pass.word.session.android.screen.initialGreeting.localInitRoot.LocalInitRootScreen
 import com.pass.word.session.android.screen.initialGreeting.tonInitRoot.TonInitRootScreen
-import com.pass.word.session.navigation.screen.main.initialGreeting.InitialGreetingRootComponent
+import com.pass.word.session.navigation.screen.initialGreeting.InitialGreetingRootComponent
 
 @Composable
 fun InitialGreetingScreen(component: InitialGreetingRootComponent) {

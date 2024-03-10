@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenChoosingType.ScreenChoosingTypeComponent
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenChoosingType.ScreenChoosingTypeEvent
+import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ScreenChoosingTypeComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ScreenChoosingTypeEvent
 import com.pass.word.session.ui.CustomColor
 
 @Composable

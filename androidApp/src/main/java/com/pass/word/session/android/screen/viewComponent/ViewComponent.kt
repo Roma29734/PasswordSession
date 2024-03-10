@@ -31,7 +31,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
-import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
 
 @Composable

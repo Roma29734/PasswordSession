@@ -21,8 +21,8 @@ import org.ton.cell.storeRef
 import org.ton.tlb.storeRef
 import org.ton.tlb.storeTlb
 import org.ton.tonkotlinusecase.constants.SendMode
-import org.ton.tonkotlinusecase.toSnakeData
-import org.ton.tonkotlinusecase.toWalletTransfer
+import com.pass.word.session.tonCore.toSnakeData
+import com.pass.word.session.tonCore.toWalletTransfer
 
 class WalletV4R2(
     privateKey: PrivateKeyEd25519,

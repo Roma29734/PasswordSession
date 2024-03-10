@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.main.initialGreeting.screenCheckWalletAddress.ScreenCheckWalletAddressComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenCheckWalletAddress.ScreenCheckWalletAddressComponent
 
 @Composable
 fun CheckWalletAddressScreen(component: ScreenCheckWalletAddressComponent) {

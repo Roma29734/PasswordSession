@@ -15,13 +15,9 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackA
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.arkivanov.decompose.retainedComponent
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.pass.word.session.android.screen.authenticationScreen.AuthenticationScreen
-import com.pass.word.session.android.screen.bottomScreen.BottomMainScreen
-import com.pass.word.session.android.screen.bottomScreen.settingsScreen.changePassword.ChangePasswordRoot
-import com.pass.word.session.android.screen.detailScreen.DetailScreen
-import com.pass.word.session.android.screen.editScreen.EditScreen
-import com.pass.word.session.android.screen.initialGreeting.ImportPasswordScreen
 import com.pass.word.session.android.screen.initialGreeting.InitialGreetingScreen
+import com.pass.word.session.android.screen.localDivisionRoot.LocalDivisionRootScreen
+import com.pass.word.session.android.screen.multiDivisionRoot.MultiDivisionRootScreen
 import com.pass.word.session.navigation.RootComponent
 import com.pass.word.session.ui.CustomColor
 import com.pass.word.session.ui.MyCustomAppTheme
@@ -58,22 +54,17 @@ class MainActivity : ComponentActivity() {
                         animation = stackAnimation(slide())
                     ) { child ->
                         when (val instance = child.instance) {
-                            is RootComponent.Child.ScreenBottomMain -> BottomMainScreen(component = instance.component)
-                            is RootComponent.Child.ScreenDetail -> DetailScreen(component = instance.component)
-                            is RootComponent.Child.ScreenAuthentication -> AuthenticationScreen(
-                                component = instance.component
-                            )
 
-                            is RootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
+
                             is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
                                 component = instance.component,
                             )
 
-                            is RootComponent.Child.ScreenChangePasswordRootComponent -> ChangePasswordRoot(
+                            is RootComponent.Child.LocalDivisionRoot -> LocalDivisionRootScreen(
                                 component = instance.component
                             )
 
-                            is RootComponent.Child.ScreenImportPassword -> ImportPasswordScreen(
+                            is RootComponent.Child.MultiDivisionRoot -> MultiDivisionRootScreen(
                                 component = instance.component
                             )
                         }
