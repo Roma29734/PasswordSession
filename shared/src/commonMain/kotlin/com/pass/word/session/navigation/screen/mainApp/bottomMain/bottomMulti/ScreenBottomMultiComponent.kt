@@ -60,6 +60,11 @@ class ScreenBottomMultiComponent(
     fun openSettingsScreen() {
         navigation.bringToFront(Configuration.ScreenSettings)
     }
+
+    fun openLocalPasswordScreen() {
+        navigation.bringToFront(Configuration.ScreenLocalPassword)
+    }
+
     @OptIn(ExperimentalDecomposeApi::class)
     private fun createChild(
         config: Configuration,
@@ -83,6 +88,11 @@ class ScreenBottomMultiComponent(
                     onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() }
                 )
             )
+
+            is Configuration.ScreenLocalPassword -> Child.ScreenLocalPassword(
+                ScreenPasswordComponent(componentContext = context, {})
+            )
+
         }
     }
 
@@ -90,12 +100,16 @@ class ScreenBottomMultiComponent(
         data class ScreenPassword(val component: ScreenTonPasswordComponent) : Child()
         data class ScreenAddPassword(val component: ScreenAddMultiPasswordComponent) : Child()
         data class ScreenSettings(val component: ScreenSettingsComponent) : Child()
+        data class ScreenLocalPassword(val component: ScreenPasswordComponent): Child()
     }
 
     @Serializable
     sealed class Configuration {
         @Serializable
         data object ScreenPassword : Configuration()
+
+        @Serializable
+        data object ScreenLocalPassword: Configuration()
 
         @Serializable
         data object ScreenAddPassword : Configuration()

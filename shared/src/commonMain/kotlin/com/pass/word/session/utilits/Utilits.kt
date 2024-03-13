@@ -87,12 +87,17 @@ class EventDispatcher<T> {
     private val listeners = mutableListOf<(T) -> Unit>()
 
     // Метод для подписки на событие
-    fun subscribe(listener: (T) -> Unit) {
+    fun subscribe(listener: (T) -> Unit): () -> Unit {
         listeners.add(listener)
+        return {unsubscribe (listener)}
     }
 
     // Метод для отправки события всем подписчикам
     fun dispatch(event: T) {
         listeners.forEach { it(event) }
+    }
+
+    fun unsubscribe(listener: (T) -> Unit) {
+        listeners.remove(listener)
     }
 }

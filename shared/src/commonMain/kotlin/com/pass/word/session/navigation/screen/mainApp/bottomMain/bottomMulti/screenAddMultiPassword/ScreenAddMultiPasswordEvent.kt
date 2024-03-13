@@ -14,3 +14,8 @@ interface ScreenAddMultiPasswordEvent {
     data class UpdateTextUrl(val textUrl: String) : ScreenAddMultiPasswordEvent
     data class UpdateTextDescriptions(val textDescriptions: String) : ScreenAddMultiPasswordEvent
 }
+
+sealed class StateAlertDialog {
+    data object Hide: StateAlertDialog()
+    data class Show(val firstCallBack: () -> Unit, val secondCallBack: () -> Unit): StateAlertDialog()
+}
