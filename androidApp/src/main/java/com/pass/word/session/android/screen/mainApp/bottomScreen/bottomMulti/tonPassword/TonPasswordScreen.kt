@@ -44,11 +44,13 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     val context = LocalContext.current
     val listItemModel: List<PasswordItemModel>? by component.passwordListItem.collectAsState()
     val stateCallItem by component.stateCallItem.collectAsState()
+
     LaunchedEffect(stateCallItem) {
         if(stateCallItem) {
             component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory(context)))
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

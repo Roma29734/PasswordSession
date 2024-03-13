@@ -3,6 +3,7 @@ package com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
@@ -48,17 +49,16 @@ class ScreenBottomMultiComponent(
         _selectedItem.value = newItem
     }
 
-
     fun openPasswordScreen() {
-        navigation.popTo(0)
+        navigation.bringToFront(Configuration.ScreenPassword)
     }
 
     fun openAddPasswordScreen() {
-        navigation.push(Configuration.ScreenAddPassword)
+        navigation.bringToFront(Configuration.ScreenAddPassword)
     }
 
     fun openSettingsScreen() {
-        navigation.replaceCurrent(Configuration.ScreenSettings)
+        navigation.bringToFront(Configuration.ScreenSettings)
     }
     @OptIn(ExperimentalDecomposeApi::class)
     private fun createChild(
@@ -103,6 +103,4 @@ class ScreenBottomMultiComponent(
         @Serializable
         data object ScreenSettings : Configuration()
     }
-
-
 }

@@ -1,5 +1,11 @@
 package com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti
 
+import android.util.Log
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.OnBackPressedDispatcherOwner
+import androidx.activity.addCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +21,15 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.fade
@@ -26,6 +37,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
+import com.pass.word.session.android.MainActivity
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.ScreensBottom
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.addPasswordScreen.AppPasswordScreen
@@ -41,6 +53,7 @@ import com.pass.word.session.ui.CustomColor
 fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
 
     val selectedItem by component.selectedItem.subscribeAsState()
+    val context = LocalContext.current as MainActivity
     val screens by remember {
         mutableStateOf(
             listOf(
@@ -50,6 +63,43 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
             )
         )
     }
+
+
+
+    val backCallback = remember {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(selectedItem >= 1) {
+                    component.updateSelectedItem(selectedItem - 1)
+                    screens[selectedItem].openScreen()
+                    Log.d("BottomMultiScreen", "back handler")
+                } else {
+                    context.finish()
+                }
+            }
+        }
+    }
+
+// On every successful composition, update the callback with the enabled value
+    SideEffect {
+        backCallback.isEnabled = true
+    }
+
+    val backDispatcher = checkNotNull(LocalOnBackPressedDispatcherOwner.current) {
+        "No OnBackPressedDispatcherOwner was provided via LocalOnBackPressedDispatcherOwner"
+    }.onBackPressedDispatcher
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner, backDispatcher) {
+        // Add callback to the backDispatcher
+        backDispatcher.addCallback(lifecycleOwner, backCallback)
+        // When the effect leaves the Composition, remove the callback
+        onDispose {
+            backCallback.remove()
+        }
+    }
+
 
     Scaffold(
         bottomBar = {
@@ -96,6 +146,7 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
             )
         },
         content = { innerpadding ->
+
             Column(modifier = Modifier.padding(innerpadding)) {
                 Children(
                     stack = component.childStack,
@@ -112,7 +163,8 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
                     }
                 }
             }
-        }
+        },
+
     )
-    
 }
+
