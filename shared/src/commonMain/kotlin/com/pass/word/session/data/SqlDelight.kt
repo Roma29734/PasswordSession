@@ -86,3 +86,81 @@ internal class PersonalDatabase(databaseDriverFactory: DriverFactory) {
         )
     }
 }
+
+internal class TonCashDatabase(databaseDriverFactory: DriverFactory) {
+    private val database = Database(databaseDriverFactory.createDriver())
+    private val dbQuery = database.tonDatabaseQueries
+    internal fun clearDatabase() {
+        dbQuery.transaction {
+            dbQuery.removeAllPassItemTalbeTon()
+        }
+    }
+
+    internal fun getAllPass(): List<PasswordItemModel> {
+        return dbQuery.selectAllPassItemTalbeTon(::matPassSettings).executeAsList()
+    }
+
+    internal fun getOneItemPass(id: Int): PasswordItemModel? {
+        return try {
+            val result = dbQuery.selectOneItemPassItemTableTon(id.toLong(), ::matPassSettings).executeAsOne()
+            result
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun matPassSettings(
+        id: Long,
+        nameItemPasswordTon: String,
+        emailOrUserNameTon: String,
+        passwordItemTon: String,
+        changeDataTon: String,
+        urlSiteTon: String?,
+        descriptionsTon: String?,
+    ): PasswordItemModel {
+        return PasswordItemModel(
+            nameItemPassword = nameItemPasswordTon,
+            emailOrUserName = emailOrUserNameTon,
+            passwordItem = passwordItemTon,
+            changeData = changeDataTon,
+            urlSite = urlSiteTon,
+            descriptions = descriptionsTon,
+            id = id.toInt()
+        )
+    }
+
+    internal fun createPass(launches: List<PasswordItemModel>) {
+        dbQuery.transaction {
+            launches.forEach { launch ->
+                insertPass(launch)
+            }
+        }
+    }
+
+    private fun insertPass(launch: PasswordItemModel) {
+        dbQuery.insertPassItemTalbeTon(
+            nameItemPasswordTon = launch.nameItemPassword,
+            emailOrUserNameTon = launch.emailOrUserName,
+            passwordItemTon = launch.passwordItem,
+            changeDataTon = launch.changeData,
+            urlSiteTon = launch.urlSite,
+            descriptionsTon = launch.descriptions,
+        )
+    }
+
+    internal fun deleteOneItem(id: Int) {
+        dbQuery.deleteOneItemTon(id = id.toLong())
+    }
+
+    internal fun updatePassItem(model: PasswordItemModel) {
+        dbQuery.updateOneItemTon(
+            nameItemPasswordTon = model.nameItemPassword,
+            emailOrUserNameTon = model.emailOrUserName,
+            passwordItemTon = model.passwordItem,
+            changeDataTon = model.changeData,
+            urlSiteTon = model.urlSite,
+            descriptionsTon = model.descriptions,
+            id = model.id.toLong()
+        )
+    }
+}

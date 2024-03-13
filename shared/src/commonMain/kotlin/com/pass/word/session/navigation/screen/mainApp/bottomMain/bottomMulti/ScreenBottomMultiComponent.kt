@@ -4,6 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.navigate
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
+import com.arkivanov.decompose.router.stack.popWhile
+import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.model.PasswordItemModel
@@ -11,6 +19,7 @@ import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.Sc
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenAddPasswordComponent.ScreenAddPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenPasswordComponent.ScreenPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
 import kotlinx.serialization.Serializable
 
@@ -40,6 +49,17 @@ class ScreenBottomMultiComponent(
     }
 
 
+    fun openPasswordScreen() {
+        navigation.popTo(0)
+    }
+
+    fun openAddPasswordScreen() {
+        navigation.push(Configuration.ScreenAddPassword)
+    }
+
+    fun openSettingsScreen() {
+        navigation.replaceCurrent(Configuration.ScreenSettings)
+    }
     @OptIn(ExperimentalDecomposeApi::class)
     private fun createChild(
         config: Configuration,
@@ -53,7 +73,7 @@ class ScreenBottomMultiComponent(
             )
 
             is Configuration.ScreenAddPassword -> Child.ScreenAddPassword(
-                ScreenAddPasswordComponent(componentContext = context)
+                ScreenAddMultiPasswordComponent(componentContext = context)
             )
 
             is Configuration.ScreenSettings -> Child.ScreenSettings(
@@ -68,7 +88,7 @@ class ScreenBottomMultiComponent(
 
     sealed class Child {
         data class ScreenPassword(val component: ScreenTonPasswordComponent) : Child()
-        data class ScreenAddPassword(val component: ScreenAddPasswordComponent) : Child()
+        data class ScreenAddPassword(val component: ScreenAddMultiPasswordComponent) : Child()
         data class ScreenSettings(val component: ScreenSettingsComponent) : Child()
     }
 

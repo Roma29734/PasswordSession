@@ -82,3 +82,17 @@ fun jsonStringToList(jsonString: String): List<String> {
     val data = Json.decodeFromString(Data.serializer(), jsonString)
     return data.items
 }
+
+class EventDispatcher<T> {
+    private val listeners = mutableListOf<(T) -> Unit>()
+
+    // Метод для подписки на событие
+    fun subscribe(listener: (T) -> Unit) {
+        listeners.add(listener)
+    }
+
+    // Метод для отправки события всем подписчикам
+    fun dispatch(event: T) {
+        listeners.forEach { it(event) }
+    }
+}

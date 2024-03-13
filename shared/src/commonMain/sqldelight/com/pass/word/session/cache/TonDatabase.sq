@@ -1,0 +1,24 @@
+
+insertPassItemTalbeTon:
+INSERT INTO PassItemTableTon(nameItemPasswordTon, emailOrUserNameTon, passwordItemTon, changeDataTon, urlSiteTon, descriptionsTon)
+VALUES(?, ?, ?, ?, ?, ?);
+
+removeAllPassItemTalbeTon:
+DELETE FROM PassItemTableTon;
+
+selectAllPassItemTalbeTon:
+SELECT PassItemTableTon.*
+FROM PassItemTableTon;
+
+selectOneItemPassItemTableTon:
+SELECT *
+FROM PassItemTableTon
+WHERE id=?;
+
+deleteOneItemTon:
+DELETE FROM PassItemTableTon
+WHERE id=?;
+
+updateOneItemTon:
+UPDATE PassItemTableTon
+SET nameItemPasswordTon=?, emailOrUserNameTon=?, passwordItemTon=?,changeDataTon=?,urlSiteTon=?,descriptionsTon=? WHERE id=?;

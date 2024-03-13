@@ -148,7 +148,8 @@ open class LiteContract(
             if (returnedVmStack.depth != 5) {
 
             }
-            val resultAddress = returnedVmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress).toAddrString()
+            val resultAddress =
+                returnedVmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress).toAddrString()
             println(
                 "getDataItem - $resultAddress"
             )
@@ -168,19 +169,37 @@ open class LiteContract(
             lastBlockId, params = listOf()
         )
 
-        return if(returnedVmStack != null) {
-            val firstItem = returnedVmStack.toMutableVmStack().popCell().bits.toByteArray().decodeToString()
-            val secondItem = returnedVmStack.toMutableVmStack().popCell().refs.first().bits.toByteArray().decodeToString()
-            logging().i("liteCOntractRest") { "getItemPassFromChildContract result $firstItem$secondItem" }
-            if(secondItem.isEmpty()) {
-                return firstItem
-            } else {
-                return firstItem + secondItem
-            }
+        return if (returnedVmStack != null) {
+            val stack = returnedVmStack.toMutableVmStack().popCell()
+            val decodeResult = decodeCellToString(stack)
+
+            logging().i("liteCOntractRest") { "decoreResult  $decodeResult" }
+            return decodeResult
         } else {
             null
         }
     }
+
+
+
+    private suspend fun decodeCellToString(itemCell: Cell): String? {
+        return try {
+            var result = itemCell.bits.toByteArray().decodeToString()
+            var refs = itemCell.refs
+
+            while (refs.isNotEmpty()) {
+                val currentItemString = refs.last().bits.toByteArray().decodeToString()
+                result += currentItemString
+                refs = refs.firstOrNull()?.refs ?: emptyList()
+            }
+
+            result
+        } catch (e: Exception) {
+            logging().i("liteCOntractRest") { "decoreResult error  ${e.message}" }
+            null
+        }
+    }
+
 
     override fun createDataInit() = Cell.empty()
 }

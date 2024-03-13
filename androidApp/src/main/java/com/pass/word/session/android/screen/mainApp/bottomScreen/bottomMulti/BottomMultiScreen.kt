@@ -31,6 +31,7 @@ import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.Scr
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.addPasswordScreen.AppPasswordScreen
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.PasswordScreen
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.settingsScreen.SettingsScreen
+import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.addMultiPassword.AddMultiPasswordScreen
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.tonPassword.TonPasswordScreen
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.ScreenBottomLocalComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.ScreenBottomMultiComponent
@@ -43,9 +44,9 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
     val screens by remember {
         mutableStateOf(
             listOf(
-                ScreensBottom("Password", {}, false),
-                ScreensBottom("Add Password", {}, false),
-                ScreensBottom("Settings", {}, false),
+                ScreensBottom("Password", {component.openPasswordScreen()}, false),
+                ScreensBottom("Add Password", {component.openAddPasswordScreen()}, false),
+                ScreensBottom("Settings", {component.openSettingsScreen()}, false),
             )
         )
     }
@@ -103,7 +104,7 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
                 ) { child ->
                     when (val instance = child.instance) {
                         is ScreenBottomMultiComponent.Child.ScreenPassword -> TonPasswordScreen(instance.component)
-                        is ScreenBottomMultiComponent.Child.ScreenAddPassword -> AppPasswordScreen(
+                        is ScreenBottomMultiComponent.Child.ScreenAddPassword -> AddMultiPasswordScreen(
                             instance.component
                         )
 

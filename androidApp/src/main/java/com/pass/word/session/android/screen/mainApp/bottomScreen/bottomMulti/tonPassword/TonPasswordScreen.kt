@@ -17,6 +17,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,16 +31,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.ItemPasswordView
+import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.LoadingTonPassItemState
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
 import com.pass.word.session.ui.CustomColor
 
 @Composable
 fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     val stateLoading by component.stateLoading.collectAsState()
     val context = LocalContext.current
-    component.readTonPassItem()
-
+    val listItemModel: List<PasswordItemModel>? by component.passwordListItem.collectAsState()
+    val stateCallItem by component.stateCallItem.collectAsState()
+    LaunchedEffect(stateCallItem) {
+        if(stateCallItem) {
+            component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory(context)))
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,25 +61,34 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
             style = MaterialTheme.typography.bodyLarge
         )
 
-        when(stateLoading) {
-            is LoadingTonPassItemState.InSuccess -> {
-                val itemPass = (stateLoading as LoadingTonPassItemState.InSuccess).itemPass
-                LazyColumn {
-                    items(count = itemPass.size) { countItem ->
-                        ItemPasswordView(
-                            nameItem = itemPass[countItem].nameItemPassword,
-                            emailItem = itemPass[countItem].emailOrUserName,
-                            changeData = itemPass[countItem].changeData,
-                            oncLick = { }
-                        )
-                    }
+        LazyColumn {
+            if (listItemModel != null) {
+
+                items(count = listItemModel!!.size) { countItem ->
+                    ItemPasswordView(
+                        nameItem = listItemModel!![countItem].nameItemPassword,
+                        emailItem = listItemModel!![countItem].emailOrUserName,
+                        changeData = listItemModel!![countItem].changeData,
+                        oncLick = { }
+                    )
                 }
+            } else {
+                items(count = 0) {}
             }
+        }
+
+        when (stateLoading) {
+
+            is LoadingTonPassItemState.IsSuccess -> {
+
+            }
+
             is LoadingTonPassItemState.InLoading -> {
-                Dialog(onDismissRequest = { stateLoading as LoadingTonPassItemState.InLoading}) {
+                Dialog(onDismissRequest = { stateLoading as LoadingTonPassItemState.InLoading }) {
                     CustomLoadingDialog()
                 }
             }
+
             is LoadingTonPassItemState.InEmpty -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -91,6 +109,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
                     )
                 }
             }
+
             is LoadingTonPassItemState.InError -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -127,7 +146,13 @@ fun CustomLoadingDialog() {
                 .background(CustomColor().mainBlue),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator(modifier = Modifier.padding(top = 35.dp).height(70.dp).height(70.dp), color = CustomColor().brandBlueLight)
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(top = 35.dp)
+                    .height(70.dp)
+                    .height(70.dp),
+                color = CustomColor().brandBlueLight
+            )
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(

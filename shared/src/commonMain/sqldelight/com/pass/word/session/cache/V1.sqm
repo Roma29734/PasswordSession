@@ -7,3 +7,13 @@ CREATE TABLE PassItemTable (
     urlSite TEXT ,
     descriptions TEXT
 );
+
+CREATE TABLE PassItemTableTon (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    nameItemPasswordTon TEXT NOT NULL,
+    emailOrUserNameTon TEXT NOT NULL,
+    passwordItemTon TEXT NOT NULL ,
+    changeDataTon TEXT NOT NULL,
+    urlSiteTon TEXT ,
+    descriptionsTon TEXT
+);
