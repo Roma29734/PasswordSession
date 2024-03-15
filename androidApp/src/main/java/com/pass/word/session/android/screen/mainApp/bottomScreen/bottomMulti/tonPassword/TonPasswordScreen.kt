@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.ItemPasswordView
+import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.LoadingTonPassItemState
@@ -136,46 +137,3 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     }
 }
 
-@Composable
-fun CustomLoadingDialog() {
-    Card(
-        shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 10.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
-    ) {
-        Column(
-            Modifier
-                .background(CustomColor().mainBlue),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(top = 35.dp)
-                    .height(70.dp)
-                    .height(70.dp),
-                color = CustomColor().brandBlueLight
-            )
-
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Please wait",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 5.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "Your data is being downloaded from the blockchain",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
-    }
-}

@@ -65,8 +65,6 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
         )
     }
 
-
-
     val backCallback = remember {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -81,7 +79,6 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
         }
     }
 
-// On every successful composition, update the callback with the enabled value
     SideEffect {
         backCallback.isEnabled = true
     }

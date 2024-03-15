@@ -5,9 +5,16 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
+import com.pass.word.session.data.TonCashDatabase
+import com.pass.word.session.data.getParamsString
+import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.data.model.PasswordListContainer
+import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.EventDispatcher
+import com.pass.word.session.utilits.ResponseStatus
 import com.pass.word.session.utilits.getThisLocalTime
+import com.pass.word.session.utilits.jsonStringToList
 import com.pass.word.session.utilits.onCheckValidation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +26,7 @@ import org.lighthousegames.logging.logging
 
 class ScreenAddMultiPasswordComponent(
     componentContext: ComponentContext
-): ComponentContext by componentContext {
+) : ComponentContext by componentContext {
 
     private var _textTitle = MutableValue("")
     val textTitle: Value<String> = _textTitle
@@ -38,8 +45,10 @@ class ScreenAddMultiPasswordComponent(
 
     val showSnackBarDispatcher = EventDispatcher<String>()
 
+    private val seedPhrase = getParamsString(keyWalletSeed)
 
-    private var _stateOpenDialogChoseType: MutableStateFlow<StateAlertDialog> = MutableStateFlow(StateAlertDialog.Hide)
+    private var _stateOpenDialogChoseType: MutableStateFlow<StateAlertDialog> =
+        MutableStateFlow(StateAlertDialog.Hide)
     val stateOpenDialogChoseType get() = _stateOpenDialogChoseType
 
     fun onEvent(eventAdd: ScreenAddMultiPasswordEvent) {
@@ -49,11 +58,13 @@ class ScreenAddMultiPasswordComponent(
                     showSnackBarDispatcher.dispatch("Not all fields are filled in")
                     return
                 }
-                _stateOpenDialogChoseType.update { StateAlertDialog.Show({
-                    savedTonStorageType()
-                }, {
-                    savedLocalStorageType(databaseDriverFactory = eventAdd.databaseDriverFactory)
-                }) }
+                _stateOpenDialogChoseType.update {
+                    StateAlertDialog.Show({
+                        savedTonStorageType(databaseDriverFactory = eventAdd.databaseDriverFactory)
+                    }, {
+                        savedLocalStorageType(databaseDriverFactory = eventAdd.databaseDriverFactory)
+                    })
+                }
             }
 
             is ScreenAddMultiPasswordEvent.UpdateTextTitle -> {
@@ -75,11 +86,44 @@ class ScreenAddMultiPasswordComponent(
             is ScreenAddMultiPasswordEvent.UpdateTextDescriptions -> {
                 _textDescriptions.value = eventAdd.textDescriptions
             }
+
+            is ScreenAddMultiPasswordEvent.CloseAllAlert -> {
+                _stateOpenDialogChoseType.update { StateAlertDialog.Hide }
+            }
+
         }
     }
 
-    private fun savedTonStorageType() {
-        _stateOpenDialogChoseType.update { StateAlertDialog.Hide }
+    private fun savedTonStorageType(
+        databaseDriverFactory: DriverFactory
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            _stateOpenDialogChoseType.update { StateAlertDialog.ShowLoading }
+            val localDate = getThisLocalTime()
+            val model = PasswordItemModel(
+                nameItemPassword = textTitle.value,
+                emailOrUserName = textEmailOrUserName.value,
+                passwordItem = textPassword.value,
+                changeData = localDate,
+                urlSite = textUrl.value.onCheckValidation(),
+                descriptions = textDescriptions.value.onCheckValidation(),
+                id = 1,
+            )
+            val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
+            if (seedPhrase != null) {
+                val database = TonCashDatabase(databaseDriverFactory)
+                val itemList = database.getAllPass()
+                itemList.toMutableList().add(model)
+                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList))
+                if(resultInSend is ResponseStatus.Success) {
+                    _stateOpenDialogChoseType.update { StateAlertDialog.Hide }
+                    showSnackBarDispatcher.dispatch("Password a success created")
+                } else {
+                    val messageError = (resultInSend as ResponseStatus.Error).errorMessage
+                    _stateOpenDialogChoseType.update { StateAlertDialog.Error(messageError) }
+                }
+            }
+        }
     }
 
     private fun savedLocalStorageType(databaseDriverFactory: DriverFactory) {

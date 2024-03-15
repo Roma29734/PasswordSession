@@ -2,10 +2,12 @@ package com.pass.word.session.utilits
 
 import androidx.compose.runtime.Composable
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.data.model.PasswordListContainer
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.Json.Default.encodeToString
 import kotlinx.serialization.json.JsonObject
@@ -83,6 +85,8 @@ fun jsonStringToList(jsonString: String): List<String> {
     return data.items
 }
 
+
+
 class EventDispatcher<T> {
     private val listeners = mutableListOf<(T) -> Unit>()
 
@@ -100,4 +104,10 @@ class EventDispatcher<T> {
     fun unsubscribe(listener: (T) -> Unit) {
         listeners.remove(listener)
     }
+}
+
+
+sealed class ResponseStatus() {
+    data object Success: ResponseStatus()
+    data class Error (val errorMessage: String): ResponseStatus()
 }

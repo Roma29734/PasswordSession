@@ -1,6 +1,5 @@
 package com.pass.word.session.tonCore.contract.wallet
 
-import androidx.compose.runtime.key
 import com.pass.word.session.data.model.PasswordListContainer
 import com.pass.word.session.tonCore.contract.LiteContract
 import kotlinx.coroutines.Dispatchers
@@ -17,8 +16,12 @@ import org.ton.mnemonic.Mnemonic
 import org.ton.tl.ByteString.Companion.toByteString
 import com.pass.word.session.tonCore.toAddrString
 import com.pass.word.session.tonCore.toKeyPair
+import com.pass.word.session.tonCore.toNano
 import com.pass.word.session.utilits.KeySecretPhrase
+import com.pass.word.session.utilits.ResponseStatus
 import com.pass.word.session.utilits.decrypt
+import com.pass.word.session.utilits.encrypt
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class WalletOperation(private val walletSeed: List<String>) {
@@ -115,7 +118,7 @@ class WalletOperation(private val walletSeed: List<String>) {
                 logging().i("enterSeedPhrase") { "walletAddress - $walletAddress" }
                 val result = liteContract().getDataItem(
                     address = AddrStd(contractMasterAddress),
-                    addressWallet = AddrStd("EQDDp_elzjex41uOyzGPNRKy8ysk44-2YxhLj4xg29xJsq_6")
+                    addressWallet = AddrStd(walletAddress)
                 )
                 logging().i("enterSeedPhrase") { "walletAddressRresult - $result" }
                 if (result != null) {
@@ -151,6 +154,37 @@ class WalletOperation(private val walletSeed: List<String>) {
         } catch (e: Exception) {
             logging().i("walletOperation") { "getItemPass error " + e.message }
             return null
+        }
+    }
+
+
+    suspend fun sendNewItemPass(
+        newItemModel: PasswordListContainer
+    ): ResponseStatus {
+        try {
+            val jsonResult = Json.encodeToString(newItemModel)
+            logging().i("walletOperation") { "sendNewItemPass jsonResult $jsonResult" }
+            val encryptResult = encrypt(text = jsonResult,secretPhrase = KeySecretPhrase)
+            logging().i("walletOperation") { "sendNewItemPass jsonResult $encryptResult" }
+            val walletAddress = getWalletAddress()
+            if(walletAddress != null) {
+                val resultAddress = liteContract().getDataItem(
+                    address = AddrStd(contractMasterAddress),
+                    addressWallet = AddrStd(walletAddress)
+                )
+                if(resultAddress != null) {
+                    val addressChildContract =  AddrStd(resultAddress)
+                    logging().i("walletOperation") { "sendNewItemPass result ${addressChildContract}" }
+                    val wallet = getWallet()
+                    wallet.transfer(address = "kQC7ryRspjsMrdnuuA98uGyLMUVd_dDWjroYLBHoIz9ovl7e", amount = 0.001.toNano())
+                }
+                return ResponseStatus.Success
+            } else {
+                return ResponseStatus.Error("")
+            }
+        } catch (e: Exception) {
+            logging().i("walletOperation") { "sendNewItemPass Exception ${e.cause}" }
+            return ResponseStatus.Error(e.message.toString())
         }
     }
 

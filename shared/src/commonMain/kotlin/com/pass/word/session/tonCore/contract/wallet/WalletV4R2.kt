@@ -23,6 +23,7 @@ import org.ton.tlb.storeTlb
 import org.ton.tonkotlinusecase.constants.SendMode
 import com.pass.word.session.tonCore.toSnakeData
 import com.pass.word.session.tonCore.toWalletTransfer
+import org.lighthousegames.logging.logging
 
 class WalletV4R2(
     privateKey: PrivateKeyEd25519,
@@ -46,6 +47,7 @@ class WalletV4R2(
 
 
     suspend fun transfer(address: String, amount: Long) {
+        logging().i("walletOperation") { "transfer itemTransfers ${listOf(Pair(address, amount)).toWalletTransfer()}" }
         transfer(transfers = listOf(Pair(address, amount)).toWalletTransfer().toTypedArray())
     }
 
@@ -67,16 +69,17 @@ class WalletV4R2(
         })
     }
 
-    suspend fun transfer(address: String, amount: Long, comment: String) {
+    suspend fun transfer(address: AddrStd, amount: Long, comment: String) {
         transfer(transfers = listOf(
             WalletTransfer {
-                destination = AddrStd(address)
+                destination = address
                 coins = Coins.ofNano(amount)
                 bounceable = false
                 sendMode = SendMode.PAY_GAS_SEPARATELY
                 messageData = MessageData.raw(
                     body = buildCell {
-                        storeUInt(0, 32)
+                        storeUInt(0x5773d1f5, 32)
+                        storeUInt(0, 64)
                         storeRef {
                             storeTlb(
                                 SnakeData,
@@ -182,3 +185,4 @@ class WalletV4R2(
         )
     }
 }
+
