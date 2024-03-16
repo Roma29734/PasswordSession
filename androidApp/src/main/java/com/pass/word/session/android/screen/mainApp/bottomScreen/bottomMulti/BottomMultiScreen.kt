@@ -58,7 +58,6 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
         mutableStateOf(
             listOf(
                 ScreensBottom("Password", {component.openPasswordScreen()}, false),
-                ScreensBottom("Local", {component.openLocalPasswordScreen()}, false),
                 ScreensBottom("Add Password", {component.openAddPasswordScreen()}, false),
                 ScreensBottom("Settings", {component.openSettingsScreen()}, false)
             )
@@ -122,12 +121,6 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
                                         Icons.Default.Settings,
                                         contentDescription = null
                                     )
-
-                                    "Local" -> Icon(
-                                        painter = painterResource(id = R.drawable.ic_password),
-                                        contentDescription = null,
-                                    )
-
                                 }
                             },
                             label = { Text(text = screensBottom.name) },
@@ -164,10 +157,6 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
                         )
 
                         is ScreenBottomMultiComponent.Child.ScreenSettings -> SettingsScreen(instance.component)
-
-                        is ScreenBottomMultiComponent.Child.ScreenLocalPassword -> PasswordScreen(
-                            component = instance.component
-                        )
                     }
                 }
             }

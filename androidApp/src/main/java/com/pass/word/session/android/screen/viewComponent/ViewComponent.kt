@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -29,7 +31,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pass.word.session.android.R
 import com.pass.word.session.ui.CustomColor
 
@@ -135,5 +139,41 @@ fun UpBarButtonBack(onBackHandler: () -> Unit) {
                 Color.White
             )
         )
+    }
+}
+
+
+@Composable
+fun ItemSelectedType(
+    modifier: Modifier = Modifier,
+    textItem: String,
+    colorButton: Color,
+    handlerClick: () -> Unit,
+) {
+    Card(
+        modifier = modifier.clickable { handlerClick() },
+        elevation = CardDefaults.cardElevation(64.dp)
+    ) {
+        Row(
+            modifier = Modifier.background(colorButton),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = textItem,
+                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 8.dp),
+                style = MaterialTheme.typography.bodyMedium.plus(TextStyle(fontSize = 14.sp)),
+                color = Color.White
+            )
+
+            Image(
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(end = 16.dp),
+                painter = painterResource(id = R.drawable.ic_down_more),
+                contentDescription = "ic_more",
+                colorFilter = ColorFilter.tint(Color.White)
+            )
+
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.subscribe
 import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.TonCashDatabase
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyWalletSeed
@@ -24,7 +25,6 @@ class ScreenTonPasswordComponent(
     componentContext: ComponentContext
 ) : ComponentContext by componentContext {
 
-
     private var _stateLoading =
         MutableStateFlow<LoadingTonPassItemState>(LoadingTonPassItemState.IsSuccess)
     val stateLoading = _stateLoading
@@ -37,11 +37,41 @@ class ScreenTonPasswordComponent(
     private var _stateCallItem = MutableStateFlow<Boolean>(false)
     val stateCallItem get() = _stateCallItem
 
+    private var _stateSelectedTypeStorage: MutableStateFlow<StateSelectedType> =
+        MutableStateFlow(StateSelectedType.TonStorage)
+    val stateSelectedTypeStorage get() = _stateSelectedTypeStorage
+
     fun onEvent(event: ScreenTonPasswordEvent) {
         when (event) {
             is ScreenTonPasswordEvent.ReadBdItem -> {
                 readPassItem(event.databaseDriverFactory)
             }
+
+            is ScreenTonPasswordEvent.UpdateSelectedType -> {
+                _stateSelectedTypeStorage.update { event.newType }
+                if (_stateSelectedTypeStorage.value == StateSelectedType.TonStorage) {
+                    readPassItem(event.databaseDriverFactory)
+                } else {
+                    readBd(event.databaseDriverFactory)
+                }
+            }
+        }
+    }
+
+
+    private fun readBd(databaseDriverFactory: DriverFactory) {
+        try {
+            _stateLoading.update { LoadingTonPassItemState.InLoading }
+            val database = PersonalDatabase(databaseDriverFactory).getAllPass()
+            if (database.isEmpty()) {
+                _stateLoading.update { LoadingTonPassItemState.InEmpty }
+                return
+            }
+            _stateLoading.update { LoadingTonPassItemState.IsSuccess }
+            _passwordListItem.update { database }
+        } catch (e: Exception) {
+            println("Erro pass screen - ${e.message}")
+            _stateLoading.update { LoadingTonPassItemState.InError(e.message.toString()) }
         }
     }
 

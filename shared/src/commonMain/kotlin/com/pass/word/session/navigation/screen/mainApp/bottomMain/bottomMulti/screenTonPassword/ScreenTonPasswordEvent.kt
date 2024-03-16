@@ -5,6 +5,7 @@ import com.pass.word.session.data.model.PasswordItemModel
 
 interface ScreenTonPasswordEvent {
     data class ReadBdItem(val databaseDriverFactory: DriverFactory) : ScreenTonPasswordEvent
+    data class UpdateSelectedType(val databaseDriverFactory: DriverFactory, val newType: StateSelectedType): ScreenTonPasswordEvent
 }
 
 sealed class LoadingTonPassItemState {
@@ -18,4 +19,8 @@ sealed class ResultReadResultFromTonBlock {
     data object InEmpty : ResultReadResultFromTonBlock()
     data class InError(val message: String) : ResultReadResultFromTonBlock()
     data class InSuccess(val itemPass: List<PasswordItemModel>) : ResultReadResultFromTonBlock()
+}
+
+enum class StateSelectedType {
+    TonStorage, LocalStorage
 }
