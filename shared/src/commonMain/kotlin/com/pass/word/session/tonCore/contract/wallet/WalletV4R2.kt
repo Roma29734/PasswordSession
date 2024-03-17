@@ -1,5 +1,7 @@
 package com.pass.word.session.tonCore.contract.wallet
 
+import com.pass.word.session.tonCore.toAddrString
+import com.pass.word.session.tonCore.toCell
 import io.ktor.utils.io.charsets.Charsets
 import io.ktor.utils.io.core.toByteArray
 import org.ton.api.pk.PrivateKeyEd25519
@@ -24,6 +26,7 @@ import org.ton.tonkotlinusecase.constants.SendMode
 import com.pass.word.session.tonCore.toSnakeData
 import com.pass.word.session.tonCore.toWalletTransfer
 import org.lighthousegames.logging.logging
+import org.ton.cell.CellBuilder.Companion.beginCell
 
 class WalletV4R2(
     privateKey: PrivateKeyEd25519,
@@ -47,7 +50,16 @@ class WalletV4R2(
 
 
     suspend fun transfer(address: String, amount: Long) {
-        logging().i("walletOperation") { "transfer itemTransfers ${listOf(Pair(address, amount)).toWalletTransfer()}" }
+        logging().i("walletOperation") {
+            "transfer itemTransfers ${
+                listOf(
+                    Pair(
+                        address,
+                        amount
+                    )
+                ).toWalletTransfer()
+            }"
+        }
         transfer(transfers = listOf(Pair(address, amount)).toWalletTransfer().toTypedArray())
     }
 
@@ -80,12 +92,7 @@ class WalletV4R2(
                     body = buildCell {
                         storeUInt(0x5773d1f5, 32)
                         storeUInt(0, 64)
-                        storeRef {
-                            storeTlb(
-                                SnakeData,
-                                comment.toByteArray(Charsets.UTF_8).toSnakeData()
-                            )
-                        }
+                        storeRef(comment.toCell()).endCell()
                     }
                 )
             }
@@ -162,7 +169,7 @@ class WalletV4R2(
             bounce = gift.bounceable,
             bounced = false,
             src = AddrNone,
-            dest = MsgAddressInt(gift.destination.toString()),
+            dest = MsgAddressInt(gift.destination.toAddrString()),
             ihrFee = Coins(),
             fwdFee = Coins(),
             createdLt = 0u,
@@ -185,4 +192,3 @@ class WalletV4R2(
         )
     }
 }
-

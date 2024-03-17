@@ -1,7 +1,9 @@
 package com.pass.word.session.tonCore
 
+import io.ktor.utils.io.core.toByteArray
 import org.ton.bitstring.BitString
 import org.ton.block.*
+import org.ton.cell.Cell
 import org.ton.cell.CellBuilder
 import org.ton.cell.CellSlice
 import org.ton.contract.SnakeData
@@ -84,3 +86,26 @@ fun ByteArray.toSnakeData(): SnakeData {
 
     return nextSnakeData
 }
+
+fun String.toCell(): Cell {
+    val result  = writeBuffer(this.toByteArray(), CellBuilder())
+    return result.endCell()
+}
+
+fun writeBuffer(src: ByteArray, builder: CellBuilder): CellBuilder {
+    if (src.size > 0) {
+        val bytes = builder.remainingBits / 8
+        if (src.size > bytes) {
+            val a = src.copyOfRange(0, bytes)
+            val t = src.copyOfRange(bytes, src.size)
+            builder.storeBytes(a)
+            val bb = CellBuilder.beginCell()
+            writeBuffer(t, bb)
+            builder.storeRef(bb.endCell())
+        } else {
+            builder.storeBytes(src)
+        }
+    }
+    return builder
+}
+

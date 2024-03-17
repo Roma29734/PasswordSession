@@ -112,8 +112,9 @@ class ScreenAddMultiPasswordComponent(
             val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
             if (seedPhrase != null) {
                 val database = TonCashDatabase(databaseDriverFactory)
-                val itemList = database.getAllPass()
-                itemList.toMutableList().add(model)
+                val itemList = database.getAllPass().toMutableList()
+                itemList.add(model)
+                logging().i("walletOperation") { "sendNewItemPass itemList $itemList" }
                 val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList))
                 if(resultInSend is ResponseStatus.Success) {
                     _stateOpenDialogChoseType.update { StateAlertDialog.Hide }

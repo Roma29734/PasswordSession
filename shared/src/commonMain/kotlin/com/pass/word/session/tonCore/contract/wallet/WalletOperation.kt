@@ -176,14 +176,15 @@ class WalletOperation(private val walletSeed: List<String>) {
                     val addressChildContract =  AddrStd(resultAddress)
                     logging().i("walletOperation") { "sendNewItemPass result ${addressChildContract}" }
                     val wallet = getWallet()
-                    wallet.transfer(address = "kQC7ryRspjsMrdnuuA98uGyLMUVd_dDWjroYLBHoIz9ovl7e", amount = 0.001.toNano())
+                    wallet.transfer(address = addressChildContract, amount = 0.01.toNano(), comment = encryptResult)
+
                 }
                 return ResponseStatus.Success
             } else {
                 return ResponseStatus.Error("")
             }
         } catch (e: Exception) {
-            logging().i("walletOperation") { "sendNewItemPass Exception ${e.cause}" }
+            logging().i("walletOperation") { "sendNewItemPass Exception ${e.stackTraceToString()}" }
             return ResponseStatus.Error(e.message.toString())
         }
     }
