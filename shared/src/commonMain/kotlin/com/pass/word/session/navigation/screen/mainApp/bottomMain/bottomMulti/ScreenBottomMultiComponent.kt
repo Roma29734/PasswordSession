@@ -22,12 +22,13 @@ import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.sc
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
+import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.serialization.Serializable
 
 
 class ScreenBottomMultiComponent(
     componentContext: ComponentContext,
-    private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit,
+    private val onNavigateToDetailComponent: (PasswordItemModel, StateSelectedType) -> Unit,
     private val onNavigateToChangePasswordComponent: () -> Unit,
     private val onNavigateToImportPasswordComponent: () -> Unit
 ) : ComponentContext by componentContext {
@@ -71,6 +72,9 @@ class ScreenBottomMultiComponent(
             Configuration.ScreenPassword -> Child.ScreenPassword(
                 ScreenTonPasswordComponent(
                     componentContext = context,
+                    onNavigateToDetailComponent = { passwordItemModel, stateSelectedType ->
+                        onNavigateToDetailComponent(passwordItemModel, stateSelectedType)
+                    }
                 )
             )
 
@@ -100,8 +104,6 @@ class ScreenBottomMultiComponent(
     sealed class Configuration {
         @Serializable
         data object ScreenPassword : Configuration()
-
-
 
         @Serializable
         data object ScreenAddPassword : Configuration()

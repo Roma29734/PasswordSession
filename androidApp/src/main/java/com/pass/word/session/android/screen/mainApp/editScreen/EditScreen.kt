@@ -15,6 +15,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,13 +26,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
+import com.pass.word.session.android.screen.viewComponent.CustomErrorDialog
+import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.OutlineInputText
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordEvent
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.StateAddDialog
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditEvent
+import com.pass.word.session.utilits.StateBasicLoadingDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,21 +58,20 @@ fun EditScreen(component: ScreenEditComponent) {
     val focusRequesterUrl = remember { FocusRequester() }
     val focusRequesterDescriptions = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-
+    val stateOpenDialogLoading by component.stateOpenDialogChoseType.collectAsState()
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
     DisposableEffect(component) {
-        val listenerPassCreated: (message: String) -> Unit = { msg ->
+        val cancel = component.showSnackBarDispatcher.subscribe {
             scope.launch {
-                snackBarHostState.showSnackbar(msg)
+                snackBarHostState.showSnackbar(it)
             }
         }
-        component.subscribeListenerPush(listenerPassCreated)
 
         onDispose {
             // Отписка при уничтожении экрана
-            component.unsubscribeListenerPush(listenerPassCreated)
+            cancel()
         }
     }
 
@@ -74,6 +80,27 @@ fun EditScreen(component: ScreenEditComponent) {
             SnackbarHost(hostState = snackBarHostState)
         },
     ) {
+
+
+        if (stateOpenDialogLoading is StateBasicLoadingDialog.ShowLoading) {
+            Dialog(onDismissRequest = { stateOpenDialogLoading is StateBasicLoadingDialog.ShowLoading }) {
+                CustomLoadingDialog()
+            }
+        }
+
+        if (stateOpenDialogLoading is StateBasicLoadingDialog.Error) {
+            Dialog(onDismissRequest = { stateOpenDialogLoading is StateBasicLoadingDialog.Error }) {
+                CustomErrorDialog(
+                    textTitle = "An error has occurred",
+                    textSubTitle = "An error occurred during the execution of the request. try again later",
+                    textButton = "close",
+                    handlerButton = {
+                        component.onEvent(ScreenEditEvent.CloseAllAlert)
+                    }
+                )
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -105,9 +105,3 @@ class EventDispatcher<T> {
         listeners.remove(listener)
     }
 }
-
-
-sealed class ResponseStatus() {
-    data object Success: ResponseStatus()
-    data class Error (val errorMessage: String): ResponseStatus()
-}

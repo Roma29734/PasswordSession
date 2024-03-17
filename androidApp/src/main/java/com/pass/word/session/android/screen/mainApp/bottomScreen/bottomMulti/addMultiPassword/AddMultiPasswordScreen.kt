@@ -36,7 +36,7 @@ import com.pass.word.session.android.screen.viewComponent.OutlineInputText
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordEvent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.StateAlertDialog
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.StateAddDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -85,27 +85,27 @@ fun AddMultiPasswordScreen(component: ScreenAddMultiPasswordComponent) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                if (stateOpenDialogLoading is StateAlertDialog.Show) {
-                    Dialog(onDismissRequest = { stateOpenDialogLoading is StateAlertDialog.Show }) {
+                if (stateOpenDialogLoading is StateAddDialog.Show) {
+                    Dialog(onDismissRequest = { stateOpenDialogLoading is StateAddDialog.Show }) {
                         CustomChoseTypeDialog(
                             textTitle = "Please choose where to save your password",
                             textSubTitle = "Be careful, because saving to the blockchain consumes the ton cryptocurrency",
                             textButtonFirst = "Ton storage",
                             textButtonSecond = "Local storage",
-                            handlerFirstButton = (stateOpenDialogLoading as StateAlertDialog.Show).firstCallBack,
-                            handlerSecondButton = (stateOpenDialogLoading as StateAlertDialog.Show).secondCallBack
+                            handlerFirstButton = (stateOpenDialogLoading as StateAddDialog.Show).firstCallBack,
+                            handlerSecondButton = (stateOpenDialogLoading as StateAddDialog.Show).secondCallBack
                         )
                     }
                 }
 
-                if (stateOpenDialogLoading is StateAlertDialog.ShowLoading) {
-                    Dialog(onDismissRequest = { stateOpenDialogLoading is StateAlertDialog.ShowLoading }) {
+                if (stateOpenDialogLoading is StateAddDialog.ShowLoading) {
+                    Dialog(onDismissRequest = { stateOpenDialogLoading is StateAddDialog.ShowLoading }) {
                         CustomLoadingDialog()
                     }
                 }
 
-                if (stateOpenDialogLoading is StateAlertDialog.Error) {
-                    Dialog(onDismissRequest = { stateOpenDialogLoading is StateAlertDialog.Error }) {
+                if (stateOpenDialogLoading is StateAddDialog.Error) {
+                    Dialog(onDismissRequest = { stateOpenDialogLoading is StateAddDialog.Error }) {
                         CustomErrorDialog(
                             textTitle = "An error has occurred",
                             textSubTitle = "An error occurred during the execution of the request. try again later",

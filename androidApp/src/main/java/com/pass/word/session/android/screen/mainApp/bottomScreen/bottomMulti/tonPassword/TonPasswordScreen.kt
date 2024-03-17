@@ -8,21 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -32,33 +23,30 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.ItemPasswordView
+import com.pass.word.session.android.screen.viewComponent.CustomErrorDialog
 import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
 import com.pass.word.session.android.screen.viewComponent.ItemSelectedType
 import com.pass.word.session.data.DriverFactory
-import com.pass.word.session.data.model.PasswordItemModel
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.LoadingTonPassItemState
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.StateSelectedType
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StatePassItemDisplay
+import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +54,7 @@ import kotlinx.coroutines.launch
 fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     val stateLoading by component.stateLoading.collectAsState()
     val context = LocalContext.current
-    val listItemModel: List<PasswordItemModel>? by component.passwordListItem.collectAsState()
+    val statePassItemDisplay by component.statePassItemDisplay.collectAsState()
     val stateCallItem by component.stateCallItem.collectAsState()
     val stateSelectedTypeStorage by component.stateSelectedTypeStorage.collectAsState()
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -77,6 +65,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
         if (stateCallItem) {
             component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory(context)))
         }
+        component.onEvent(ScreenTonPasswordEvent.ReadCashPass(DriverFactory(context)))
     }
 
     Column(
@@ -198,74 +187,61 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
             }
         }
 
-        LazyColumn {
-            if (listItemModel != null) {
-
-                items(count = listItemModel!!.size) { countItem ->
-                    ItemPasswordView(
-                        nameItem = listItemModel!![countItem].nameItemPassword,
-                        emailItem = listItemModel!![countItem].emailOrUserName,
-                        changeData = listItemModel!![countItem].changeData,
-                        oncLick = { }
-                    )
+        if (statePassItemDisplay is StatePassItemDisplay.VisibleItem) {
+            val item = (statePassItemDisplay as StatePassItemDisplay.VisibleItem).passItem
+            LazyColumn {
+                if (item != null) {
+                    items(count = item.size) { countItem ->
+                        ItemPasswordView(
+                            nameItem = item[countItem].nameItemPassword,
+                            emailItem = item[countItem].emailOrUserName,
+                            changeData = item[countItem].changeData,
+                            oncLick = {
+                                component.onEvent(ScreenTonPasswordEvent.ClickToItem(item[countItem]))
+                            }
+                        )
+                    }
                 }
-            } else {
-                items(count = 0) {}
             }
         }
 
-        when (stateLoading) {
+        if (statePassItemDisplay is StatePassItemDisplay.VisibleEmpty) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(250.dp),
+                    painter = painterResource(id = R.drawable.key_variant_tow),
+                    contentDescription = "iconstEmpty notes",
+                )
 
-            is LoadingTonPassItemState.IsSuccess -> {
-
+                Text(
+                    modifier = Modifier.padding(top = 24.dp),
+                    text = "You don't have any saved passwords",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
+        }
 
-            is LoadingTonPassItemState.InLoading -> {
-                Dialog(onDismissRequest = { stateLoading as LoadingTonPassItemState.InLoading }) {
-                    CustomLoadingDialog()
-                }
+        if (stateLoading is StateBasicLoadingDialog.ShowLoading) {
+            Dialog(onDismissRequest = { stateLoading as StateBasicLoadingDialog.ShowLoading }) {
+                CustomLoadingDialog()
             }
+        }
 
-            is LoadingTonPassItemState.InEmpty -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        modifier = Modifier.size(250.dp),
-                        painter = painterResource(id = R.drawable.key_variant_tow),
-                        contentDescription = "iconstEmpty notes",
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(top = 24.dp),
-                        text = "You don't have any saved passwords",
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-
-            is LoadingTonPassItemState.InError -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        modifier = Modifier.size(250.dp),
-                        painter = painterResource(id = R.drawable.key_variant_tow),
-                        contentDescription = "iconstEmpty notes",
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(top = 24.dp),
-                        text = "You don't have any saved passwords",
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+        if (stateLoading is StateBasicLoadingDialog.Error) {
+            Dialog(onDismissRequest = { stateLoading is StateBasicLoadingDialog.Error }) {
+                CustomErrorDialog(
+                    textTitle = "An error has occurred",
+                    textSubTitle = "An error occurred during the execution of the request. try again later",
+                    textButton = "close",
+                    handlerButton = {
+//                            component.onEvent(ScreenAddMultiPasswordEvent.CloseAllAlert)
+                    }
+                )
             }
         }
     }

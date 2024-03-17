@@ -203,59 +203,6 @@ data class LiteServerParams(
 )
 
 
-//"liteservers": [
-//{
-//    "ip": 1959448750,
-//    "port": 51281,
-//    "id": {
-//    "@type": "pub.ed25519",
-//    "key": "hyXd2d6yyiD/wirjoraSrKek1jYhOyzbQoIzV85CB98="
-//}
-//},
-//{
-//    "ip": 1097633201,
-//    "port": 17439,
-//    "id": {
-//    "@type": "pub.ed25519",
-//    "key": "0MIADpLH4VQn+INHfm0FxGiuZZAA8JfTujRqQugkkA8="
-//}
-//},
-//{
-//    "ip": 1097649206,
-//    "port": 29296,
-//    "id": {
-//    "@type": "pub.ed25519",
-//    "key": "p2tSiaeSqX978BxE5zLxuTQM06WVDErf5/15QToxMYA="
-//}
-//}
-//],
-
-//	{
-//			"ip": 1592601963,
-//			"port": 13833,
-//			"id": {
-//				"@type": "pub.ed25519",
-//				"key": "QpVqQiv1u3nCHuBR3cg3fT6NqaFLlnLGbEgtBRukDpU="
-//			}
-//		},
-//		{
-//			"ip": 1097649206,
-//			"port": 29296,
-//			"id": {
-//				"@type": "pub.ed25519",
-//				"key": "p2tSiaeSqX978BxE5zLxuTQM06WVDErf5/15QToxMYA="
-//			}
-//		},
-//		{
-//			"ip": 1162057690,
-//			"port": 35939,
-//			"id": {
-//				"@type": "pub.ed25519",
-//				"key": "97y55AkdzXWyyVuOAn+WX6p66XTNs2hEGG0jFUOkCIo="
-//			}
-//		},
-
-
 private val listServerConfigLite = listOf<LiteServerParams>(
     LiteServerParams(
         ip = 1592601963,
@@ -281,28 +228,4 @@ private val listServerConfigLite = listOf<LiteServerParams>(
             type = "pub.ed25519"
         )
     ),
-//    LiteServerParams(
-//        ip = 1959448750,
-//        port = 51281,
-//        id = LiteServerId(
-//            key = "hyXd2d6yyiD/wirjoraSrKek1jYhOyzbQoIzV85CB98=",
-//            type = "pub.ed25519"
-//        )
-//    ),
-//    LiteServerParams(
-//        ip = 1097633201,
-//        port = 17439,
-//        id = LiteServerId(
-//            key = "0MIADpLH4VQn+INHfm0FxGiuZZAA8JfTujRqQugkkA8=",
-//            type = "pub.ed25519"
-//        )
-//    ),
-//    LiteServerParams(
-//        ip = 1097649206,
-//        port = 29296,
-//        id = LiteServerId(
-//            key = "p2tSiaeSqX978BxE5zLxuTQM06WVDErf5/15QToxMYA=",
-//            type = "pub.ed25519"
-//        )
-//    ),
 )

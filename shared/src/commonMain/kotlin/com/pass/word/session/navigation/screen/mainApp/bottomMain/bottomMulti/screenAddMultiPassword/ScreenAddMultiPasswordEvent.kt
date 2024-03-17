@@ -16,9 +16,9 @@ interface ScreenAddMultiPasswordEvent {
     data object CloseAllAlert: ScreenAddMultiPasswordEvent
 }
 
-sealed class StateAlertDialog {
-    data object Hide: StateAlertDialog()
-    data class Show(val firstCallBack: () -> Unit, val secondCallBack: () -> Unit): StateAlertDialog()
-    data class Error(val message: String): StateAlertDialog()
-    data object ShowLoading: StateAlertDialog()
+sealed class StateAddDialog {
+    data object Hide: StateAddDialog()
+    data class Show(val firstCallBack: () -> Unit, val secondCallBack: () -> Unit): StateAddDialog()
+    data class Error(val message: String): StateAddDialog()
+    data object ShowLoading: StateAddDialog()
 }

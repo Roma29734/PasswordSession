@@ -11,4 +11,5 @@ interface ScreenEditEvent {
     data class UpdateTextUrl(val textUrl: String) : ScreenEditEvent
     data class UpdateTextDescriptions(val textDescriptions: String) : ScreenEditEvent
     data class ClickButtonUpdate(val databaseDriverFactory: DriverFactory): ScreenEditEvent
+    data object CloseAllAlert: ScreenEditEvent
 }

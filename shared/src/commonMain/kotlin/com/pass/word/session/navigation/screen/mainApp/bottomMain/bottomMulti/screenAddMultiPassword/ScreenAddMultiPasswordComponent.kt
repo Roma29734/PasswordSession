@@ -47,8 +47,8 @@ class ScreenAddMultiPasswordComponent(
 
     private val seedPhrase = getParamsString(keyWalletSeed)
 
-    private var _stateOpenDialogChoseType: MutableStateFlow<StateAlertDialog> =
-        MutableStateFlow(StateAlertDialog.Hide)
+    private var _stateOpenDialogChoseType: MutableStateFlow<StateAddDialog> =
+        MutableStateFlow(StateAddDialog.Hide)
     val stateOpenDialogChoseType get() = _stateOpenDialogChoseType
 
     fun onEvent(eventAdd: ScreenAddMultiPasswordEvent) {
@@ -59,7 +59,7 @@ class ScreenAddMultiPasswordComponent(
                     return
                 }
                 _stateOpenDialogChoseType.update {
-                    StateAlertDialog.Show({
+                    StateAddDialog.Show({
                         savedTonStorageType(databaseDriverFactory = eventAdd.databaseDriverFactory)
                     }, {
                         savedLocalStorageType(databaseDriverFactory = eventAdd.databaseDriverFactory)
@@ -88,7 +88,7 @@ class ScreenAddMultiPasswordComponent(
             }
 
             is ScreenAddMultiPasswordEvent.CloseAllAlert -> {
-                _stateOpenDialogChoseType.update { StateAlertDialog.Hide }
+                _stateOpenDialogChoseType.update { StateAddDialog.Hide }
             }
 
         }
@@ -98,7 +98,7 @@ class ScreenAddMultiPasswordComponent(
         databaseDriverFactory: DriverFactory
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            _stateOpenDialogChoseType.update { StateAlertDialog.ShowLoading }
+            _stateOpenDialogChoseType.update { StateAddDialog.ShowLoading }
             val localDate = getThisLocalTime()
             val model = PasswordItemModel(
                 nameItemPassword = textTitle.value,
@@ -117,11 +117,16 @@ class ScreenAddMultiPasswordComponent(
                 logging().i("walletOperation") { "sendNewItemPass itemList $itemList" }
                 val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList))
                 if(resultInSend is ResponseStatus.Success) {
-                    _stateOpenDialogChoseType.update { StateAlertDialog.Hide }
+                    _stateOpenDialogChoseType.update { StateAddDialog.Hide }
+                    _textTitle.value = ""
+                    _textEmailOrUserName.value = ""
+                    _textPassword.value = ""
+                    _textUrl.value = ""
+                    _textDescriptions.value = ""
                     showSnackBarDispatcher.dispatch("Password a success created")
                 } else {
                     val messageError = (resultInSend as ResponseStatus.Error).errorMessage
-                    _stateOpenDialogChoseType.update { StateAlertDialog.Error(messageError) }
+                    _stateOpenDialogChoseType.update { StateAddDialog.Error(messageError) }
                 }
             }
         }
@@ -129,7 +134,7 @@ class ScreenAddMultiPasswordComponent(
 
     private fun savedLocalStorageType(databaseDriverFactory: DriverFactory) {
         addPassToDataBass(databaseDriverFactory = databaseDriverFactory)
-        _stateOpenDialogChoseType.update { StateAlertDialog.Hide }
+        _stateOpenDialogChoseType.update { StateAddDialog.Hide }
     }
 
     private fun addPassToDataBass(

@@ -5,7 +5,9 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
+import com.pass.word.session.data.TonCashDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -13,7 +15,8 @@ class ScreenDetailComponent constructor(
     componentContext: ComponentContext,
     val passDetailModel: PasswordItemModel,
     private val onGoBack: () -> Unit,
-    private val onGoEditScreen: (passDetailModel: PasswordItemModel) -> Unit
+    private val onGoEditScreen: (passDetailModel: PasswordItemModel, stateSelectedType: StateSelectedType) -> Unit,
+    private val stateSelectedType: StateSelectedType
 ): ComponentContext by componentContext {
 
     private var _stateOpenAlertDialog = MutableValue(false)
@@ -24,9 +27,16 @@ class ScreenDetailComponent constructor(
     val passwordItem: Value<PasswordItemModel> = _passwordItem
 
     fun getOneItem(databaseDriverFactory: DriverFactory) {
-        val result = PersonalDatabase(databaseDriverFactory).getOneItemPass(passDetailModel.id)
-        if(result != null) {
-            _passwordItem.value = result
+        if(stateSelectedType == StateSelectedType.LocalStorage) {
+            val result = PersonalDatabase(databaseDriverFactory).getOneItemPass(passDetailModel.id)
+            if(result != null) {
+                _passwordItem.value = result
+            }
+        } else {
+            val result = TonCashDatabase(databaseDriverFactory).getOneItemPass(passDetailModel.id)
+            if(result != null) {
+                _passwordItem.value = result
+            }
         }
     }
 
@@ -51,7 +61,7 @@ class ScreenDetailComponent constructor(
                 }
             }
             is ScreenDetailEvent.EditItemPass -> {
-                onGoEditScreen(passDetailModel)
+                onGoEditScreen(passDetailModel, stateSelectedType)
             }
         }
     }

@@ -15,6 +15,8 @@ import com.pass.word.session.navigation.screen.mainApp.changePassword.ChangePass
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
+import com.pass.word.session.navigation.screen.multiDivisionRoot.MultiDivisionRootComponent
+import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
@@ -60,7 +62,15 @@ class LocalDivisionRootComponent constructor(
                     onGoBack = {
                         navigation.pop()
                     },
-                    onGoEditScreen = { navigation.pushNew(Configuration.ScreenEdit(it)) }
+                    onGoEditScreen = { passDetailModel, stateSelectedType ->
+                        navigation.pushNew(
+                            Configuration.ScreenEdit(
+                                passDetailModel,
+                                stateSelectedType
+                            )
+                        )
+                    },
+                    stateSelectedType = StateSelectedType.LocalStorage
                 )
             )
 
@@ -77,7 +87,8 @@ class LocalDivisionRootComponent constructor(
                 ScreenEditComponent(
                     componentContext = context,
                     passDetailModel = config.passDetailModel,
-                    onGoBack = { navigation.pop() }
+                    onGoBack = { navigation.pop() },
+                    stateSelectedType = StateSelectedType.LocalStorage
                 )
             )
 
@@ -128,7 +139,10 @@ class LocalDivisionRootComponent constructor(
         data object ScreenAuthentication : Configuration()
 
         @Serializable
-        data class ScreenEdit(val passDetailModel: PasswordItemModel) : Configuration()
+        data class ScreenEdit(
+            val passDetailModel: PasswordItemModel,
+            val stateSelectedType: StateSelectedType
+        ) : Configuration()
 
         @Serializable
         data object ScreenChangePasswordRootComponent : Configuration()

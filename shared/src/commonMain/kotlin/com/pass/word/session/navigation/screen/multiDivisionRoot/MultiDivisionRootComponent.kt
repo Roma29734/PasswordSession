@@ -8,11 +8,15 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
+import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.mainApp.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.navigation.screen.mainApp.changePassword.ChangePasswordRootComponent
 import com.pass.word.session.navigation.screen.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
 import com.pass.word.session.navigation.screen.localDivisionRoot.LocalDivisionRootComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.ScreenBottomMultiComponent
+import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
+import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditComponent
+import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
@@ -21,7 +25,6 @@ class MultiDivisionRootComponent constructor(
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
-
 
     val childStack = childStack(
         source = navigation,
@@ -63,7 +66,7 @@ class MultiDivisionRootComponent constructor(
                 ScreenImportPasswordComponent(
                     componentContext = context,
                     onNextScreen = {
-//                        navigation.replaceAll(Configuration.ScreenBottomMain)
+                        navigation.replaceAll(Configuration.ScreenBottomMulti)
                     },
                     onBackHandler = { navigation.pop() }
                 )
@@ -72,8 +75,8 @@ class MultiDivisionRootComponent constructor(
             is Configuration.ScreenBottomMulti -> Child.ScreenBottomMulti(
                 ScreenBottomMultiComponent(
                     componentContext = context,
-                    onNavigateToDetailComponent = { model ->
-//                        navigation.pushNew(Configuration.ScreenDetail(model))
+                    onNavigateToDetailComponent = { model, stateSelectedType ->
+                        navigation.pushNew(Configuration.ScreenDetail(model, stateSelectedType))
                     },
                     onNavigateToChangePasswordComponent = {
                         navigation.pushNew(Configuration.ScreenChangePasswordRootComponent)
@@ -81,6 +84,34 @@ class MultiDivisionRootComponent constructor(
                     onNavigateToImportPasswordComponent = {
                         navigation.pushNew(Configuration.ScreenImportPassword)
                     }
+                )
+            )
+
+            is Configuration.ScreenDetail -> Child.ScreenDetail(
+                ScreenDetailComponent(
+                    componentContext = context,
+                    passDetailModel = config.passDetailModel,
+                    onGoBack = {
+                        navigation.pop()
+                    },
+                    onGoEditScreen = { passDetailModel, stateSelectedType ->
+                        navigation.pushNew(
+                            Configuration.ScreenEdit(
+                                passDetailModel,
+                                stateSelectedType
+                            )
+                        )
+                    },
+                    stateSelectedType = config.stateSelectedType
+                )
+            )
+
+            is Configuration.ScreenEdit -> Child.ScreenEdit(
+                ScreenEditComponent(
+                    componentContext = context,
+                    passDetailModel = config.passDetailModel,
+                    onGoBack = { navigation.pop() },
+                    stateSelectedType = config.stateSelectedType
                 )
             )
 
@@ -98,6 +129,10 @@ class MultiDivisionRootComponent constructor(
         data class ScreenImportPassword(val component: ScreenImportPasswordComponent) : Child()
 
         data class ScreenBottomMulti(val component: ScreenBottomMultiComponent) : Child()
+
+        data class ScreenDetail(val component: ScreenDetailComponent) : Child()
+
+        data class ScreenEdit(val component: ScreenEditComponent) : Child()
     }
 
     @Serializable
@@ -114,6 +149,19 @@ class MultiDivisionRootComponent constructor(
         @Serializable
         data object ScreenImportPassword : Configuration()
 
+        @Serializable
         data object ScreenBottomMulti : Configuration()
+
+        @Serializable
+        data class ScreenDetail(
+            val passDetailModel: PasswordItemModel,
+            val stateSelectedType: StateSelectedType
+        ) : Configuration()
+
+        @Serializable
+        data class ScreenEdit(
+            val passDetailModel: PasswordItemModel,
+            val stateSelectedType: StateSelectedType
+        ) : Configuration()
     }
 }
