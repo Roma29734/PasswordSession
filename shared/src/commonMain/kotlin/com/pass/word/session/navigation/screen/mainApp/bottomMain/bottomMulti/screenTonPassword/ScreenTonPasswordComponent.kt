@@ -67,6 +67,7 @@ class ScreenTonPasswordComponent(
             is ScreenTonPasswordEvent.ClickToItem -> {
                 onNavigateToDetailComponent(event.model, _stateSelectedTypeStorage.value)
             }
+
             is ScreenTonPasswordEvent.ReadCashPass -> {
                 if (_stateSelectedTypeStorage.value == StateSelectedType.TonStorage) {
                     val database = TonCashDatabase(event.databaseDriverFactory)
@@ -83,7 +84,6 @@ class ScreenTonPasswordComponent(
     // This function read pass, in local storage
     private fun readLocalBd(databaseDriverFactory: DriverFactory) {
         try {
-            _stateLoading.update { StateBasicLoadingDialog.ShowLoading }
             val database = PersonalDatabase(databaseDriverFactory).getAllPass()
             if (database.isEmpty()) {
                 _statePassItemDisplay.update { StatePassItemDisplay.VisibleEmpty }
@@ -106,22 +106,30 @@ class ScreenTonPasswordComponent(
             delay(1000)
             when (val readResult = readPassInBlockchainTon()) {
                 is ResultReadResultFromTonBlock.InSuccess -> {
-                    val listOne =
-                        (_statePassItemDisplay.value as StatePassItemDisplay.VisibleItem).passItem?.map {
-                            it.copy(id = 0)
-                        }
-                    val listTwo = readResult.itemPass.map { it.copy(id = 0) }
-                    logging().i("ScreenTonPasswordComponent") { "listOne ${listOne}" }
-                    logging().i("ScreenTonPasswordComponent") { "listTwo ${listTwo}" }
+                    if (_statePassItemDisplay.value is StatePassItemDisplay.VisibleItem) {
+                        val listOne =
+                            (_statePassItemDisplay.value as StatePassItemDisplay.VisibleItem).passItem?.map {
+                                it.copy(id = 0)
+                            }
+                        val listTwo = readResult.itemPass.map { it.copy(id = 0) }
+                        logging().i("ScreenTonPasswordComponent") { "listOne ${listOne}" }
+                        logging().i("ScreenTonPasswordComponent") { "listTwo ${listTwo}" }
 
-                    if (listOne == listTwo) {
-                        logging().i("ScreenTonPasswordComponent") { "readPassItem item equal" }
+                        if (listOne == listTwo) {
+                            logging().i("ScreenTonPasswordComponent") { "readPassItem item equal" }
+                        } else {
+                            database.clearDatabase()
+                            database.createPass(readResult.itemPass)
+                            readTonCashBd(database)
+                        }
+                        _stateLoading.update { StateBasicLoadingDialog.Hide }
                     } else {
                         database.clearDatabase()
                         database.createPass(readResult.itemPass)
                         readTonCashBd(database)
+                        _statePassItemDisplay.update { StatePassItemDisplay.VisibleItem(readResult.itemPass) }
+                        _stateLoading.update { StateBasicLoadingDialog.Hide }
                     }
-                    _stateLoading.update { StateBasicLoadingDialog.ShowLoading }
                 }
 
                 is ResultReadResultFromTonBlock.InEmpty -> {
