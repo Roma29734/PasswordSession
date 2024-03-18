@@ -47,6 +47,7 @@ import com.pass.word.session.ui.CustomColor
 import com.pass.word.session.utilits.StateBasicLoadingDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType
+import com.pass.word.session.utilits.StateStatusBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +58,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     val statePassItemDisplay by component.statePassItemDisplay.collectAsState()
     val stateCallItem by component.stateCallItem.collectAsState()
     val stateSelectedTypeStorage by component.stateSelectedTypeStorage.collectAsState()
+    val stateVisibleStatusBar by component.stateVisibleStatusBar.collectAsState()
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -93,6 +95,25 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
                 openBottomSheet = true
             }
         }
+
+
+        if(stateVisibleStatusBar is StateStatusBar.Show) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(CustomColor().brandRedMain),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = (stateVisibleStatusBar as StateStatusBar.Show).message,
+                    style = MaterialTheme.typography.bodyMedium.plus(TextStyle(fontSize = 16.sp)),
+                    color = Color.White
+                )
+            }
+        }
+
 
         if (openBottomSheet) {
             ModalBottomSheet(
@@ -189,7 +210,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
 
         if (statePassItemDisplay is StatePassItemDisplay.VisibleItem) {
             val item = (statePassItemDisplay as StatePassItemDisplay.VisibleItem).passItem
-            LazyColumn {
+            LazyColumn(Modifier.padding(top = 8.dp)) {
                 if (item != null) {
                     items(count = item.size) { countItem ->
                         ItemPasswordView(
@@ -205,7 +226,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
             }
         }
 
-        if (statePassItemDisplay is StatePassItemDisplay.VisibleEmpty) {
+        if (statePassItemDisplay is StatePassItemDisplay.VisibleMessage) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -219,7 +240,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
 
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
-                    text = "You don't have any saved passwords",
+                    text = (statePassItemDisplay as StatePassItemDisplay.VisibleMessage).message,
                     color = Color.White,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -239,7 +260,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
                     textSubTitle = "An error occurred during the execution of the request. try again later",
                     textButton = "close",
                     handlerButton = {
-//                            component.onEvent(ScreenAddMultiPasswordEvent.CloseAllAlert)
+                        component.onEvent(ScreenTonPasswordEvent.HideDialog)
                     }
                 )
             }

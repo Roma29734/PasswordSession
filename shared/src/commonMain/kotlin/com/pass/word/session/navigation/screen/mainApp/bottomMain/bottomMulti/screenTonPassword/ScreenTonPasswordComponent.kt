@@ -12,6 +12,7 @@ import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.StateBasicLoadingDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType
+import com.pass.word.session.utilits.StateStatusBar
 import com.pass.word.session.utilits.jsonStringToList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +49,12 @@ class ScreenTonPasswordComponent(
         MutableStateFlow(StateSelectedType.TonStorage)
     val stateSelectedTypeStorage get() = _stateSelectedTypeStorage
 
+
+    // state visible status bar of state
+    private var _stateVisibleStatusBar: MutableStateFlow<StateStatusBar> =
+        MutableStateFlow(StateStatusBar.Hide)
+    val stateVisibleStatusBar get() = _stateVisibleStatusBar
+
     // this function handle event
     fun onEvent(event: ScreenTonPasswordEvent) {
         when (event) {
@@ -78,6 +85,9 @@ class ScreenTonPasswordComponent(
                     readLocalBd(event.databaseDriverFactory)
                 }
             }
+            is ScreenTonPasswordEvent.HideDialog -> {
+                _stateLoading.update { StateBasicLoadingDialog.Hide }
+            }
         }
     }
 
@@ -86,7 +96,7 @@ class ScreenTonPasswordComponent(
         try {
             val database = PersonalDatabase(databaseDriverFactory).getAllPass()
             if (database.isEmpty()) {
-                _statePassItemDisplay.update { StatePassItemDisplay.VisibleEmpty }
+                _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
                 return
             }
             _stateLoading.update { StateBasicLoadingDialog.Hide }
@@ -101,11 +111,13 @@ class ScreenTonPasswordComponent(
     private fun readTonPassItem(databaseDriverFactory: DriverFactory) {
         CoroutineScope(Dispatchers.IO).launch {
             _stateCallItem.update { false }
+            _stateLoading.update { StateBasicLoadingDialog.ShowLoading }
             val database = TonCashDatabase(databaseDriverFactory)
             readTonCashBd(database)
-            delay(1000)
+            delay(200)
             when (val readResult = readPassInBlockchainTon()) {
                 is ResultReadResultFromTonBlock.InSuccess -> {
+                    _stateVisibleStatusBar.update { StateStatusBar.Hide}
                     if (_statePassItemDisplay.value is StatePassItemDisplay.VisibleItem) {
                         val listOne =
                             (_statePassItemDisplay.value as StatePassItemDisplay.VisibleItem).passItem?.map {
@@ -133,12 +145,13 @@ class ScreenTonPasswordComponent(
                 }
 
                 is ResultReadResultFromTonBlock.InEmpty -> {
+                    _stateVisibleStatusBar.update { StateStatusBar.Hide}
                     _stateLoading.update { StateBasicLoadingDialog.Hide }
-                    _statePassItemDisplay.update { StatePassItemDisplay.VisibleEmpty }
+                    _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
                 }
 
                 is ResultReadResultFromTonBlock.InError -> {
-                    _statePassItemDisplay.update { StatePassItemDisplay.VisibleNothing }
+                    _stateVisibleStatusBar.update { StateStatusBar.Show("An error occurred try again later") }
                     _stateLoading.update { StateBasicLoadingDialog.Error(readResult.message) }
                 }
             }
@@ -148,16 +161,19 @@ class ScreenTonPasswordComponent(
     // This function read pass from Blockchain in Ton
     private suspend fun readPassInBlockchainTon(): ResultReadResultFromTonBlock {
         try {
-            _stateLoading.update { StateBasicLoadingDialog.ShowLoading }
             val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
             return if (seedPhrase != null) {
                 val walletOperation = WalletOperation(seedPhrase)
                 val resultAddressPassChild = walletOperation.getItemPass()
                 if (resultAddressPassChild != null) {
                     logging().i("readTonPassItem") { "resultAddressPassChild ${resultAddressPassChild}" }
-                    ResultReadResultFromTonBlock.InSuccess(resultAddressPassChild.passwordList)
+                    if(resultAddressPassChild.passwordList.isNotEmpty()) {
+                        ResultReadResultFromTonBlock.InSuccess(resultAddressPassChild.passwordList)
+                    } else {
+                        ResultReadResultFromTonBlock.InEmpty
+                    }
                 } else {
-                    ResultReadResultFromTonBlock.InEmpty
+                    return ResultReadResultFromTonBlock.InError("")
                 }
             } else {
                 ResultReadResultFromTonBlock.InEmpty
@@ -171,7 +187,7 @@ class ScreenTonPasswordComponent(
     private suspend fun readTonCashBd(database: TonCashDatabase) {
         val resultBd = database.getAllPass()
         if (resultBd.isEmpty()) {
-            _statePassItemDisplay.update { StatePassItemDisplay.VisibleEmpty }
+            _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
         } else {
             _statePassItemDisplay.update { StatePassItemDisplay.VisibleItem(resultBd) }
         }
@@ -185,4 +201,5 @@ class ScreenTonPasswordComponent(
             }
         )
     }
+
 }

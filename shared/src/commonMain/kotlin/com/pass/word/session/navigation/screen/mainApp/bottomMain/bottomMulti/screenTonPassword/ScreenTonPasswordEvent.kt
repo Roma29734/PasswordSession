@@ -9,6 +9,7 @@ interface ScreenTonPasswordEvent {
     data class UpdateSelectedType(val databaseDriverFactory: DriverFactory, val newType: StateSelectedType): ScreenTonPasswordEvent
     data class ClickToItem(val model: PasswordItemModel): ScreenTonPasswordEvent
     data class ReadCashPass(val databaseDriverFactory: DriverFactory): ScreenTonPasswordEvent
+    data object HideDialog: ScreenTonPasswordEvent
 }
 
 sealed class ResultReadResultFromTonBlock {

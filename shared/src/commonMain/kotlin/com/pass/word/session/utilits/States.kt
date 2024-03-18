@@ -14,8 +14,13 @@ enum class StateSelectedType {
 
 sealed class StatePassItemDisplay {
     data class VisibleItem(val passItem: List<PasswordItemModel>?): StatePassItemDisplay()
-    data object VisibleEmpty: StatePassItemDisplay()
+    data class VisibleMessage(val message: String): StatePassItemDisplay()
     data object VisibleNothing: StatePassItemDisplay()
+}
+
+sealed class StateStatusBar {
+    data class Show(val message: String): StateStatusBar()
+    data object Hide: StateStatusBar()
 }
 
 sealed class StateBasicLoadingDialog {
