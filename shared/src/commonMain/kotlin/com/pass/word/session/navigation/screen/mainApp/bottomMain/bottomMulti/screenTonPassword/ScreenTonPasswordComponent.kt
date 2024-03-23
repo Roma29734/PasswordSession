@@ -49,7 +49,6 @@ class ScreenTonPasswordComponent(
         MutableStateFlow(StateSelectedType.TonStorage)
     val stateSelectedTypeStorage get() = _stateSelectedTypeStorage
 
-
     // state visible status bar of state
     private var _stateVisibleStatusBar: MutableStateFlow<StateStatusBar> =
         MutableStateFlow(StateStatusBar.Hide)

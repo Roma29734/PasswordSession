@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,14 +34,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
+import com.pass.word.session.android.screen.viewComponent.CustomErrorDialog
+import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.utilits.StateBasicLoadingDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,6 +57,7 @@ fun DetailScreen(component: ScreenDetailComponent) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val stateOpenAlertDialog: Boolean by component.stateOpenAlertDialog.subscribeAsState()
     val context = LocalContext.current
+    val stateLoading by component.stateOpenDialogChoseType.collectAsState()
 
     val itemModel: PasswordItemModel by component.passwordItem.subscribeAsState()
 
@@ -61,6 +68,28 @@ fun DetailScreen(component: ScreenDetailComponent) {
             SnackbarHost(hostState = snackbarHostState)
         },
     ) {
+
+
+
+        if (stateLoading is StateBasicLoadingDialog.ShowLoading) {
+            Dialog(onDismissRequest = { stateLoading as StateBasicLoadingDialog.ShowLoading }) {
+                CustomLoadingDialog()
+            }
+        }
+
+        if (stateLoading is StateBasicLoadingDialog.Error) {
+            Dialog(onDismissRequest = { stateLoading is StateBasicLoadingDialog.Error }) {
+                CustomErrorDialog(
+                    textTitle = "An error has occurred",
+                    textSubTitle = "An error occurred during the execution of the request. try again later",
+                    textButton = "close",
+                    handlerButton = {
+//                        component.onEvent(ScreenDetailEvent.HideDialog)
+                    }
+                )
+            }
+        }
+
         AlertDialogDelete(openDialog = stateOpenAlertDialog, onBackHandler = {
             component.onEvent(ScreenDetailEvent.ChangeStateOpenedAlertDialog(false))
         }, onConfirmHandler = {

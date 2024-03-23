@@ -54,8 +54,6 @@ class MainActivity : ComponentActivity() {
                         animation = stackAnimation(slide())
                     ) { child ->
                         when (val instance = child.instance) {
-
-
                             is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
                                 component = instance.component,
                             )
