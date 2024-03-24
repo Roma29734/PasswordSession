@@ -1,21 +1,38 @@
 package com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.tonPassword
 
+import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -23,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -35,6 +53,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.ItemPasswordView
 import com.pass.word.session.android.screen.viewComponent.CustomErrorDialog
@@ -63,6 +83,10 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     val scope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+
+    var isRefreshing by remember { mutableStateOf(false) }
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
+
     LaunchedEffect(stateCallItem) {
         if (stateCallItem) {
             component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory(context)))
@@ -70,11 +94,17 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
         component.onEvent(ScreenTonPasswordEvent.ReadCashPass(DriverFactory(context)))
     }
 
+    LaunchedEffect(isRefreshing) {
+        if(isRefreshing) {
+            component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory(context)))
+            isRefreshing = false
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -97,7 +127,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
         }
 
 
-        if(stateVisibleStatusBar is StateStatusBar.Show) {
+        if (stateVisibleStatusBar is StateStatusBar.Show) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -113,7 +143,6 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
                 )
             }
         }
-
 
         if (openBottomSheet) {
             ModalBottomSheet(
@@ -210,17 +239,24 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
 
         if (statePassItemDisplay is StatePassItemDisplay.VisibleItem) {
             val item = (statePassItemDisplay as StatePassItemDisplay.VisibleItem).passItem
-            LazyColumn(Modifier.padding(top = 8.dp)) {
-                if (item != null) {
-                    items(count = item.size) { countItem ->
-                        ItemPasswordView(
-                            nameItem = item[countItem].nameItemPassword,
-                            emailItem = item[countItem].emailOrUserName,
-                            changeData = item[countItem].changeData,
-                            oncLick = {
-                                component.onEvent(ScreenTonPasswordEvent.ClickToItem(item[countItem]))
-                            }
-                        )
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    isRefreshing = true
+                },
+            ) {
+                LazyColumn(Modifier.padding(top = 8.dp)) {
+                    if (item != null) {
+                        items(count = item.size) { countItem ->
+                            ItemPasswordView(
+                                nameItem = item[countItem].nameItemPassword,
+                                emailItem = item[countItem].emailOrUserName,
+                                changeData = item[countItem].changeData,
+                                oncLick = {
+                                    component.onEvent(ScreenTonPasswordEvent.ClickToItem(item[countItem]))
+                                }
+                            )
+                        }
                     }
                 }
             }
