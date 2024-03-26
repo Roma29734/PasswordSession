@@ -6,9 +6,11 @@ import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.TonCashDatabase
 import com.pass.word.session.data.getParamsString
+import com.pass.word.session.data.keySecretPassKey
 import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
+import com.pass.word.session.utilits.ResultReadResultFromTonBlock
 import com.pass.word.session.utilits.StateBasicLoadingDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType
@@ -145,6 +147,9 @@ class ScreenTonPasswordComponent(
 
                 is ResultReadResultFromTonBlock.InEmpty -> {
                     _stateVisibleStatusBar.update { StateStatusBar.Hide}
+                    if(database.getAllPass().isNotEmpty()){
+                        database.clearDatabase()
+                    }
                     _stateLoading.update { StateBasicLoadingDialog.Hide }
                     _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
                 }
@@ -161,18 +166,13 @@ class ScreenTonPasswordComponent(
     private suspend fun readPassInBlockchainTon(): ResultReadResultFromTonBlock {
         try {
             val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
+            val keyPhrase = getParamsString(keySecretPassKey)
             return if (seedPhrase != null) {
-                val walletOperation = WalletOperation(seedPhrase)
-                val resultAddressPassChild = walletOperation.getItemPass()
-                if (resultAddressPassChild != null) {
-                    logging().i("readTonPassItem") { "resultAddressPassChild ${resultAddressPassChild}" }
-                    if(resultAddressPassChild.passwordList.isNotEmpty()) {
-                        ResultReadResultFromTonBlock.InSuccess(resultAddressPassChild.passwordList)
-                    } else {
-                        ResultReadResultFromTonBlock.InEmpty
-                    }
+                if(keyPhrase != null) {
+                    val walletOperation = WalletOperation(seedPhrase)
+                    return walletOperation.getItemPass(keyPhrase)
                 } else {
-                    return ResultReadResultFromTonBlock.InError("")
+                    ResultReadResultFromTonBlock.InEmpty
                 }
             } else {
                 ResultReadResultFromTonBlock.InEmpty

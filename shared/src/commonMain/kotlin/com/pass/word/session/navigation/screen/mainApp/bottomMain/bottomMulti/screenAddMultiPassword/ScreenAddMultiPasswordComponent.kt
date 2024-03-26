@@ -115,7 +115,7 @@ class ScreenAddMultiPasswordComponent(
                 val itemList = database.getAllPass().toMutableList()
                 itemList.add(model)
                 logging().i("walletOperation") { "sendNewItemPass itemList $itemList" }
-                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList))
+                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList), null)
                 if(resultInSend is ResponseStatus.Success) {
                     _stateOpenDialogChoseType.update { StateAddDialog.Hide }
                     _textTitle.value = ""

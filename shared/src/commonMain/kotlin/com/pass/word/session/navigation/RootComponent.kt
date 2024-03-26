@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyAuthPass
+import com.pass.word.session.data.keySecretPassKey
 import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.navigation.screen.localDivisionRoot.LocalDivisionRootComponent
 import com.pass.word.session.navigation.screen.initialGreeting.InitialGreetingRootComponent
@@ -30,7 +31,7 @@ class RootComponent constructor(
     private fun checkStateAppLoading(): Configuration {
 
         getParamsString(keyAuthPass) ?: return Configuration.ScreenInitialGreeting
-
+        getParamsString(keySecretPassKey) ?: return Configuration.ScreenInitialGreeting
         if (getParamsString(keyWalletSeed) == null) {
             return Configuration.LocalDivisionRoot
         }

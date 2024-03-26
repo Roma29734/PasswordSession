@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.pass.word.session.navigation.screen.initialGreeting.screenCheckWalletAddress.ScreenCheckWalletAddressComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterPassKeySecret.ScreenEnterPassKeySecretComponent
 import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.ScreenEnterSeedPhraseComponent
 import com.pass.word.session.navigation.screen.mainApp.screenEnterPass.ScreenEnterPassComponent
 import kotlinx.serialization.Serializable
@@ -66,13 +67,25 @@ class TonInitRootComponent constructor(
                 ScreenCheckWalletAddressComponent(
                     componentContext = context,
                     navToNextScreen = {
-                        navigation.pushNew(Configuration.ScreenEnterInitialPassAuth)
+                        navigation.pushNew(Configuration.ScreenEnterPassKeySecret)
                     },
                     navToBackScreen = {
                         navigation.pop()
                     },
                     walletAddress = config.walletAddress,
                     jsonSeedPhrase = config.jsonSeedPhrase
+                )
+            )
+
+            is Configuration.ScreenEnterPassKeySecret -> Child.ScreenEnterPassKeySecret(
+                ScreenEnterPassKeySecretComponent(
+                    componentContext = context,
+                    navToNextScreen = {
+                        navigation.pushNew(Configuration.ScreenEnterInitialPassAuth)
+                    },
+                    navToBackScreen = {
+                        navigation.pop()
+                    }
                 )
             )
 
@@ -88,6 +101,8 @@ class TonInitRootComponent constructor(
 
         data class ScreenCheckWalletAddress(val component: ScreenCheckWalletAddressComponent) :
             Child()
+
+        data class ScreenEnterPassKeySecret(val component: ScreenEnterPassKeySecretComponent): Child()
     }
 
     @Serializable
@@ -104,5 +119,8 @@ class TonInitRootComponent constructor(
             val walletAddress: String,
             val jsonSeedPhrase: String
         ) : Configuration()
+
+        @Serializable
+        data object ScreenEnterPassKeySecret: Configuration()
     }
 }

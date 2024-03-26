@@ -1,7 +1,6 @@
 package com.pass.word.session.utilits
 
 
-const val KeySecretPhrase = "superSecretPhrqweerqeqase"
 
 expect fun generateAESKey(secretPhrase: String): ByteArray
 //    val digest = MessageDigest.getInstance("SHA-256")

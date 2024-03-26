@@ -1,5 +1,7 @@
 package com.pass.word.session.tonCore.contract.wallet
 
+import com.pass.word.session.data.getParamsString
+import com.pass.word.session.data.keySecretPassKey
 import com.pass.word.session.data.model.PasswordListContainer
 import com.pass.word.session.tonCore.contract.LiteContract
 import kotlinx.coroutines.Dispatchers
@@ -17,8 +19,8 @@ import org.ton.tl.ByteString.Companion.toByteString
 import com.pass.word.session.tonCore.toAddrString
 import com.pass.word.session.tonCore.toKeyPair
 import com.pass.word.session.tonCore.toNano
-import com.pass.word.session.utilits.KeySecretPhrase
 import com.pass.word.session.utilits.ResponseStatus
+import com.pass.word.session.utilits.ResultReadResultFromTonBlock
 import com.pass.word.session.utilits.decrypt
 import com.pass.word.session.utilits.encrypt
 import kotlinx.serialization.encodeToString
@@ -56,6 +58,8 @@ class WalletOperation(private val walletSeed: List<String>) {
             LiteContract(liteClient = liteClient)
         }
     }
+
+    // get method:
 
     private fun getWallet(): WalletV4R2 {
         return runBlocking {
@@ -136,50 +140,70 @@ class WalletOperation(private val walletSeed: List<String>) {
     }
 
 
-    suspend fun getItemPass(): PasswordListContainer? {
+    suspend fun getItemPass(phrase: String): ResultReadResultFromTonBlock {
         try {
             val itemPassChildContractAddress = getAddressPassChildContract()
             return if (itemPassChildContractAddress != null) {
-                val result = liteContract().getItemPassFromChildContract(AddrStd(itemPassChildContractAddress))
-                if(result != null) {
-                    val decryptResult = decrypt(encryptedText = result, secretPhrase = KeySecretPhrase)
+                val result =
+                    liteContract().getItemPassFromChildContract(AddrStd(itemPassChildContractAddress))
+                if (result != null) {
+                    if (result == "null") {
+                        return ResultReadResultFromTonBlock.InEmpty
+                    }
+                    val decryptResult =
+                        decrypt(encryptedText = result, secretPhrase = phrase)
                     logging().i("walletOperation") { "getItemPass - resultDecrypt - $decryptResult" }
-                    val resultFromObject = Json.decodeFromString<PasswordListContainer>(decryptResult)
+                    if (decryptResult == "null") {
+                        return ResultReadResultFromTonBlock.InEmpty
+                    }
+                    val resultFromObject =
+                        Json.decodeFromString<PasswordListContainer>(decryptResult)
                     logging().i("walletOperation") { "resultFromObject - resultFromObject - $resultFromObject" }
-                    resultFromObject
-                } else null
+                    ResultReadResultFromTonBlock.InSuccess(resultFromObject.passwordList)
+                } else ResultReadResultFromTonBlock.InError("Error in")
             } else {
-                null
+                ResultReadResultFromTonBlock.InError("Error in your child contract")
             }
         } catch (e: Exception) {
             logging().i("walletOperation") { "getItemPass error " + e.message }
-            return null
+            return ResultReadResultFromTonBlock.InError(e.message.toString())
         }
     }
 
-
+    //  send method:
     suspend fun sendNewItemPass(
-        newItemModel: PasswordListContainer
+        newItemModel: PasswordListContainer,
+        phrase: String?
     ): ResponseStatus {
         try {
-            val jsonResult = Json.encodeToString(newItemModel)
-            logging().i("walletOperation") { "sendNewItemPass jsonResult $jsonResult" }
-            val encryptResult = encrypt(text = jsonResult,secretPhrase = KeySecretPhrase)
-            logging().i("walletOperation") { "sendNewItemPass jsonResult $encryptResult" }
-            val walletAddress = getWalletAddress()
-            if(walletAddress != null) {
-                val resultAddress = liteContract().getDataItem(
-                    address = AddrStd(contractMasterAddress),
-                    addressWallet = AddrStd(walletAddress)
-                )
-                if(resultAddress != null) {
-                    val addressChildContract =  AddrStd(resultAddress)
-                    logging().i("walletOperation") { "sendNewItemPass result ${addressChildContract}" }
-                    val wallet = getWallet()
-                    wallet.transfer(address = addressChildContract, amount = 0.01.toNano(), comment = encryptResult)
+            val savedPhrase = getParamsString(keySecretPassKey)
+            val itemPhrase = phrase ?: savedPhrase
+            if(itemPhrase != null) {
+                val jsonResult = Json.encodeToString(newItemModel)
+                logging().i("walletOperation") { "sendNewItemPass jsonResult $jsonResult" }
+                val encryptResult = encrypt(text = jsonResult, secretPhrase = itemPhrase)
+                logging().i("walletOperation") { "sendNewItemPass jsonResult $encryptResult" }
+                val walletAddress = getWalletAddress()
+                if (walletAddress != null) {
+                    val resultAddress = liteContract().getDataItem(
+                        address = AddrStd(contractMasterAddress),
+                        addressWallet = AddrStd(walletAddress)
+                    )
+                    if (resultAddress != null) {
+                        val addressChildContract = AddrStd(resultAddress)
+                        logging().i("walletOperation") { "sendNewItemPass result ${addressChildContract}" }
+                        val wallet = getWallet()
+                        wallet.transfer(
+                            address = addressChildContract,
+                            amount = 0.01.toNano(),
+                            comment = encryptResult
+                        )
 
+                    }
+                    return ResponseStatus.Success
+                } else {
+                    return ResponseStatus.Error("")
                 }
-                return ResponseStatus.Success
             } else {
                 return ResponseStatus.Error("")
             }

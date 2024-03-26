@@ -142,7 +142,7 @@ class ScreenEditComponent constructor(
             val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
             if(seedPhrase != null) {
                 val itemResult = database.getAllPass()
-                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemResult))
+                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemResult), null)
                 if(resultInSend is ResponseStatus.Success) {
                     _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
                     showSnackBarDispatcher.dispatch("Password a success created")

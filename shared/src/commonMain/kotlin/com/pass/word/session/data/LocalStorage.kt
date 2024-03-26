@@ -7,6 +7,7 @@ val settings: Settings = Settings()
 
 internal const val keyAuthPass: String = "KEY_AUTH_PASS"
 internal const val keyWalletSeed: String = "KEY_WALLET_SEED"
+internal const val keySecretPassKey: String = "KEY_SECRET_PASS_KEY"
 
 fun getParamsInt(key: String): Int? {
     return settings[key]

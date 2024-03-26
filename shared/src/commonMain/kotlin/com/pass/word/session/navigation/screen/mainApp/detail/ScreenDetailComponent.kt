@@ -78,7 +78,7 @@ class ScreenDetailComponent constructor(
                     val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
                     if (seedPhrase != null) {
                         val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(
-                            PasswordListContainer(allItem)
+                            PasswordListContainer(allItem), null
                         )
                         if (resultInSend is ResponseStatus.Success) {
                             database.clearDatabase()

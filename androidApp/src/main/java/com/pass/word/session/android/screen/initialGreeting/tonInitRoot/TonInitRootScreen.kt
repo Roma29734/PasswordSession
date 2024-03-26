@@ -8,6 +8,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackA
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.mainApp.enterPassScreen.EnterPassScreen
 import com.pass.word.session.android.screen.initialGreeting.checkWalletAddress.CheckWalletAddressScreen
+import com.pass.word.session.android.screen.initialGreeting.enterPassKeySecret.EnterPassKeySecretScreen
 import com.pass.word.session.android.screen.initialGreeting.enterSeedPhrase.EnterSeedPhraseScreen
 import com.pass.word.session.navigation.screen.initialGreeting.tonInitRoot.TonInitRootComponent
 
@@ -32,6 +33,11 @@ fun TonInitRootScreen(component: TonInitRootComponent) {
             is TonInitRootComponent.Child.ScreenCheckWalletAddress -> CheckWalletAddressScreen(
                 component = instance.component
             )
+            
+            is TonInitRootComponent.Child.ScreenEnterPassKeySecret -> EnterPassKeySecretScreen(
+                component = instance.component
+            )
+            
         }
     }
 }

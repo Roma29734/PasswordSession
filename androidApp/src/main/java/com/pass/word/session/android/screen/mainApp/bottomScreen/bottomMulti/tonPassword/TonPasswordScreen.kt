@@ -95,7 +95,7 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
     }
 
     LaunchedEffect(isRefreshing) {
-        if(isRefreshing) {
+        if (isRefreshing) {
             component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory(context)))
             isRefreshing = false
         }
@@ -239,12 +239,29 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
 
         if (statePassItemDisplay is StatePassItemDisplay.VisibleItem) {
             val item = (statePassItemDisplay as StatePassItemDisplay.VisibleItem).passItem
-            SwipeRefresh(
-                state = swipeRefreshState,
-                onRefresh = {
-                    isRefreshing = true
-                },
-            ) {
+            if (stateSelectedTypeStorage == StateSelectedType.TonStorage) {
+                SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = {
+                        isRefreshing = true
+                    },
+                ) {
+                    LazyColumn(Modifier.padding(top = 8.dp)) {
+                        if (item != null) {
+                            items(count = item.size) { countItem ->
+                                ItemPasswordView(
+                                    nameItem = item[countItem].nameItemPassword,
+                                    emailItem = item[countItem].emailOrUserName,
+                                    changeData = item[countItem].changeData,
+                                    oncLick = {
+                                        component.onEvent(ScreenTonPasswordEvent.ClickToItem(item[countItem]))
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
                 LazyColumn(Modifier.padding(top = 8.dp)) {
                     if (item != null) {
                         items(count = item.size) { countItem ->
