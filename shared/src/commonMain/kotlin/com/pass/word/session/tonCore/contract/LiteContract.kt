@@ -16,6 +16,8 @@ import com.pass.word.session.tonCore.LiteServerAccountId
 import org.ton.tonkotlinusecase.constants.ContractMethods
 import com.pass.word.session.tonCore.toAddrString
 import com.pass.word.session.tonCore.toSlice
+import com.pass.word.session.utilits.ResponseCodState
+import com.pass.word.session.utilits.StateBasicResult
 
 open class LiteContract(
     override val liteClient: LiteClient
@@ -71,7 +73,7 @@ open class LiteContract(
         method: String,
         lastBlockId: TonNodeBlockIdExt? = null,
         params: List<VmStackValue> = listOf()
-    ): VmStack? {
+    ): Pair<VmStack?, Exception?> {
         var result: VmStack? = null
         var retryCount = 0
         var ex: Exception? = null
@@ -101,7 +103,7 @@ open class LiteContract(
 //            logger.warn(it.message)
 //        }.getOrNull()
 
-        return result
+        return Pair(result, ex)
     }
 
 
@@ -114,27 +116,11 @@ open class LiteContract(
 
     // ==== COLLECTION METHODS ====
 
-    suspend fun getItemAddressByIndex(
-        collectionAddress: AddrStd,
-        index: Int,
-        lastBlockId: TonNodeBlockIdExt? = null
-    ): MsgAddress? {
-        return runSmc(
-            collectionAddress,
-            ContractMethods.getItemAddressByIndex,
-            params = listOf(VmStackValue.of(index)),
-            lastBlockId = lastBlockId
-        )?.let {
-            val stack = it.toMutableVmStack()
-            return stack.popSlice().loadTlb(MsgAddress)
-        }
-    }
-
     suspend fun getDataItem(
         address: AddrStd,
         lastBlockId: TonNodeBlockIdExt? = null,
         addressWallet: AddrStd
-    ): String? {
+    ): StateBasicResult<String> {
         println("LLLAsdastBlockId - $lastBlockId")
 
         val returnedVmStack = runSmc(
@@ -143,20 +129,31 @@ open class LiteContract(
                 VmStackValue.of(addressWallet.toSlice())
             )
         )
-        if (returnedVmStack != null) {
-            println("getDataItem depth - ${returnedVmStack.depth}")
-            if (returnedVmStack.depth != 5) {
+
+        val vmStack = returnedVmStack.first
+        val ex = returnedVmStack.second
+
+        return if (vmStack != null && ex == null) {
+            println("getDataItem depth - ${vmStack.depth}")
+            if (vmStack.depth != 5) {
 
             }
             val resultAddress =
-                returnedVmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress).toAddrString()
+                vmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress)
+                    .toAddrString()
             println(
                 "getDataItem - $resultAddress"
             )
             println("getDataItem - $returnedVmStack")
-            return resultAddress
+            StateBasicResult.InSuccess(resultAddress)
+        } else if (ex != null) {
+            logging().i("liteCOntractRest") { "ex  ${ex.message}" }
+            if(ex is RuntimeException) {
+               return StateBasicResult.InError("in getData item", ResponseCodState.CD01)
+            }
+            StateBasicResult.InError("in getData item", ResponseCodState.CD401)
         } else {
-            return null
+            StateBasicResult.InError("in getData item", ResponseCodState.CD401)
         }
     }
 
@@ -169,8 +166,8 @@ open class LiteContract(
             lastBlockId, params = listOf()
         )
 
-        return if (returnedVmStack != null) {
-            val stack = returnedVmStack.toMutableVmStack().popCell()
+        return if (returnedVmStack.first != null) {
+            val stack = returnedVmStack.first!!.toMutableVmStack().popCell()
             val decodeResult = decodeCellToString(stack)
 
             logging().i("liteCOntractRest") { "decoreResult  $decodeResult" }
@@ -179,7 +176,6 @@ open class LiteContract(
             null
         }
     }
-
 
 
     private suspend fun decodeCellToString(itemCell: Cell): String? {

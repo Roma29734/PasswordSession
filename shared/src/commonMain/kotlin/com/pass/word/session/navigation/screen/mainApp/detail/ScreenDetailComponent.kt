@@ -13,7 +13,9 @@ import com.pass.word.session.data.model.PasswordListContainer
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.ResponseStatus
 import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.StateSelectedType
+import com.pass.word.session.utilits.convertToMessageAndCode
 import com.pass.word.session.utilits.jsonStringToList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -77,20 +79,24 @@ class ScreenDetailComponent constructor(
                 } else {
                     val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
                     if (seedPhrase != null) {
-                        val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(
+
+
+                        when (val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(
                             PasswordListContainer(allItem), null
-                        )
-                        if (resultInSend is ResponseStatus.Success) {
-                            database.clearDatabase()
-                            database.createPass(allItem)
-                            _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
-                            onGoBack()
-                        } else {
-                            val messageError = (resultInSend as ResponseStatus.Error).errorMessage
-                            _stateOpenDialogChoseType.update {
-                                StateBasicLoadingDialog.Error(
-                                    messageError
-                                )
+                        )) {
+                            is StateBasicResult.InSuccess -> {
+                                database.clearDatabase()
+                                database.createPass(allItem)
+                                _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
+                                onGoBack()
+                            }
+
+                            is StateBasicResult.InError -> {
+                                _stateOpenDialogChoseType.update {
+                                    StateBasicLoadingDialog.Error(
+                                        resultInSend.errorCode.convertToMessageAndCode()
+                                    )
+                                }
                             }
                         }
                     }

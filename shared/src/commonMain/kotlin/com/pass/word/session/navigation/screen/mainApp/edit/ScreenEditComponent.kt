@@ -16,7 +16,9 @@ import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.EventDispatcher
 import com.pass.word.session.utilits.ResponseStatus
 import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.StateSelectedType
+import com.pass.word.session.utilits.convertToMessageAndCode
 import com.pass.word.session.utilits.getThisLocalTime
 import com.pass.word.session.utilits.jsonStringToList
 import com.pass.word.session.utilits.onCheckValidation
@@ -142,14 +144,15 @@ class ScreenEditComponent constructor(
             val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
             if(seedPhrase != null) {
                 val itemResult = database.getAllPass()
-                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemResult), null)
-                if(resultInSend is ResponseStatus.Success) {
-                    _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
-                    showSnackBarDispatcher.dispatch("Password a success created")
-                    onGoBack()
-                } else {
-                    val messageError = (resultInSend as ResponseStatus.Error).errorMessage
-                    _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Error(messageError) }
+                when(val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemResult), null)) {
+                    is StateBasicResult.InSuccess -> {
+                        _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
+                        showSnackBarDispatcher.dispatch("Password a success created")
+                        onGoBack()
+                    }
+                    is StateBasicResult.InError -> {
+                        _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Error(resultInSend.errorCode.convertToMessageAndCode()) }
+                    }
                 }
             }
         }

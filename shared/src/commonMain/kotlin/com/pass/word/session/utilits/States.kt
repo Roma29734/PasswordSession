@@ -3,8 +3,8 @@ package com.pass.word.session.utilits
 import com.pass.word.session.data.model.PasswordItemModel
 
 sealed class ResponseStatus() {
-    data object Success: ResponseStatus()
-    data class Error (val errorMessage: String): ResponseStatus()
+    data object Success : ResponseStatus()
+    data class Error(val errorMessage: String) : ResponseStatus()
 }
 
 enum class StateSelectedType {
@@ -13,24 +13,37 @@ enum class StateSelectedType {
 
 
 sealed class StatePassItemDisplay {
-    data class VisibleItem(val passItem: List<PasswordItemModel>?): StatePassItemDisplay()
-    data class VisibleMessage(val message: String): StatePassItemDisplay()
-    data object VisibleNothing: StatePassItemDisplay()
+    data class VisibleItem(val passItem: List<PasswordItemModel>?) : StatePassItemDisplay()
+    data class VisibleMessage(val message: String) : StatePassItemDisplay()
+    data object VisibleNothing : StatePassItemDisplay()
 }
 
 sealed class StateStatusBar {
-    data class Show(val message: String): StateStatusBar()
-    data object Hide: StateStatusBar()
+    data class Show(val message: String) : StateStatusBar()
+    data object Hide : StateStatusBar()
 }
 
 sealed class StateBasicLoadingDialog {
-    data object Hide: StateBasicLoadingDialog()
-    data class Error(val message: String): StateBasicLoadingDialog()
-    data object ShowLoading: StateBasicLoadingDialog()
+    data object Hide : StateBasicLoadingDialog()
+    data class Error(val message: String) : StateBasicLoadingDialog()
+    data object ShowLoading : StateBasicLoadingDialog()
 }
 
 sealed class ResultReadResultFromTonBlock {
     data object InEmpty : ResultReadResultFromTonBlock()
-    data class InError(val message: String) : ResultReadResultFromTonBlock()
+    data class InError(val message: String, val errorCode: ResponseCodState) :
+        ResultReadResultFromTonBlock()
+
     data class InSuccess(val itemPass: List<PasswordItemModel>) : ResultReadResultFromTonBlock()
 }
+
+// Базовый стейт результата работы функции
+sealed class StateBasicResult<out T> {
+    data class InError(val message: String, val errorCode: ResponseCodState) :
+        StateBasicResult<Nothing>()
+
+    data class InSuccess<T>(val item: T) : StateBasicResult<T>()
+}
+
+
+

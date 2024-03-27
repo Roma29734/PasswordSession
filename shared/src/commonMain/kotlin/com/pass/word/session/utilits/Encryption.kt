@@ -7,7 +7,7 @@ expect fun generateAESKey(secretPhrase: String): ByteArray
 //    return digest.digest(secretPhrase.toByteArray(Charsets.UTF_8))
 
 
-expect fun encrypt(text: String, secretPhrase: String): String
+expect fun encrypt(text: String, secretPhrase: String): StateBasicResult<String>
 //    val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
 //    val keySpec = SecretKeySpec(generateAESKey(secretPhrase), "AES")
 //    val ivParameterSpec = IvParameterSpec(secretPhrase.substring(0, 16).toByteArray(Charsets.UTF_8))
@@ -16,7 +16,7 @@ expect fun encrypt(text: String, secretPhrase: String): String
 //    return Base64.getEncoder().encodeToString(encryptedBytes)
 //
 
-expect fun decrypt(encryptedText: String, secretPhrase: String): String
+expect fun decrypt(encryptedText: String, secretPhrase: String): StateBasicResult<String>
 //    val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
 //    val keySpec = SecretKeySpec(generateAESKey(secretPhrase), "AES")
 //    val ivParameterSpec = IvParameterSpec(secretPhrase.substring(0, 16).toByteArray(Charsets.UTF_8))

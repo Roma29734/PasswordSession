@@ -10,11 +10,13 @@ import com.pass.word.session.data.keySecretPassKey
 import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
+import com.pass.word.session.utilits.ResponseCodState
 import com.pass.word.session.utilits.ResultReadResultFromTonBlock
 import com.pass.word.session.utilits.StateBasicLoadingDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType
 import com.pass.word.session.utilits.StateStatusBar
+import com.pass.word.session.utilits.conversionToMessage
 import com.pass.word.session.utilits.jsonStringToList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -86,6 +88,7 @@ class ScreenTonPasswordComponent(
                     readLocalBd(event.databaseDriverFactory)
                 }
             }
+
             is ScreenTonPasswordEvent.HideDialog -> {
                 _stateLoading.update { StateBasicLoadingDialog.Hide }
             }
@@ -118,7 +121,7 @@ class ScreenTonPasswordComponent(
             delay(200)
             when (val readResult = readPassInBlockchainTon()) {
                 is ResultReadResultFromTonBlock.InSuccess -> {
-                    _stateVisibleStatusBar.update { StateStatusBar.Hide}
+                    _stateVisibleStatusBar.update { StateStatusBar.Hide }
                     if (_statePassItemDisplay.value is StatePassItemDisplay.VisibleItem) {
                         val listOne =
                             (_statePassItemDisplay.value as StatePassItemDisplay.VisibleItem).passItem?.map {
@@ -146,8 +149,8 @@ class ScreenTonPasswordComponent(
                 }
 
                 is ResultReadResultFromTonBlock.InEmpty -> {
-                    _stateVisibleStatusBar.update { StateStatusBar.Hide}
-                    if(database.getAllPass().isNotEmpty()){
+                    _stateVisibleStatusBar.update { StateStatusBar.Hide }
+                    if (database.getAllPass().isNotEmpty()) {
                         database.clearDatabase()
                     }
                     _stateLoading.update { StateBasicLoadingDialog.Hide }
@@ -155,7 +158,8 @@ class ScreenTonPasswordComponent(
                 }
 
                 is ResultReadResultFromTonBlock.InError -> {
-                    _stateVisibleStatusBar.update { StateStatusBar.Show("An error occurred try again later") }
+
+                    _stateVisibleStatusBar.update { StateStatusBar.Show("${readResult.errorCode} ${readResult.errorCode.conversionToMessage()}") }
                     _stateLoading.update { StateBasicLoadingDialog.Error(readResult.message) }
                 }
             }
@@ -164,21 +168,17 @@ class ScreenTonPasswordComponent(
 
     // This function read pass from Blockchain in Ton
     private suspend fun readPassInBlockchainTon(): ResultReadResultFromTonBlock {
-        try {
-            val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
-            val keyPhrase = getParamsString(keySecretPassKey)
-            return if (seedPhrase != null) {
-                if(keyPhrase != null) {
-                    val walletOperation = WalletOperation(seedPhrase)
-                    return walletOperation.getItemPass(keyPhrase)
-                } else {
-                    ResultReadResultFromTonBlock.InEmpty
-                }
+        val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
+        val keyPhrase = getParamsString(keySecretPassKey)
+        return if (seedPhrase != null) {
+            if (keyPhrase != null) {
+                val walletOperation = WalletOperation(seedPhrase)
+                return walletOperation.getItemPass(keyPhrase)
             } else {
                 ResultReadResultFromTonBlock.InEmpty
             }
-        } catch (e: Exception) {
-            return ResultReadResultFromTonBlock.InError(e.message.toString())
+        } else {
+            ResultReadResultFromTonBlock.InEmpty
         }
     }
 

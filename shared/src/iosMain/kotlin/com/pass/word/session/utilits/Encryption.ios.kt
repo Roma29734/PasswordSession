@@ -6,11 +6,11 @@ actual fun generateAESKey(secretPhrase: String): ByteArray {
 }
 
 
-actual fun encrypt(text: String, secretPhrase: String): String {
+actual fun encrypt(text: String, secretPhrase: String): StateBasicResult<String> {
     TODO()
 }
 
 
-actual fun decrypt(encryptedText: String, secretPhrase: String): String {
+actual fun decrypt(encryptedText: String, secretPhrase: String): StateBasicResult<String> {
     TODO()
 }

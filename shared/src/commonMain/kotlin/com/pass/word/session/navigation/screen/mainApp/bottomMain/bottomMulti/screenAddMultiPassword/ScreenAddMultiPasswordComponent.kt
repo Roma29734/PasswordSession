@@ -13,6 +13,8 @@ import com.pass.word.session.data.model.PasswordListContainer
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.EventDispatcher
 import com.pass.word.session.utilits.ResponseStatus
+import com.pass.word.session.utilits.StateBasicResult
+import com.pass.word.session.utilits.convertToMessageAndCode
 import com.pass.word.session.utilits.getThisLocalTime
 import com.pass.word.session.utilits.jsonStringToList
 import com.pass.word.session.utilits.onCheckValidation
@@ -115,18 +117,21 @@ class ScreenAddMultiPasswordComponent(
                 val itemList = database.getAllPass().toMutableList()
                 itemList.add(model)
                 logging().i("walletOperation") { "sendNewItemPass itemList $itemList" }
-                val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList), null)
-                if(resultInSend is ResponseStatus.Success) {
-                    _stateOpenDialogChoseType.update { StateAddDialog.Hide }
-                    _textTitle.value = ""
-                    _textEmailOrUserName.value = ""
-                    _textPassword.value = ""
-                    _textUrl.value = ""
-                    _textDescriptions.value = ""
-                    showSnackBarDispatcher.dispatch("Password a success created")
-                } else {
-                    val messageError = (resultInSend as ResponseStatus.Error).errorMessage
-                    _stateOpenDialogChoseType.update { StateAddDialog.Error(messageError) }
+                when(val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemList), null)) {
+                    is StateBasicResult.InSuccess -> {
+                        database.clearDatabase()
+                        database.createPass(itemList)
+                        _stateOpenDialogChoseType.update { StateAddDialog.Hide }
+                        _textTitle.value = ""
+                        _textEmailOrUserName.value = ""
+                        _textPassword.value = ""
+                        _textUrl.value = ""
+                        _textDescriptions.value = ""
+                        showSnackBarDispatcher.dispatch("Password a success created")
+                    }
+                    is StateBasicResult.InError -> {
+                        _stateOpenDialogChoseType.update { StateAddDialog.Error(resultInSend.errorCode.convertToMessageAndCode()) }
+                    }
                 }
             }
         }

@@ -19,8 +19,10 @@ import org.ton.tl.ByteString.Companion.toByteString
 import com.pass.word.session.tonCore.toAddrString
 import com.pass.word.session.tonCore.toKeyPair
 import com.pass.word.session.tonCore.toNano
+import com.pass.word.session.utilits.ResponseCodState
 import com.pass.word.session.utilits.ResponseStatus
 import com.pass.word.session.utilits.ResultReadResultFromTonBlock
+import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.decrypt
 import com.pass.word.session.utilits.encrypt
 import kotlinx.serialization.encodeToString
@@ -115,7 +117,7 @@ class WalletOperation(private val walletSeed: List<String>) {
     }
 
 
-    private suspend fun getAddressPassChildContract(): String? {
+    private suspend fun getAddressPassChildContract(): StateBasicResult<String> {
         try {
             val walletAddress = getWalletAddress()
             return if (walletAddress != null) {
@@ -125,48 +127,76 @@ class WalletOperation(private val walletSeed: List<String>) {
                     addressWallet = AddrStd(walletAddress)
                 )
                 logging().i("enterSeedPhrase") { "walletAddressRresult - $result" }
-                if (result != null) {
-                    liteContract().getItemPassFromChildContract(AddrStd(result))
+                return when (result) {
+                    is StateBasicResult.InSuccess -> {
+                        StateBasicResult.InSuccess(result.item)
+                    }
+
+                    is StateBasicResult.InError -> {
+                        StateBasicResult.InError(result.message, result.errorCode)
+                    }
                 }
-                return result
             } else {
-//             returned Null
-                null
+                StateBasicResult.InError("", ResponseCodState.CD402)
             }
         } catch (e: Exception) {
             logging().i("walletOperation") { "getAddressPassChildContract error " + e.message }
-            return null
+            return StateBasicResult.InError("", ResponseCodState.CD01)
         }
     }
 
-
     suspend fun getItemPass(phrase: String): ResultReadResultFromTonBlock {
         try {
-            val itemPassChildContractAddress = getAddressPassChildContract()
-            return if (itemPassChildContractAddress != null) {
-                val result =
-                    liteContract().getItemPassFromChildContract(AddrStd(itemPassChildContractAddress))
-                if (result != null) {
-                    if (result == "null") {
-                        return ResultReadResultFromTonBlock.InEmpty
-                    }
-                    val decryptResult =
-                        decrypt(encryptedText = result, secretPhrase = phrase)
-                    logging().i("walletOperation") { "getItemPass - resultDecrypt - $decryptResult" }
-                    if (decryptResult == "null") {
-                        return ResultReadResultFromTonBlock.InEmpty
-                    }
-                    val resultFromObject =
-                        Json.decodeFromString<PasswordListContainer>(decryptResult)
-                    logging().i("walletOperation") { "resultFromObject - resultFromObject - $resultFromObject" }
-                    ResultReadResultFromTonBlock.InSuccess(resultFromObject.passwordList)
-                } else ResultReadResultFromTonBlock.InError("Error in")
-            } else {
-                ResultReadResultFromTonBlock.InError("Error in your child contract")
+            return when (val itemPassChildContractAddress = getAddressPassChildContract()) {
+                is StateBasicResult.InSuccess -> {
+                    val result =
+                        liteContract().getItemPassFromChildContract(
+                            AddrStd(
+                                itemPassChildContractAddress.item
+                            )
+                        )
+                    if (result != null) {
+                        if (result == "null") {
+                            return ResultReadResultFromTonBlock.InEmpty
+                        }
+                        val decryptResult =
+                            decrypt(
+                                encryptedText = result,
+                                secretPhrase = phrase
+                            )
+                        logging().i("walletOperation") { "getItemPass - resultDecrypt - $decryptResult" }
+                        when (decryptResult) {
+                            is StateBasicResult.InSuccess -> {
+                                if (decryptResult.item == "null") {
+                                    return ResultReadResultFromTonBlock.InEmpty
+                                }
+                                val resultFromObject =
+                                    Json.decodeFromString<PasswordListContainer>(decryptResult.item)
+                                logging().i("walletOperation") { "resultFromObject - resultFromObject - $resultFromObject" }
+                                return ResultReadResultFromTonBlock.InSuccess(resultFromObject.passwordList)
+                            }
+
+                            is StateBasicResult.InError -> {
+                                ResultReadResultFromTonBlock.InError(
+                                    decryptResult.message,
+                                    decryptResult.errorCode
+                                )
+                            }
+                        }
+                    } else ResultReadResultFromTonBlock.InError("Error in", ResponseCodState.CD01)
+                }
+
+                is StateBasicResult.InError -> {
+                    ResultReadResultFromTonBlock.InError(
+                        itemPassChildContractAddress.message,
+                        itemPassChildContractAddress.errorCode
+                    )
+                }
+
             }
         } catch (e: Exception) {
-            logging().i("walletOperation") { "getItemPass error " + e.message }
-            return ResultReadResultFromTonBlock.InError(e.message.toString())
+            logging().i("walletOperation") { "getItemPass error " + e.stackTraceToString() }
+            return ResultReadResultFromTonBlock.InError(e.message.toString(), ResponseCodState.CD01)
         }
     }
 
@@ -174,11 +204,11 @@ class WalletOperation(private val walletSeed: List<String>) {
     suspend fun sendNewItemPass(
         newItemModel: PasswordListContainer,
         phrase: String?
-    ): ResponseStatus {
+    ): StateBasicResult<Boolean> {
         try {
             val savedPhrase = getParamsString(keySecretPassKey)
             val itemPhrase = phrase ?: savedPhrase
-            if(itemPhrase != null) {
+            if (itemPhrase != null) {
                 val jsonResult = Json.encodeToString(newItemModel)
                 logging().i("walletOperation") { "sendNewItemPass jsonResult $jsonResult" }
                 val encryptResult = encrypt(text = jsonResult, secretPhrase = itemPhrase)
@@ -189,27 +219,46 @@ class WalletOperation(private val walletSeed: List<String>) {
                         address = AddrStd(contractMasterAddress),
                         addressWallet = AddrStd(walletAddress)
                     )
-                    if (resultAddress != null) {
-                        val addressChildContract = AddrStd(resultAddress)
-                        logging().i("walletOperation") { "sendNewItemPass result ${addressChildContract}" }
-                        val wallet = getWallet()
-                        wallet.transfer(
-                            address = addressChildContract,
-                            amount = 0.01.toNano(),
-                            comment = encryptResult
-                        )
+                    when (resultAddress) {
+                        is StateBasicResult.InSuccess -> {
+                            when (encryptResult) {
+                                is StateBasicResult.InSuccess -> {
+                                    val addressChildContract = AddrStd(resultAddress.item)
+                                    logging().i("walletOperation") { "sendNewItemPass result ${addressChildContract}" }
+                                    val wallet = getWallet()
+                                    wallet.transfer(
+                                        address = addressChildContract,
+                                        amount = 0.01.toNano(),
+                                        comment = encryptResult.item
+                                    )
+                                    return StateBasicResult.InSuccess(true)
+                                }
 
+                                is StateBasicResult.InError -> {
+                                    return StateBasicResult.InError(
+                                        encryptResult.message,
+                                        encryptResult.errorCode
+                                    )
+                                }
+                            }
+                        }
+
+                        is StateBasicResult.InError -> {
+                            return StateBasicResult.InError(
+                                resultAddress.message,
+                                resultAddress.errorCode
+                            )
+                        }
                     }
-                    return ResponseStatus.Success
                 } else {
-                    return ResponseStatus.Error("")
+                    return StateBasicResult.InError("", ResponseCodState.CD402)
                 }
             } else {
-                return ResponseStatus.Error("")
+                return StateBasicResult.InError("", ResponseCodState.CD402)
             }
         } catch (e: Exception) {
             logging().i("walletOperation") { "sendNewItemPass Exception ${e.stackTraceToString()}" }
-            return ResponseStatus.Error(e.message.toString())
+            return StateBasicResult.InError("", ResponseCodState.CD00)
         }
     }
 
@@ -249,6 +298,22 @@ private val listServerConfigLite = listOf<LiteServerParams>(
         port = 35939,
         id = LiteServerId(
             key = "97y55AkdzXWyyVuOAn+WX6p66XTNs2hEGG0jFUOkCIo=",
+            type = "pub.ed25519"
+        )
+    ),
+    LiteServerParams(
+        ip = 1091914380,
+        port = 46427,
+        id = LiteServerId(
+            key = "JhXt7H1dZTgxQTIyGiYV4f9VUARuDxFl/1kVBjLSMB8=",
+            type = "pub.ed25519"
+        )
+    ),
+    LiteServerParams(
+        ip = 1097633201,
+        port = 17439,
+        id = LiteServerId(
+            key = "0MIADpLH4VQn+INHfm0FxGiuZZAA8JfTujRqQugkkA8=",
             type = "pub.ed25519"
         )
     ),
