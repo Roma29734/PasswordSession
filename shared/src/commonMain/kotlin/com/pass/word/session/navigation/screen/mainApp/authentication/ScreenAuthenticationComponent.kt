@@ -30,7 +30,6 @@ class ScreenAuthenticationComponent constructor(
     }
 
 
-
     private var pass: String? = null
     var clickState = false
     fun unsubscribeListenerSnackBar(listener: (String) -> Unit) {
@@ -58,10 +57,10 @@ class ScreenAuthenticationComponent constructor(
             }
 
             is ScreenAuthStateEvent.ReactionToFirstBiometrics -> {
-                if(eventAuth.successState) {
+                if (eventAuth.successState) {
                     _passItem.value = pass.orEmpty()
                     onNavigateToMainScreen()
-                    vibrationResponse (50, eventAuth.context)
+                    vibrationResponse(50, eventAuth.context)
                 }
             }
 
@@ -69,15 +68,17 @@ class ScreenAuthenticationComponent constructor(
                 vibrationResponse(20, eventAuth.context)
                 CoroutineScope(Dispatchers.Main).launch {
                     val oldValue = passItem.value
-                    val newValue = oldValue + eventAuth.number
-                    _passItem.value = newValue
-                    if(passItem.value.length == 4){
+                    if(oldValue.length != 4) {
+                        val newValue = oldValue + eventAuth.number
+                        _passItem.value = newValue
+                    }
+                    if (passItem.value.length == 4) {
                         println("clickState afterClick - $clickState")
-                        if(!clickState) {
+                        if (!clickState) {
                             clickState = true
                             GlobalScope.launch {
                                 delay(300)
-                                if(pass == passItem.value) {
+                                if (pass == passItem.value) {
                                     onNavigateToMainScreen()
                                 } else {
                                     showSnackBar("pass error")
@@ -86,7 +87,7 @@ class ScreenAuthenticationComponent constructor(
                                 }
                             }
                         } else {
-                            if(pass == passItem.value) {
+                            if (pass == passItem.value) {
                                 onNavigateToMainScreen()
                             } else {
                                 _passItem.value = ""
