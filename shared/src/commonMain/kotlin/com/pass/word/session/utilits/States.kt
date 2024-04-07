@@ -23,10 +23,10 @@ sealed class StateStatusBar {
     data object Hide : StateStatusBar()
 }
 
-sealed class StateBasicLoadingDialog {
-    data object Hide : StateBasicLoadingDialog()
-    data class Error(val message: String) : StateBasicLoadingDialog()
-    data object ShowLoading : StateBasicLoadingDialog()
+sealed class StateBasicDialog {
+    data object Hide : StateBasicDialog()
+    data class Error(val message: String) : StateBasicDialog()
+    data object Show : StateBasicDialog()
 }
 
 sealed class ResultReadResultFromTonBlock {

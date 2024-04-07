@@ -1,38 +1,21 @@
 package com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.tonPassword
 
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -64,7 +47,7 @@ import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
 import com.pass.word.session.ui.CustomColor
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType
 import com.pass.word.session.utilits.StateStatusBar
@@ -300,14 +283,14 @@ fun TonPasswordScreen(component: ScreenTonPasswordComponent) {
             }
         }
 
-        if (stateLoading is StateBasicLoadingDialog.ShowLoading) {
-            Dialog(onDismissRequest = { stateLoading as StateBasicLoadingDialog.ShowLoading }) {
+        if (stateLoading is StateBasicDialog.Show) {
+            Dialog(onDismissRequest = { stateLoading as StateBasicDialog.Show }) {
                 CustomLoadingDialog()
             }
         }
 
-        if (stateLoading is StateBasicLoadingDialog.Error) {
-            Dialog(onDismissRequest = { stateLoading is StateBasicLoadingDialog.Error }) {
+        if (stateLoading is StateBasicDialog.Error) {
+            Dialog(onDismissRequest = { stateLoading is StateBasicDialog.Error }) {
                 CustomErrorDialog(
                     textTitle = "An error has occurred",
                     textSubTitle = "An error occurred during the execution of the request. try again later",

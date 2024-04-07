@@ -42,11 +42,10 @@ import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.model.PasswordItemModel
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -71,14 +70,14 @@ fun DetailScreen(component: ScreenDetailComponent) {
 
 
 
-        if (stateLoading is StateBasicLoadingDialog.ShowLoading) {
-            Dialog(onDismissRequest = { stateLoading as StateBasicLoadingDialog.ShowLoading }) {
+        if (stateLoading is StateBasicDialog.Show) {
+            Dialog(onDismissRequest = { stateLoading as StateBasicDialog.Show }) {
                 CustomLoadingDialog()
             }
         }
 
-        if (stateLoading is StateBasicLoadingDialog.Error) {
-            Dialog(onDismissRequest = { stateLoading is StateBasicLoadingDialog.Error }) {
+        if (stateLoading is StateBasicDialog.Error) {
+            Dialog(onDismissRequest = { stateLoading is StateBasicDialog.Error }) {
                 CustomErrorDialog(
                     textTitle = "An error has occurred",
                     textSubTitle = "An error occurred during the execution of the request. try again later",

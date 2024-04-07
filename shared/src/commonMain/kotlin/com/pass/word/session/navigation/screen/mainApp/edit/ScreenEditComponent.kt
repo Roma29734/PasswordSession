@@ -10,12 +10,9 @@ import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.data.model.PasswordListContainer
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordEvent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.StateAddDialog
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.EventDispatcher
-import com.pass.word.session.utilits.ResponseStatus
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.StateSelectedType
 import com.pass.word.session.utilits.convertToMessageAndCode
@@ -53,8 +50,8 @@ class ScreenEditComponent constructor(
 
     val showSnackBarDispatcher = EventDispatcher<String>()
 
-    private var _stateOpenDialogChoseType: MutableStateFlow<StateBasicLoadingDialog> =
-        MutableStateFlow(StateBasicLoadingDialog.Hide)
+    private var _stateOpenDialogChoseType: MutableStateFlow<StateBasicDialog> =
+        MutableStateFlow(StateBasicDialog.Hide)
     val stateOpenDialogChoseType get() = _stateOpenDialogChoseType
     private val seedPhrase = getParamsString(keyWalletSeed)
 
@@ -98,7 +95,7 @@ class ScreenEditComponent constructor(
                 }
             }
             is ScreenEditEvent.CloseAllAlert -> {
-                _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
+                _stateOpenDialogChoseType.update { StateBasicDialog.Hide }
             }
         }
     }
@@ -121,7 +118,7 @@ class ScreenEditComponent constructor(
 
     private fun updateInTonStorage(databaseDriverFactory: DriverFactory) {
         CoroutineScope(Dispatchers.IO).launch {
-            _stateOpenDialogChoseType.update { StateBasicLoadingDialog.ShowLoading }
+            _stateOpenDialogChoseType.update { StateBasicDialog.Show }
             val localDate = getThisLocalTime()
             val model = PasswordItemModel(
                 id = passDetailModel.id,
@@ -134,7 +131,7 @@ class ScreenEditComponent constructor(
             )
 
             if(model == passDetailModel ) {
-                _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
+                _stateOpenDialogChoseType.update { StateBasicDialog.Hide }
                 onGoBack()
                 return@launch
             }
@@ -146,12 +143,12 @@ class ScreenEditComponent constructor(
                 val itemResult = database.getAllPass()
                 when(val resultInSend = WalletOperation(seedPhrase).sendNewItemPass(PasswordListContainer(itemResult), null)) {
                     is StateBasicResult.InSuccess -> {
-                        _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
+                        _stateOpenDialogChoseType.update { StateBasicDialog.Hide }
                         showSnackBarDispatcher.dispatch("Password a success created")
                         onGoBack()
                     }
                     is StateBasicResult.InError -> {
-                        _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Error(resultInSend.errorCode.convertToMessageAndCode()) }
+                        _stateOpenDialogChoseType.update { StateBasicDialog.Error(resultInSend.errorCode.convertToMessageAndCode()) }
                     }
                 }
             }

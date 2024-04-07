@@ -94,6 +94,7 @@ fun EnterSeedPhraseScreen(component: ScreenEnterSeedPhraseComponent) {
 
                     item {
                         Text(
+                            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                             text = "enter your SED phrase of your wallet tone",
                             style = MaterialTheme.typography.displayLarge,
                             color = Color.White,
@@ -200,7 +201,7 @@ fun CustomDialogUI(
                         .fillMaxWidth(),
 
                     colorFilter = ColorFilter.tint(CustomColor().brandGreen)
-                    )
+                )
 
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -232,7 +233,13 @@ fun CustomDialogUI(
                     }
                 }
             } else {
-                CircularProgressIndicator(modifier = Modifier.padding(top = 35.dp).height(70.dp).height(70.dp), color = CustomColor().brandBlueLight)
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(top = 35.dp)
+                        .height(70.dp)
+                        .height(70.dp),
+                    color = CustomColor().brandBlueLight
+                )
 
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(

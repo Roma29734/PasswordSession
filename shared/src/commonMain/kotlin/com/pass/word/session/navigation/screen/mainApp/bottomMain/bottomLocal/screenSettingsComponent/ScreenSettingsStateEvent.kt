@@ -8,4 +8,5 @@ interface ScreenSettingsStateEvent {
         ScreenSettingsStateEvent
     data object OnNavigateToChangePasswordComponent: ScreenSettingsStateEvent
     data object OnNavigateToImportPassword : ScreenSettingsStateEvent
+    data object OnNavigateToSeedPhraseSettings: ScreenSettingsStateEvent
 }

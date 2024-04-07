@@ -73,7 +73,8 @@ class ScreenBottomLocalComponent constructor(
                 ScreenSettingsComponent(
                     componentContext = context,
                     onNavigateToChangePasswordComponent = { onNavigateToChangePasswordComponent() },
-                    onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() }
+                    onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() },
+                    {  }
                 )
             )
         }

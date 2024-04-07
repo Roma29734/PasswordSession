@@ -28,7 +28,7 @@ import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.navigation.screen.initialGreeting.screenEnterPassKeySecret.ScreenEnterPassKeySecretComponent
 import com.pass.word.session.navigation.screen.initialGreeting.screenEnterPassKeySecret.ScreenEnterPassKeySecretEvent
 import com.pass.word.session.ui.CustomColor
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 
 @Composable
 fun EnterPassKeySecretScreen(component: ScreenEnterPassKeySecretComponent) {
@@ -94,17 +94,17 @@ fun EnterPassKeySecretScreen(component: ScreenEnterPassKeySecretComponent) {
             component.onEvent(ScreenEnterPassKeySecretEvent.ClickContinueButton)
         }
 
-        if (stateLoading is StateBasicLoadingDialog.ShowLoading) {
-            Dialog(onDismissRequest = { stateLoading as StateBasicLoadingDialog.ShowLoading }) {
+        if (stateLoading is StateBasicDialog.Show) {
+            Dialog(onDismissRequest = { stateLoading as StateBasicDialog.Show }) {
                 CustomLoadingDialog()
             }
         }
 
-        if (stateLoading is StateBasicLoadingDialog.Error) {
-            Dialog(onDismissRequest = { stateLoading is StateBasicLoadingDialog.Error }) {
+        if (stateLoading is StateBasicDialog.Error) {
+            Dialog(onDismissRequest = { stateLoading is StateBasicDialog.Error }) {
                 CustomErrorDialog(
                     textTitle = "An error has occurred",
-                    textSubTitle = (stateLoading as StateBasicLoadingDialog.Error).message,
+                    textSubTitle = (stateLoading as StateBasicDialog.Error).message,
                     textButton = "close",
                     handlerButton = {
                         component.onEvent(ScreenEnterPassKeySecretEvent.HideLoadingDialog)

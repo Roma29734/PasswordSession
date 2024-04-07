@@ -11,15 +11,13 @@ import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.data.model.PasswordListContainer
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
-import com.pass.word.session.utilits.ResponseStatus
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.StateSelectedType
 import com.pass.word.session.utilits.convertToMessageAndCode
 import com.pass.word.session.utilits.jsonStringToList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -42,8 +40,8 @@ class ScreenDetailComponent constructor(
 
     private val seedPhrase = getParamsString(keyWalletSeed)
 
-    private var _stateOpenDialogChoseType: MutableStateFlow<StateBasicLoadingDialog> =
-        MutableStateFlow(StateBasicLoadingDialog.Hide)
+    private var _stateOpenDialogChoseType: MutableStateFlow<StateBasicDialog> =
+        MutableStateFlow(StateBasicDialog.Hide)
     val stateOpenDialogChoseType get() = _stateOpenDialogChoseType
 
     fun getOneItem(databaseDriverFactory: DriverFactory) {
@@ -68,7 +66,7 @@ class ScreenDetailComponent constructor(
                     PersonalDatabase(databaseDriverFactory).deleteOneItem(passDetailModel.id)
                     return@launch
                 }
-                _stateOpenDialogChoseType.update { StateBasicLoadingDialog.ShowLoading }
+                _stateOpenDialogChoseType.update { StateBasicDialog.Show }
                 val database = TonCashDatabase(databaseDriverFactory)
 
                 val allItem = database.getAllPass().toMutableList()
@@ -87,13 +85,13 @@ class ScreenDetailComponent constructor(
                             is StateBasicResult.InSuccess -> {
                                 database.clearDatabase()
                                 database.createPass(allItem)
-                                _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Hide }
+                                _stateOpenDialogChoseType.update { StateBasicDialog.Hide }
                                 onGoBack()
                             }
 
                             is StateBasicResult.InError -> {
                                 _stateOpenDialogChoseType.update {
-                                    StateBasicLoadingDialog.Error(
+                                    StateBasicDialog.Error(
                                         resultInSend.errorCode.convertToMessageAndCode()
                                     )
                                 }
@@ -102,7 +100,7 @@ class ScreenDetailComponent constructor(
                     }
                 }
             } catch (e: Exception) {
-                _stateOpenDialogChoseType.update { StateBasicLoadingDialog.Error(e.message.toString()) }
+                _stateOpenDialogChoseType.update { StateBasicDialog.Error(e.message.toString()) }
             }
         }
     }

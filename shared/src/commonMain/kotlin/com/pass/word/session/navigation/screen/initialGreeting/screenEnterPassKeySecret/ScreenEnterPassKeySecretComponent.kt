@@ -7,7 +7,7 @@ import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.putToParams
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.ResultReadResultFromTonBlock
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.jsonStringToList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ class ScreenEnterPassKeySecretComponent(
 
     // state progress loading (state showed dialog)
     private var _stateLoading =
-        MutableStateFlow<StateBasicLoadingDialog>(StateBasicLoadingDialog.Hide)
+        MutableStateFlow<StateBasicDialog>(StateBasicDialog.Hide)
     val stateLoading = _stateLoading
 
     private var _warningText = MutableStateFlow<String?>(null)
@@ -46,32 +46,32 @@ class ScreenEnterPassKeySecretComponent(
             }
 
             is ScreenEnterPassKeySecretEvent.ClickContinueButton -> {
-                _stateLoading.update { StateBasicLoadingDialog.ShowLoading }
+                _stateLoading.update { StateBasicDialog.Show }
                 if (_statePassKeySecret.value.length >= 14) {
                     CoroutineScope(Dispatchers.IO).launch {
                         val seedPhrase = seedPhrase?.let { jsonStringToList(it) }
                         if (seedPhrase != null) {
                             when (WalletOperation(seedPhrase).getItemPass(_statePassKeySecret.value)) {
                                 is ResultReadResultFromTonBlock.InEmpty -> {
-                                    _stateLoading.update { StateBasicLoadingDialog.Hide }
+                                    _stateLoading.update { StateBasicDialog.Hide }
                                     _statePassKeySecret.value.putToParams(keySecretPassKey)
                                     navToNextScreen()
                                 }
 
                                 is ResultReadResultFromTonBlock.InSuccess -> {
-                                    _stateLoading.update { StateBasicLoadingDialog.Hide }
+                                    _stateLoading.update { StateBasicDialog.Hide }
                                     _statePassKeySecret.value.putToParams(keySecretPassKey)
                                     navToNextScreen()
                                 }
 
                                 is ResultReadResultFromTonBlock.InError -> {
-                                    _stateLoading.update { StateBasicLoadingDialog.Error("The phrase already exists, the one you entered is incorrect") }
+                                    _stateLoading.update { StateBasicDialog.Error("The phrase already exists, the one you entered is incorrect") }
                                 }
                             }
                         }
                     }
                 } else {
-                    _stateLoading.update { StateBasicLoadingDialog.Error("Incorrect password length") }
+                    _stateLoading.update { StateBasicDialog.Error("Incorrect password length") }
                 }
             }
 
@@ -87,7 +87,7 @@ class ScreenEnterPassKeySecretComponent(
             }
 
             is ScreenEnterPassKeySecretEvent.HideLoadingDialog -> {
-                _stateLoading.update { StateBasicLoadingDialog.Hide }
+                _stateLoading.update { StateBasicDialog.Hide }
             }
         }
     }

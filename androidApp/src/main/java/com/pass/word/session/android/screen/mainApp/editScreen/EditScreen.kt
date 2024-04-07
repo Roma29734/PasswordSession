@@ -34,11 +34,9 @@ import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.OutlineInputText
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordEvent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.StateAddDialog
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditComponent
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditEvent
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -82,14 +80,14 @@ fun EditScreen(component: ScreenEditComponent) {
     ) {
 
 
-        if (stateOpenDialogLoading is StateBasicLoadingDialog.ShowLoading) {
-            Dialog(onDismissRequest = { stateOpenDialogLoading is StateBasicLoadingDialog.ShowLoading }) {
+        if (stateOpenDialogLoading is StateBasicDialog.Show) {
+            Dialog(onDismissRequest = { stateOpenDialogLoading is StateBasicDialog.Show }) {
                 CustomLoadingDialog()
             }
         }
 
-        if (stateOpenDialogLoading is StateBasicLoadingDialog.Error) {
-            Dialog(onDismissRequest = { stateOpenDialogLoading is StateBasicLoadingDialog.Error }) {
+        if (stateOpenDialogLoading is StateBasicDialog.Error) {
+            Dialog(onDismissRequest = { stateOpenDialogLoading is StateBasicDialog.Error }) {
                 CustomErrorDialog(
                     textTitle = "An error has occurred",
                     textSubTitle = "An error occurred during the execution of the request. try again later",

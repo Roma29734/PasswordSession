@@ -16,12 +16,14 @@ import com.pass.word.session.navigation.screen.localDivisionRoot.LocalDivisionRo
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.ScreenBottomMultiComponent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditComponent
+import com.pass.word.session.navigation.screen.mainApp.seedPhraseSettings.ScreenSeedPhraseSettingsComponent
 import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
 class MultiDivisionRootComponent constructor(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val navToInitScreen: () -> Unit
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
@@ -83,6 +85,9 @@ class MultiDivisionRootComponent constructor(
                     },
                     onNavigateToImportPasswordComponent = {
                         navigation.pushNew(Configuration.ScreenImportPassword)
+                    },
+                    onNavigateToPhraseSettingsComponent = {
+                        navigation.pushNew(Configuration.ScreenSeedPhraseSettings)
                     }
                 )
             )
@@ -115,6 +120,14 @@ class MultiDivisionRootComponent constructor(
                 )
             )
 
+            is Configuration.ScreenSeedPhraseSettings -> Child.ScreenSeedPhraseSettings(
+                ScreenSeedPhraseSettingsComponent(
+                    componentContext = context,
+                    navToBackScreen = { navigation.pop() },
+                    navToInitScreen = { navToInitScreen() }
+                )
+            )
+
         }
     }
 
@@ -133,6 +146,9 @@ class MultiDivisionRootComponent constructor(
         data class ScreenDetail(val component: ScreenDetailComponent) : Child()
 
         data class ScreenEdit(val component: ScreenEditComponent) : Child()
+
+        data class ScreenSeedPhraseSettings(val component: ScreenSeedPhraseSettingsComponent) :
+            Child()
     }
 
     @Serializable
@@ -163,5 +179,8 @@ class MultiDivisionRootComponent constructor(
             val passDetailModel: PasswordItemModel,
             val stateSelectedType: StateSelectedType
         ) : Configuration()
+
+        @Serializable
+        data object ScreenSeedPhraseSettings : Configuration()
     }
 }

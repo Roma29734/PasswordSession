@@ -24,13 +24,15 @@ import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.sc
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
 import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.serialization.Serializable
+import org.ton.block.VmCont
 
 
 class ScreenBottomMultiComponent(
     componentContext: ComponentContext,
     private val onNavigateToDetailComponent: (PasswordItemModel, StateSelectedType) -> Unit,
     private val onNavigateToChangePasswordComponent: () -> Unit,
-    private val onNavigateToImportPasswordComponent: () -> Unit
+    private val onNavigateToImportPasswordComponent: () -> Unit,
+    private val onNavigateToPhraseSettingsComponent: () -> Unit,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
@@ -86,7 +88,10 @@ class ScreenBottomMultiComponent(
                 ScreenSettingsComponent(
                     componentContext = context,
                     onNavigateToChangePasswordComponent = { onNavigateToChangePasswordComponent() },
-                    onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() }
+                    onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() },
+                    onNavigateToPhraseSettingsComponent = {
+                        onNavigateToPhraseSettingsComponent()
+                    }
                 )
             )
 

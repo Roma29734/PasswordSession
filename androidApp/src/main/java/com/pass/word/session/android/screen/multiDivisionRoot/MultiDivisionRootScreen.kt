@@ -12,6 +12,7 @@ import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.Bot
 import com.pass.word.session.android.screen.mainApp.changePassword.ChangePasswordRoot
 import com.pass.word.session.android.screen.mainApp.detailScreen.DetailScreen
 import com.pass.word.session.android.screen.mainApp.editScreen.EditScreen
+import com.pass.word.session.android.screen.seedPhraseSettings.SeedPhraseSettingsScreen
 import com.pass.word.session.navigation.screen.multiDivisionRoot.MultiDivisionRootComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -38,6 +39,10 @@ fun MultiDivisionRootScreen(component: MultiDivisionRootComponent) {
             is MultiDivisionRootComponent.Child.ScreenDetail -> DetailScreen(component = instance.component)
             
             is MultiDivisionRootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
+
+            is MultiDivisionRootComponent.Child.ScreenSeedPhraseSettings -> SeedPhraseSettingsScreen(
+                component = instance.component
+            )
         }
     }
 }

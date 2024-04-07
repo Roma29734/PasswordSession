@@ -97,6 +97,16 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
                         component.onEvent(ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent)
                     }
                 )
+
+                Spacer(modifier = Modifier.size(16.dp))
+                ItemSettingsMenu(
+                    image = painterResource(id = R.drawable.ic_password_vertical),
+                    text = "seed phrase settings",
+                    clickHandler = {
+                        component.onEvent(ScreenSettingsStateEvent.OnNavigateToSeedPhraseSettings)
+                    }
+                )
+
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemSettingsMenu(
                     image = painterResource(id = R.drawable.ic_logo_telegram),

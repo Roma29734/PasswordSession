@@ -10,9 +10,8 @@ import com.pass.word.session.data.keySecretPassKey
 import com.pass.word.session.data.keyWalletSeed
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
-import com.pass.word.session.utilits.ResponseCodState
 import com.pass.word.session.utilits.ResultReadResultFromTonBlock
-import com.pass.word.session.utilits.StateBasicLoadingDialog
+import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType
 import com.pass.word.session.utilits.StateStatusBar
@@ -34,7 +33,7 @@ class ScreenTonPasswordComponent(
 
     // state progress loading (state showed dialog)
     private var _stateLoading =
-        MutableStateFlow<StateBasicLoadingDialog>(StateBasicLoadingDialog.Hide)
+        MutableStateFlow<StateBasicDialog>(StateBasicDialog.Hide)
     val stateLoading = _stateLoading
 
     private val seedPhrase = getParamsString(keyWalletSeed)
@@ -90,7 +89,7 @@ class ScreenTonPasswordComponent(
             }
 
             is ScreenTonPasswordEvent.HideDialog -> {
-                _stateLoading.update { StateBasicLoadingDialog.Hide }
+                _stateLoading.update { StateBasicDialog.Hide }
             }
         }
     }
@@ -103,11 +102,11 @@ class ScreenTonPasswordComponent(
                 _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
                 return
             }
-            _stateLoading.update { StateBasicLoadingDialog.Hide }
+            _stateLoading.update { StateBasicDialog.Hide }
             _statePassItemDisplay.update { StatePassItemDisplay.VisibleItem(database) }
         } catch (e: Exception) {
             println("Erro pass screen - ${e.message}")
-            _stateLoading.update { StateBasicLoadingDialog.Error(e.message.toString()) }
+            _stateLoading.update { StateBasicDialog.Error(e.message.toString()) }
         }
     }
 
@@ -115,7 +114,7 @@ class ScreenTonPasswordComponent(
     private fun readTonPassItem(databaseDriverFactory: DriverFactory) {
         CoroutineScope(Dispatchers.IO).launch {
             _stateCallItem.update { false }
-            _stateLoading.update { StateBasicLoadingDialog.ShowLoading }
+            _stateLoading.update { StateBasicDialog.Show }
             val database = TonCashDatabase(databaseDriverFactory)
             readTonCashBd(database)
             delay(200)
@@ -138,13 +137,13 @@ class ScreenTonPasswordComponent(
                             database.createPass(readResult.itemPass)
                             readTonCashBd(database)
                         }
-                        _stateLoading.update { StateBasicLoadingDialog.Hide }
+                        _stateLoading.update { StateBasicDialog.Hide }
                     } else {
                         database.clearDatabase()
                         database.createPass(readResult.itemPass)
                         readTonCashBd(database)
                         _statePassItemDisplay.update { StatePassItemDisplay.VisibleItem(readResult.itemPass) }
-                        _stateLoading.update { StateBasicLoadingDialog.Hide }
+                        _stateLoading.update { StateBasicDialog.Hide }
                     }
                 }
 
@@ -153,14 +152,14 @@ class ScreenTonPasswordComponent(
                     if (database.getAllPass().isNotEmpty()) {
                         database.clearDatabase()
                     }
-                    _stateLoading.update { StateBasicLoadingDialog.Hide }
+                    _stateLoading.update { StateBasicDialog.Hide }
                     _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
                 }
 
                 is ResultReadResultFromTonBlock.InError -> {
 
                     _stateVisibleStatusBar.update { StateStatusBar.Show("${readResult.errorCode} ${readResult.errorCode.conversionToMessage()}") }
-                    _stateLoading.update { StateBasicLoadingDialog.Error(readResult.message) }
+                    _stateLoading.update { StateBasicDialog.Error(readResult.message) }
                 }
             }
         }

@@ -81,7 +81,7 @@ class WalletV4R2(
         })
     }
 
-    suspend fun transfer(address: AddrStd, amount: Long, comment: String) {
+    suspend fun transfer(address: AddrStd, amount: Long, cell: Cell) {
         transfer(transfers = listOf(
             WalletTransfer {
                 destination = address
@@ -89,11 +89,12 @@ class WalletV4R2(
                 bounceable = false
                 sendMode = SendMode.PAY_GAS_SEPARATELY
                 messageData = MessageData.raw(
-                    body = buildCell {
-                        storeUInt(0x5773d1f5, 32)
-                        storeUInt(0, 64)
-                        storeRef(comment.toCell()).endCell()
-                    }
+                    body = cell
+//                    body = buildCell {
+//                        storeUInt(0x5773d1f5, 32)
+//                        storeUInt(0, 64)
+//                        storeRef(comment.toCell()).endCell()
+//                    }
                 )
             }
         ).toTypedArray())

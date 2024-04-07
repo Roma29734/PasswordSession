@@ -108,11 +108,16 @@ fun ButtonNumber(textButton: Int, clickHandler: (Int) -> Unit) {
 }
 
 @Composable
-fun MainComponentButton(text: String, enabledState: Boolean, clickHandler: () -> Unit) {
+fun MainComponentButton(
+    text: String,
+    enabledState: Boolean,
+    colorButton: Color = CustomColor().brandBlueLight,
+    clickHandler: () -> Unit
+) {
     Column(
         Modifier
             .fillMaxWidth()
-            .background(if (enabledState) CustomColor().brandBlueLight else CustomColor().grayLight)
+            .background(if (enabledState) colorButton else CustomColor().grayLight)
             .clickable(enabledState) { clickHandler() },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,

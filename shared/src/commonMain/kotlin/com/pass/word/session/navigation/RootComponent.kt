@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyAuthPass
@@ -51,7 +52,7 @@ class RootComponent constructor(
                 InitialGreetingRootComponent(
                     componentContext = context,
                     navigateToAuthScreen = {
-                        if(it) {
+                        if (it) {
                             navigation.replaceCurrent(Configuration.MultiDivisionRoot)
                         } else {
                             navigation.replaceCurrent(Configuration.LocalDivisionRoot)
@@ -65,7 +66,9 @@ class RootComponent constructor(
             )
 
             is Configuration.MultiDivisionRoot -> Child.MultiDivisionRoot(
-                MultiDivisionRootComponent(componentContext = context)
+                MultiDivisionRootComponent(componentContext = context, navToInitScreen = {
+                    navigation.replaceAll(Configuration.ScreenInitialGreeting)
+                })
             )
         }
     }
