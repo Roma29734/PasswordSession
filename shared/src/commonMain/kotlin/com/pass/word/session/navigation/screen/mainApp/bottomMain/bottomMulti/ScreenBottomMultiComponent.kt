@@ -5,26 +5,14 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.navigate
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.popWhile
-import com.arkivanov.decompose.router.stack.push
-import com.arkivanov.decompose.router.stack.pushNew
-import com.arkivanov.decompose.router.stack.replaceAll
-import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.model.PasswordItemModel
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.ScreenBottomLocalComponent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenAddPasswordComponent.ScreenAddPasswordComponent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenPasswordComponent.ScreenPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
 import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.serialization.Serializable
-import org.ton.block.VmCont
 
 
 class ScreenBottomMultiComponent(
@@ -33,6 +21,7 @@ class ScreenBottomMultiComponent(
     private val onNavigateToChangePasswordComponent: () -> Unit,
     private val onNavigateToImportPasswordComponent: () -> Unit,
     private val onNavigateToPhraseSettingsComponent: () -> Unit,
+    private val onNavigateToPassKeySettingsComponent: () -> Unit
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
@@ -87,10 +76,14 @@ class ScreenBottomMultiComponent(
             is Configuration.ScreenSettings -> Child.ScreenSettings(
                 ScreenSettingsComponent(
                     componentContext = context,
+                    stateApp = true,
                     onNavigateToChangePasswordComponent = { onNavigateToChangePasswordComponent() },
                     onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() },
                     onNavigateToPhraseSettingsComponent = {
                         onNavigateToPhraseSettingsComponent()
+                    },
+                    onNavigateToPassKeySettingsComponent = {
+                        onNavigateToPassKeySettingsComponent()
                     }
                 )
             )

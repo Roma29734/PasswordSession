@@ -50,6 +50,8 @@ import androidx.compose.ui.window.Dialog
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.initialGreeting.enterSeedPhrase.CustomDialogUI
 import com.pass.word.session.android.screen.initialGreeting.enterSeedPhrase.InputSeedContainer
+import com.pass.word.session.android.screen.viewComponent.CustomImageModel
+import com.pass.word.session.android.screen.viewComponent.DialogLogOut
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.data.DriverFactory
@@ -87,8 +89,22 @@ fun SeedPhraseSettingsScreen(component: ScreenSeedPhraseSettingsComponent) {
                         component.onEvent(ScreenSeedPhraseSettingsEvent.HideDialogEvent)
                     },
                     continueHandler = {
-                        component.onEvent(ScreenSeedPhraseSettingsEvent.ContinueDialogEvent(DriverFactory(context)))
-                    }
+                        component.onEvent(
+                            ScreenSeedPhraseSettingsEvent.ContinueDialogEvent(
+                                DriverFactory(context)
+                            )
+                        )
+                    },
+                    textCancelButton = "Cancel",
+                    textContinueButton = "Continue",
+                    customImageModel = CustomImageModel(
+                        painter = painterResource(id = R.drawable.ic_warning),
+                        color = CustomColor().brandRedMain,
+                        contentScale = ContentScale.Fit
+                    ),
+                    notifiText = "Dangerous",
+                    subTitleText = "when you click continue, you exit the application and all data will be erased forever, they will remain only in the blockchain",
+                    startTime = 15
                 )
             }
         }
@@ -164,132 +180,4 @@ fun ItemPhrase(text: String) {
             )
         }
     }
-}
-
-
-@Composable
-fun DialogLogOut(
-    cancelHandler: () -> Unit,
-    continueHandler: () -> Unit
-) {
-
-
-    var stateTimer by remember { mutableIntStateOf(15) }
-
-    DisposableEffect(Unit) {
-        val job = CoroutineScope(Dispatchers.Default).launch {
-            repeat(15) {
-                delay(1000)
-                stateTimer -= 1
-            }
-        }
-        onDispose {
-            job.cancel() // Отмена корутины при удалении компонента
-        }
-    }
-
-
-    Card(
-        //shape = MaterialTheme.shapes.medium,
-        shape = RoundedCornerShape(10.dp),
-        // modifier = modifier.size(280.dp, 240.dp)
-        modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 10.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
-    ) {
-        Column(
-            Modifier
-                .background(CustomColor().mainBlue),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_warning),
-                contentDescription = null, // decorative
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .padding(top = 35.dp)
-                    .height(70.dp)
-                    .fillMaxWidth(),
-
-                colorFilter = ColorFilter.tint(CustomColor().brandRedMain)
-            )
-
-            Column(modifier = Modifier.padding(16.dp)) {
-
-                if (stateTimer != 0) {
-                    Text(
-                        text = stateTimer.toString(),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-
-                Text(
-                    text = "Dangerous",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Text(
-                    text = "when you click continue, you exit the application and all data will be erased forever, they will remain only in the blockchain",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp),
-            ) {
-
-                TextButton(
-                    onClick = {
-                        cancelHandler()
-                    },
-                    Modifier
-                        .background(CustomColor().brandBlueLight)
-                        .weight(1f)
-                ) {
-                    Text(
-                        "Cancel",
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 5.dp, bottom = 5.dp)
-                            .background(CustomColor().brandBlueLight)
-                    )
-                }
-
-                TextButton(
-                    onClick = {
-                        continueHandler()
-                    }, enabled = stateTimer == 0,
-                    modifier = Modifier
-                        .background(if (stateTimer == 0) CustomColor().brandRedMain else CustomColor().grayLight)
-                        .weight(1f)
-                ) {
-                    Text(
-                        "Continue",
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 5.dp, bottom = 5.dp)
-                    )
-                }
-            }
-
-        }
-    }
-
 }

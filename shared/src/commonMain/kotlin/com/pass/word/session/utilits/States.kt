@@ -2,15 +2,9 @@ package com.pass.word.session.utilits
 
 import com.pass.word.session.data.model.PasswordItemModel
 
-sealed class ResponseStatus() {
-    data object Success : ResponseStatus()
-    data class Error(val errorMessage: String) : ResponseStatus()
-}
-
 enum class StateSelectedType {
     TonStorage, LocalStorage
 }
-
 
 sealed class StatePassItemDisplay {
     data class VisibleItem(val passItem: List<PasswordItemModel>?) : StatePassItemDisplay()
@@ -29,6 +23,13 @@ sealed class StateBasicDialog {
     data object Show : StateBasicDialog()
 }
 
+sealed class StateTwosItemDialog {
+    data object Hide : StateTwosItemDialog()
+    data class Error(val message: String) : StateTwosItemDialog()
+    data object ShowOneDialog : StateTwosItemDialog()
+    data object ShowTwoDialog : StateTwosItemDialog()
+}
+
 sealed class ResultReadResultFromTonBlock {
     data object InEmpty : ResultReadResultFromTonBlock()
     data class InError(val message: String, val errorCode: ResponseCodState) :
@@ -37,13 +38,12 @@ sealed class ResultReadResultFromTonBlock {
     data class InSuccess(val itemPass: List<PasswordItemModel>) : ResultReadResultFromTonBlock()
 }
 
-// Базовый стейт результата работы функции
+/**
+ * Базовый стейт для результата работы функции
+ */
 sealed class StateBasicResult<out T> {
     data class InError(val message: String, val errorCode: ResponseCodState) :
         StateBasicResult<Nothing>()
 
     data class InSuccess<T>(val item: T) : StateBasicResult<T>()
 }
-
-
-

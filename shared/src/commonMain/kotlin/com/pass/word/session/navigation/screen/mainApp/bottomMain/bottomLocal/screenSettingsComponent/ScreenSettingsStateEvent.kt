@@ -9,4 +9,9 @@ interface ScreenSettingsStateEvent {
     data object OnNavigateToChangePasswordComponent: ScreenSettingsStateEvent
     data object OnNavigateToImportPassword : ScreenSettingsStateEvent
     data object OnNavigateToSeedPhraseSettings: ScreenSettingsStateEvent
+    data object OnNavigateToPassKeySettingsComponent: ScreenSettingsStateEvent
+}
+
+enum class ItemSettings {
+    ImportPassword, ChangePassword, SeedPhraseSettings, PassKeySettings,Telegram, GitHub
 }

@@ -12,7 +12,6 @@ import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.data.model.PasswordListContainer
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.EventDispatcher
-import com.pass.word.session.utilits.ResponseStatus
 import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.convertToMessageAndCode
 import com.pass.word.session.utilits.getThisLocalTime

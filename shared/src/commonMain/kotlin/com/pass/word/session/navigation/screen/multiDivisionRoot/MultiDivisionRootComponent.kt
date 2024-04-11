@@ -16,6 +16,7 @@ import com.pass.word.session.navigation.screen.localDivisionRoot.LocalDivisionRo
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.ScreenBottomMultiComponent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.mainApp.edit.ScreenEditComponent
+import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPassKeySettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.seedPhraseSettings.ScreenSeedPhraseSettingsComponent
 import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -88,6 +89,9 @@ class MultiDivisionRootComponent constructor(
                     },
                     onNavigateToPhraseSettingsComponent = {
                         navigation.pushNew(Configuration.ScreenSeedPhraseSettings)
+                    },
+                    onNavigateToPassKeySettingsComponent = {
+                        navigation.pushNew(Configuration.ScreenPassKeySettings)
                     }
                 )
             )
@@ -128,6 +132,15 @@ class MultiDivisionRootComponent constructor(
                 )
             )
 
+            is Configuration.ScreenPassKeySettings -> Child.ScreenPassKeySettings(
+                ScreenPassKeySettingsComponent(
+                    componentContext = context,
+                    navToBackScreen = {navigation.pop()},
+                    navToNextScreen = {
+                        navigation.replaceAll(Configuration.ScreenAuthentication)
+                    }
+                )
+            )
         }
     }
 
@@ -149,6 +162,8 @@ class MultiDivisionRootComponent constructor(
 
         data class ScreenSeedPhraseSettings(val component: ScreenSeedPhraseSettingsComponent) :
             Child()
+
+        data class ScreenPassKeySettings(val component: ScreenPassKeySettingsComponent): Child()
     }
 
     @Serializable
@@ -182,5 +197,8 @@ class MultiDivisionRootComponent constructor(
 
         @Serializable
         data object ScreenSeedPhraseSettings : Configuration()
+
+        @Serializable
+        data object ScreenPassKeySettings : Configuration()
     }
 }

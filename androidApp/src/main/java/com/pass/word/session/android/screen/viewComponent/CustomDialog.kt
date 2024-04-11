@@ -16,10 +16,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
 import com.pass.word.session.ui.CustomColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun CustomLoadingDialog() {
@@ -239,6 +249,146 @@ fun CustomErrorDialog(
                         fontWeight = FontWeight.ExtraBold,
                         color = Color.White,
                         modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+data class CustomImageModel(
+    val painter: Painter,
+    val color: Color,
+    val contentScale: ContentScale
+)
+
+@Composable
+fun DialogLogOut(
+    cancelHandler: () -> Unit,
+    continueHandler: () -> Unit,
+    textCancelButton: String,
+    textContinueButton: String,
+    customImageModel: CustomImageModel,
+    notifiText: String,
+    subTitleText: String,
+    startTime: Int
+) {
+
+    var timeStartItem = startTime
+
+    if(startTime > 5) {
+        timeStartItem = 15
+    }
+
+    var stateTimer by remember { mutableIntStateOf(timeStartItem) }
+
+    DisposableEffect(Unit) {
+        val job = CoroutineScope(Dispatchers.Default).launch {
+            repeat(timeStartItem) {
+                delay(1000)
+                stateTimer -= 1
+            }
+        }
+        onDispose {
+            job.cancel()
+        }
+    }
+
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 10.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Column(
+            Modifier
+                .background(CustomColor().mainBlue),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+
+            Image(
+                painter = customImageModel.painter,
+                contentDescription = null, // decorative
+                contentScale = customImageModel.contentScale,
+                modifier = Modifier
+                    .padding(top = 35.dp)
+                    .height(70.dp)
+                    .fillMaxWidth(),
+
+                colorFilter = ColorFilter.tint(customImageModel.color)
+            )
+
+            Column(modifier = Modifier.padding(16.dp)) {
+
+                if (stateTimer != 0) {
+                    Text(
+                        text = stateTimer.toString(),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(top = 10.dp, start = 25.dp, end = 25.dp)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+
+                Text(
+                    text = notifiText,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = subTitleText,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
+            ) {
+
+                TextButton(
+                    onClick = {
+                        cancelHandler()
+                    },
+                    Modifier
+                        .background(CustomColor().brandBlueLight)
+                        .weight(1f)
+                ) {
+                    Text(
+                        textCancelButton,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 5.dp, bottom = 5.dp)
+                            .background(CustomColor().brandBlueLight)
+                    )
+                }
+
+                TextButton(
+                    onClick = {
+                        continueHandler()
+                    }, enabled = stateTimer == 0,
+                    modifier = Modifier
+                        .background(if (stateTimer == 0) CustomColor().brandRedMain else CustomColor().grayLight)
+                        .weight(1f)
+                ) {
+                    Text(
+                        textContinueButton,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 5.dp, bottom = 5.dp)
                     )
                 }
             }

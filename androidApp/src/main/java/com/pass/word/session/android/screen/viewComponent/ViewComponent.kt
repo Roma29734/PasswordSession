@@ -147,7 +147,6 @@ fun UpBarButtonBack(onBackHandler: () -> Unit) {
     }
 }
 
-
 @Composable
 fun ItemSelectedType(
     modifier: Modifier = Modifier,

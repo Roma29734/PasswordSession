@@ -3,6 +3,7 @@ package com.pass.word.session.tonCore.contract.wallet
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keySecretPassKey
 import com.pass.word.session.data.model.PasswordListContainer
+import com.pass.word.session.data.putToParams
 import com.pass.word.session.tonCore.contract.LiteContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -196,15 +197,19 @@ class WalletOperation(private val walletSeed: List<String>) {
                             if (result.errorCode == ResponseCodState.CD404) {
                                 logging().i("walletOperationSpecDep") { "StateBasicResult.InError - getItemPassFromChildContract - 404 mesage true" }
                                 val sendToDeployResult = sendToDeploy(phrase)
-                                when(sendToDeployResult) {
+                                when (sendToDeployResult) {
                                     is StateBasicResult.InSuccess -> {
                                         logging().i("walletOperationSpecDep") { "StateBasicResult.InError - deployResultTrue" }
                                         delay(15000)
                                         getItemPass(phrase)
                                     }
+
                                     is StateBasicResult.InError -> {
                                         logging().i("walletOperationSpecDep") { "StateBasicResult.InError - deployResultFalse - ${sendToDeployResult.errorCode}" }
-                                        ResultReadResultFromTonBlock.InError("Error in", sendToDeployResult.errorCode)
+                                        ResultReadResultFromTonBlock.InError(
+                                            "Error in",
+                                            sendToDeployResult.errorCode
+                                        )
                                     }
                                 }
                             } else {
@@ -296,6 +301,55 @@ class WalletOperation(private val walletSeed: List<String>) {
     }
 
 
+    suspend fun sendToChangePassKey(oldPhrase: String?, newPhrase: String): StateBasicResult<String> {
+
+        try {
+            val savedPhrase = getParamsString(keySecretPassKey)
+            val oldItemPhrase = oldPhrase ?: savedPhrase
+            val walletAddress = getWalletAddress()
+            if (oldItemPhrase != null && walletAddress != null) {
+                when(val itemResult = getItemPass(oldItemPhrase)) {
+                    is ResultReadResultFromTonBlock.InError -> {
+                        return StateBasicResult.InError(message = itemResult.message, errorCode = itemResult.errorCode)
+                    }
+                    is ResultReadResultFromTonBlock.InEmpty -> {
+                        val itemPass = PasswordListContainer(listOf())
+                        return when(val resultSend = sendNewItemPass(itemPass, newPhrase)) {
+                            is StateBasicResult.InSuccess -> {
+                                newPhrase.putToParams(keySecretPassKey)
+                                StateBasicResult.InSuccess(newPhrase)
+                            }
+
+                            is StateBasicResult.InError -> {
+                                StateBasicResult.InError(message = resultSend.message, errorCode = resultSend.errorCode)
+                            }
+                        }
+                    }
+                    is ResultReadResultFromTonBlock.InSuccess -> {
+                        val itemPass = PasswordListContainer(itemResult.itemPass)
+                        return when(val resultSend = sendNewItemPass(itemPass, newPhrase)) {
+                            is StateBasicResult.InSuccess -> {
+                                newPhrase.putToParams(keySecretPassKey)
+                                StateBasicResult.InSuccess(newPhrase)
+                            }
+
+                            is StateBasicResult.InError -> {
+                                StateBasicResult.InError(message = resultSend.message, errorCode = resultSend.errorCode)
+                            }
+                        }
+                    }
+                }
+
+            } else {
+                return StateBasicResult.InError("", ResponseCodState.CD402)
+            }
+        } catch (e: Exception) {
+            logging().i("walletOperation") { "sendToChangePassKey Exception ${e.stackTraceToString()}" }
+            return StateBasicResult.InError("", ResponseCodState.CD00)
+        }
+    }
+
+
     private suspend fun sendToDeploy(
         phrase: String?
     ): StateBasicResult<Boolean> {
@@ -339,6 +393,7 @@ class WalletOperation(private val walletSeed: List<String>) {
             return StateBasicResult.InError("", ResponseCodState.CD00)
         }
     }
+
 }
 
 data class LiteServerId(

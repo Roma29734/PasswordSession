@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -21,6 +22,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.data.DriverFactory
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ItemSettings
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsStateEvent
 import com.pass.word.session.ui.CustomColor
@@ -45,6 +49,7 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+    val itemSettingsList by component.itemSettingsList.collectAsState()
 
     DisposableEffect(component) {
         val listenerPassCreated: (message: String) -> Unit = { msg ->
@@ -72,6 +77,8 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
+
+
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 24.dp),
                     text = "Settings",
@@ -81,48 +88,80 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
 
                 Spacer(modifier = Modifier.size(16.dp))
 
+                LazyColumn(content = {
 
-                ItemSettingsMenu(
-                    image = painterResource(id = R.drawable.ic_import),
-                    text = "import password",
-                    clickHandler = {
-                        component.onEvent(ScreenSettingsStateEvent.OnNavigateToImportPassword)
-                    }
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemSettingsMenu(
-                    image = painterResource(id = R.drawable.ic_security_lock),
-                    text = "change password",
-                    clickHandler = {
-                        component.onEvent(ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent)
-                    }
-                )
+                    if(itemSettingsList.isNotEmpty()) {
+                        items(count = itemSettingsList.size) { countItem ->
 
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemSettingsMenu(
-                    image = painterResource(id = R.drawable.ic_password_vertical),
-                    text = "seed phrase settings",
-                    clickHandler = {
-                        component.onEvent(ScreenSettingsStateEvent.OnNavigateToSeedPhraseSettings)
-                    }
-                )
+                            when(itemSettingsList[countItem]) {
+                                ItemSettings.ImportPassword -> {
+                                    ItemSettingsMenu(
+                                        image = painterResource(id = R.drawable.ic_import),
+                                        text = "import password",
+                                        clickHandler = {
+                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToImportPassword)
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.size(16.dp))
+                                }
+                                ItemSettings.ChangePassword -> {
+                                    ItemSettingsMenu(
+                                        image = painterResource(id = R.drawable.ic_pin),
+                                        text = "change password",
+                                        clickHandler = {
+                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent)
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.size(16.dp))
+                                }
+                                ItemSettings.SeedPhraseSettings -> {
+                                    ItemSettingsMenu(
+                                        image = painterResource(id = R.drawable.ic_password_vertical),
+                                        text = "seed phrase settings",
+                                        clickHandler = {
+                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToSeedPhraseSettings)
+                                        }
+                                    )
 
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemSettingsMenu(
-                    image = painterResource(id = R.drawable.ic_logo_telegram),
-                    text = "telegram",
-                    clickHandler = {
-                        openCustomTab("https://t.me/apkPublicPrograms", context)
+                                    Spacer(modifier = Modifier.size(16.dp))
+                                }
+                                ItemSettings.GitHub -> {
+                                    ItemSettingsMenu(
+                                        image = painterResource(id = R.drawable.ic_logo_git_hub),
+                                        text = "gitHub",
+                                        clickHandler = {
+                                            openCustomTab("https://github.com/Roma29734/PasswordSession", context)
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.size(16.dp))
+                                }
+                                ItemSettings.Telegram -> {
+                                    ItemSettingsMenu(
+                                        image = painterResource(id = R.drawable.ic_logo_telegram),
+                                        text = "telegram",
+                                        clickHandler = {
+                                            openCustomTab("https://t.me/apkPublicPrograms", context)
+                                        }
+                                    )
+                                }
+                                ItemSettings.PassKeySettings -> {
+                                    ItemSettingsMenu(
+                                        image = painterResource(id = R.drawable.ic_security_lock),
+                                        text = "pass key phrase settings",
+                                        clickHandler = {
+                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToPassKeySettingsComponent)
+                                        }
+                                    )
+
+                                    Spacer(modifier = Modifier.size(16.dp))
+                                }
+                            }
+
+                        }
                     }
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemSettingsMenu(
-                    image = painterResource(id = R.drawable.ic_logo_git_hub),
-                    text = "gitHub",
-                    clickHandler = {
-                        openCustomTab("https://github.com/Roma29734/PasswordSession", context)
-                    }
-                )
+
+                })
+
             }
 
             MainComponentButton(text = "download password", true) {
