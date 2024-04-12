@@ -1,5 +1,11 @@
 package com.pass.word.session.android.screen.viewComponent
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +27,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -77,16 +86,29 @@ fun OutlineInputText(
 
 @Composable
 fun BoxItemCode(itemText: String) {
+    val isVisible = remember { mutableStateOf(false) }
+
+    LaunchedEffect(itemText) {
+        isVisible.value = itemText == "•"
+    }
+
     Box(
         Modifier
             .size(48.dp)
             .border(2.dp, color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = itemText,
-            color = Color.White, style = MaterialTheme.typography.bodyLarge
-        )
+        AnimatedVisibility(
+            visible = isVisible.value,
+            enter = fadeIn(animationSpec = TweenSpec(durationMillis = 300)),
+            exit = fadeOut(animationSpec = TweenSpec(durationMillis = 300))
+        ) {
+            Text(
+                text = itemText,
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
 }
 
