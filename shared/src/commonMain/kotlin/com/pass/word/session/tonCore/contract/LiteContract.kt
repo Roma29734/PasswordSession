@@ -17,6 +17,10 @@ import com.pass.word.session.tonCore.toAddrString
 import com.pass.word.session.tonCore.toSlice
 import com.pass.word.session.utilits.ResponseCodState
 import com.pass.word.session.utilits.StateBasicResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 open class LiteContract(
     override val liteClient: LiteClient
@@ -122,41 +126,49 @@ open class LiteContract(
     ): StateBasicResult<String> {
         println("LLLAsdastBlockId - $lastBlockId")
 
-        val returnedVmStack = runSmc(
-            address, "get_address_pass",
-            lastBlockId, params = listOf(
-                VmStackValue.of(addressWallet.toSlice())
-            )
-        )
+        val returnedVmStack = withTimeoutOrNull(15000L) {
+                logging().i("liteCOntractRest") { "returnedVmStack вызванно" }
+                runSmc(
+                    address, "get_address_pass",
+                    lastBlockId, params = listOf(
+                        VmStackValue.of(addressWallet.toSlice())
+                    )
+                )
+        }
+        logging().i("liteCOntractRest") { "returnedVmStack $returnedVmStack" }
+        if (returnedVmStack != null) {
+            val vmStack = returnedVmStack.first
+            val ex = returnedVmStack.second
 
-        val vmStack = returnedVmStack.first
-        val ex = returnedVmStack.second
+            return if (vmStack != null && ex == null) {
+                println("getAddressPassContact depth - ${vmStack.depth}")
+                if (vmStack.depth != 5) {
 
-        return if (vmStack != null && ex == null) {
-            println("getAddressPassContact depth - ${vmStack.depth}")
-            if (vmStack.depth != 5) {
-
+                }
+                val resultAddress =
+                    vmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress)
+                        .toAddrString()
+                println(
+                    "getAddressPassContact - $resultAddress"
+                )
+                println("getAddressPassContact - $returnedVmStack")
+                StateBasicResult.InSuccess(resultAddress)
+            } else if (ex != null) {
+                logging().i("liteCOntractRest") { "getAddressPassContact ex  ${ex.message}" }
+                logging().i("liteCOntractRest") { "getAddressPassContact ex stack  ${ex.stackTraceToString()}" }
+                if (ex is RuntimeException) {
+                    return StateBasicResult.InError("in getData item", ResponseCodState.CD01)
+                }
+                if (ex is org.ton.api.exception.TvmException) {
+                    return StateBasicResult.InError("in getData item", ResponseCodState.CD404)
+                }
+                StateBasicResult.InError("in getData item", ResponseCodState.CD401)
+            } else {
+                StateBasicResult.InError("in getData item", ResponseCodState.CD401)
             }
-            val resultAddress =
-                vmStack.toMutableVmStack().popSlice().loadTlb(MsgAddress)
-                    .toAddrString()
-            println(
-                "getAddressPassContact - $resultAddress"
-            )
-            println("getAddressPassContact - $returnedVmStack")
-            StateBasicResult.InSuccess(resultAddress)
-        } else if (ex != null) {
-            logging().i("liteCOntractRest") { "getAddressPassContact ex  ${ex.message}" }
-            logging().i("liteCOntractRest") { "getAddressPassContact ex stack  ${ex.stackTraceToString()}" }
-            if (ex is RuntimeException) {
-                return StateBasicResult.InError("in getData item", ResponseCodState.CD01)
-            }
-            if (ex is org.ton.api.exception.TvmException) {
-                return StateBasicResult.InError("in getData item", ResponseCodState.CD404)
-            }
-            StateBasicResult.InError("in getData item", ResponseCodState.CD401)
         } else {
-            StateBasicResult.InError("in getData item", ResponseCodState.CD401)
+            logging().i("liteCOntractRest") { "getAddressPassContact err cd02" }
+            return StateBasicResult.InError("in getData item", ResponseCodState.CD02)
         }
     }
 
@@ -164,37 +176,42 @@ open class LiteContract(
         address: AddrStd,
         lastBlockId: TonNodeBlockIdExt? = null,
     ): StateBasicResult<String> {
-        val returnedVmStack = runSmc(
-            address, "get_wallet_data",
-            lastBlockId, params = listOf()
-        )
 
-        return if (returnedVmStack.first != null) {
-            if (returnedVmStack.first!!.depth != 5) {
-                logging().i("liteCOntractRest") { "decoreResult  dept !=5" }
-            }
-            val stack = returnedVmStack.first!!.toMutableVmStack().popCell()
-            val decodeResult = decodeCellToString(stack)
+        val returnedVmStack = withTimeoutOrNull(15000L) {
+            runSmc(
+                address, "get_wallet_data",
+                lastBlockId, params = listOf()
+            )
+        }
 
-            logging().i("liteCOntractRest") { "decoreResult  $decodeResult" }
-            if(decodeResult == null) {
+        if (returnedVmStack != null) {
+            return if (returnedVmStack.first != null) {
+                if (returnedVmStack.first!!.depth != 5) {
+                    logging().i("liteCOntractRest") { "decoreResult  dept !=5" }
+                }
+                val stack = returnedVmStack.first!!.toMutableVmStack().popCell()
+                val decodeResult = decodeCellToString(stack)
+
+                logging().i("liteCOntractRest") { "decoreResult  $decodeResult" }
+                if (decodeResult == null) {
+                    return StateBasicResult.InError("in getData item", ResponseCodState.CD00)
+                }
+                return StateBasicResult.InSuccess(decodeResult)
+            } else {
+                if (returnedVmStack.second is org.ton.api.exception.TvmException) {
+                    logging().i("liteCOntractRest") { "getItemPassFromChildContract  message deploy not " }
+                    return StateBasicResult.InError("in getData item", ResponseCodState.CD404)
+                }
+                if (returnedVmStack.second is RuntimeException) {
+                    return StateBasicResult.InError("in getData item", ResponseCodState.CD01)
+                }
                 return StateBasicResult.InError("in getData item", ResponseCodState.CD00)
             }
-            return StateBasicResult.InSuccess(decodeResult)
         } else {
-            if (returnedVmStack.second is org.ton.api.exception.TvmException) {
-                logging().i("liteCOntractRest") { "getItemPassFromChildContract  message deploy not " }
-                return StateBasicResult.InError("in getData item", ResponseCodState.CD404)
-            }
-            if (returnedVmStack.second is RuntimeException) {
-                return StateBasicResult.InError("in getData item", ResponseCodState.CD01)
-            }
-            return StateBasicResult.InError("in getData item", ResponseCodState.CD00)
+            return StateBasicResult.InError("in getData item", ResponseCodState.CD02)
         }
     }
 
-
-    
 
     private suspend fun decodeCellToString(itemCell: Cell): String? {
         return try {
