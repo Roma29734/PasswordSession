@@ -1,5 +1,7 @@
 package com.pass.word.session.tonCore
 
+import Img.MyIconPack
+import Img.myiconpack.IcLogoGitHub
 import io.ktor.utils.io.core.toByteArray
 import org.ton.bitstring.BitString
 import org.ton.block.*

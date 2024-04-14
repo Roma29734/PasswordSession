@@ -45,7 +45,6 @@ kotlin {
             implementation(libs.russhwolfSettongs)
             implementation(libs.russhwolfMultiplatform)
             implementation(libs.logging)
-
             // ton
             implementation(libs.tonTvm)
             implementation(libs.tonTlb)

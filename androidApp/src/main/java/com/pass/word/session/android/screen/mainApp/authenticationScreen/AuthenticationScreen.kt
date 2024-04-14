@@ -1,5 +1,7 @@
 package com.pass.word.session.android.screen.mainApp.authenticationScreen
 
+import Img.MyIconPack
+import Img.myiconpack.IcLogoGitHub
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -105,6 +107,7 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             Text(
                 text = "Enter your authentication code",
                 style = MaterialTheme.typography.displayMedium,
