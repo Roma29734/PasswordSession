@@ -2,9 +2,14 @@ package com.pass.word.session.utilits
 
 import androidx.compose.runtime.Composable
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.data.model.PasswordListContainer
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json.Default.encodeToString
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
@@ -67,6 +72,42 @@ expect fun checkUseBiometric(
     onAction: (successState: Boolean, message: String?) -> Unit,
 )
 
+
 expect class Platform() {
     val platform: String
 }
+
+@Serializable
+data class Data(val items: List<String>)
+
+fun listToStringJson(list: List<String>): String {
+    val data = Data(list)
+    return Json.encodeToString(Data.serializer(), data)
+}
+
+fun jsonStringToList(jsonString: String): List<String> {
+    val data = Json.decodeFromString(Data.serializer(), jsonString)
+    return data.items
+}
+
+
+
+class EventDispatcher<T> {
+    private val listeners = mutableListOf<(T) -> Unit>()
+
+    // Метод для подписки на событие
+    fun subscribe(listener: (T) -> Unit): () -> Unit {
+        listeners.add(listener)
+        return {unsubscribe (listener)}
+    }
+
+    // Метод для отправки события всем подписчикам
+    fun dispatch(event: T) {
+        listeners.forEach { it(event) }
+    }
+
+    fun unsubscribe(listener: (T) -> Unit) {
+        listeners.remove(listener)
+    }
+}
+

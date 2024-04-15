@@ -1,5 +1,11 @@
 package com.pass.word.session.android.screen.viewComponent
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,11 +20,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -29,13 +40,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pass.word.session.android.R
-import com.pass.word.session.navigation.screen.main.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
 
 @Composable
-fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler: (text: String) -> Unit, focusRequester: FocusRequester, onNextHandler: () -> Unit, keyboardType: KeyboardType) {
+
+
+
+fun OutlineInputText(
+    textInTitle: String,
+    outText: String,
+    onValueChangeHandler: (text: String) -> Unit,
+    focusRequester: FocusRequester,
+    onNextHandler: () -> Unit,
+    keyboardType: KeyboardType
+) {
 
     Text(
         modifier = Modifier.padding(start = 12.dp, end = 12.dp),
@@ -45,7 +67,7 @@ fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler:
     )
     OutlinedTextField(
         value = outText,
-        onValueChange = { onValueChangeHandler(it)},
+        onValueChange = { onValueChangeHandler(it) },
         textStyle = MaterialTheme.typography.displaySmall.plus(TextStyle(color = Color.White)),
         modifier = Modifier
             .fillMaxWidth()
@@ -68,16 +90,29 @@ fun OutlineInputText(textInTitle: String, outText: String, onValueChangeHandler:
 
 @Composable
 fun BoxItemCode(itemText: String) {
+    val isVisible = remember { mutableStateOf(false) }
+
+    LaunchedEffect(itemText) {
+        isVisible.value = itemText == "•"
+    }
+
     Box(
         Modifier
             .size(48.dp)
-            .border(2.dp,color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
+            .border(2.dp, color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = itemText,
-            color = Color.White, style = MaterialTheme.typography.bodyLarge
-        )
+        AnimatedVisibility(
+            visible = isVisible.value,
+            enter = fadeIn(animationSpec = TweenSpec(durationMillis = 300)),
+            exit = fadeOut(animationSpec = TweenSpec(durationMillis = 300))
+        ) {
+            Text(
+                text = itemText,
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
 }
 
@@ -99,14 +134,19 @@ fun ButtonNumber(textButton: Int, clickHandler: (Int) -> Unit) {
 }
 
 @Composable
-fun MainComponentButton(text: String, clickHandler: () -> Unit) {
+fun MainComponentButton(
+    text: String,
+    enabledState: Boolean,
+    colorButton: Color = CustomColor().brandBlueLight,
+    clickHandler: () -> Unit
+) {
     Column(
         Modifier
             .fillMaxWidth()
-            .background(CustomColor().brandBlueLight)
-            .clickable { clickHandler() },
+            .background(if (enabledState) colorButton else CustomColor().grayLight)
+            .clickable(enabledState) { clickHandler() },
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             modifier = Modifier.padding(12.dp),
@@ -116,7 +156,6 @@ fun MainComponentButton(text: String, clickHandler: () -> Unit) {
         )
     }
 }
-
 
 @Composable
 fun UpBarButtonBack(onBackHandler: () -> Unit) {
@@ -131,5 +170,40 @@ fun UpBarButtonBack(onBackHandler: () -> Unit) {
                 Color.White
             )
         )
+    }
+}
+
+@Composable
+fun ItemSelectedType(
+    modifier: Modifier = Modifier,
+    textItem: String,
+    colorButton: Color,
+    handlerClick: () -> Unit,
+) {
+    Card(
+        modifier = modifier.clickable { handlerClick() },
+        elevation = CardDefaults.cardElevation(64.dp)
+    ) {
+        Row(
+            modifier = Modifier.background(colorButton),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = textItem,
+                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 8.dp),
+                style = MaterialTheme.typography.bodyMedium.plus(TextStyle(fontSize = 14.sp)),
+                color = Color.White
+            )
+
+            Image(
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(end = 16.dp),
+                painter = painterResource(id = R.drawable.ic_down_more),
+                contentDescription = "ic_more",
+                colorFilter = ColorFilter.tint(Color.White)
+            )
+
+        }
     }
 }

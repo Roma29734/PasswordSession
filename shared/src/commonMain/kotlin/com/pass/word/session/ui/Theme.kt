@@ -13,7 +13,6 @@ import com.pass.word.session.utilits.Platform
 
 expect fun acmeTypography(): Typography
 
-
 val colorScheme = darkColorScheme(
     background = CustomColor().mainBlue
 )
@@ -37,7 +36,6 @@ fun MyCustomAppTheme(
             colorScheme = colorScheme
         )
     }
-
 
 }
 

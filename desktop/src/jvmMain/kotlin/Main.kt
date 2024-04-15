@@ -18,15 +18,12 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stac
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.pass.word.session.navigation.RootComponent
+import com.pass.word.session.navigation.screen.mainApp.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.ui.MyCustomAppTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
-import screen.authenticationScreen.AuthenticationScreen
-import screen.bottomScreen.BottomMainScreen
-import screen.changePassword.ChangePasswordRoot
-import screen.detailScreen.DetailScreen
-import screen.editScreen.EditScreen
-import screen.importPasswordScreen.ImportPasswordScreen
-import screen.initialGreetingScreen.InitialGreetingScreen
+import screen.initialGreeting.InitialGreetingScreen
+import screen.localDivisionRoot.LocalDivisionRootScreen
+import screen.multiDivisionRoot.MultiDivisionRootScreen
 import javax.swing.SwingUtilities
 
 @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
@@ -49,34 +46,20 @@ fun main() {
                         stack = childStack,
                         animation = stackAnimation(slide())
                     ) { child ->
-
                         when(val instance = child.instance) {
-                            is RootComponent.Child.ScreenBottomMain -> BottomMainScreen(component = instance.component)
-                            is RootComponent.Child.ScreenDetail -> DetailScreen(component = instance.component)
-                            is RootComponent.Child.ScreenAuthentication -> AuthenticationScreen(
-                                component = instance.component
-                            )
-
-                            is RootComponent.Child.ScreenEdit -> EditScreen(component = instance.component)
-                            is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(
-                                component = instance.component,
-                            )
-
-                            is RootComponent.Child.ScreenChangePasswordRootComponent -> ChangePasswordRoot(
-                                component = instance.component
-                            )
-
-                            is RootComponent.Child.ScreenImportPassword -> ImportPasswordScreen(
+                            is RootComponent.Child.ScreenInitialGreeting -> InitialGreetingScreen(component = instance.component)
+                            is RootComponent.Child.LocalDivisionRoot -> LocalDivisionRootScreen(component = instance.component)
+                            is RootComponent.Child.MultiDivisionRoot -> MultiDivisionRootScreen(
                                 component = instance.component
                             )
                         }
                     }
                 }
             }
-
         }
     }
 }
+
 
 private inline fun <T : Any> runOnMainThreadBlocking(crossinline block: () -> T): T {
     lateinit var result: T
