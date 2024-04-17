@@ -57,9 +57,11 @@ kotlin {
             implementation(libs.tonContract)
             implementation(libs.tonLiteClient)
         }
+
         jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -73,11 +75,19 @@ kotlin {
 
     }
 
-    jvm("desktop"){
+    jvm{
         compilations.all {
             kotlinOptions.jvmTarget = "17"
         }
     }
+//    jvm("desktop"){
+//        compilations.all {
+//            kotlinOptions.jvmTarget = "17"
+//        }
+//        dependencies {
+//            implementation(libs.sqlDelightJvm)
+//        }
+//    }
 }
 
 android {

@@ -39,7 +39,6 @@ import androidx.compose.ui.window.Dialog
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.pass.word.session.android.R
-import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.ItemPasswordView
 import com.pass.word.session.android.screen.viewComponent.CustomErrorDialog
 import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
 import com.pass.word.session.android.screen.viewComponent.ItemSelectedType
@@ -47,6 +46,7 @@ import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.ItemPasswordView
 import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.StatePassItemDisplay
 import com.pass.word.session.utilits.StateSelectedType

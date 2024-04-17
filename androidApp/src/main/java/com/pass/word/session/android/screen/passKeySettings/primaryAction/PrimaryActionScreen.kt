@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pass.word.session.android.screen.seedPhraseSettings.ItemPhrase
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
 import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPrimaryKeyActionComponent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.ItemPhrase
 
 @Composable
 fun PrimaryActionScreen(component: ScreenPrimaryKeyActionComponent) {

@@ -59,7 +59,7 @@ class ScreenAuthenticationComponent constructor(
 
                 eventAuth.context?.let { vibrationResponse(20, it) }
 
-                CoroutineScope(Dispatchers.Main).launch {
+                CoroutineScope(Dispatchers.Default).launch {
                     val oldValue = passItem.value
                     if (oldValue.length != 4) {
                         val newValue = oldValue + eventAuth.number

@@ -28,12 +28,9 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.R
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.model.PasswordItemModel
-<<<<<<< HEAD:androidApp/src/main/java/com/pass/word/session/android/screen/bottomScreen/passwordScreen/PasswordScreen.kt
-import com.pass.word.session.navigation.screen.bottom.screenPasswordComponent.ScreenPasswordComponent
-=======
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenPasswordComponent.ScreenPasswordComponent
->>>>>>> addedSourseLibs:androidApp/src/main/java/com/pass/word/session/android/screen/mainApp/bottomScreen/bottomLocal/passwordScreen/PasswordScreen.kt
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.ItemPasswordView
 
 @Composable
 fun PasswordScreen(component: ScreenPasswordComponent) {
@@ -101,41 +98,3 @@ fun PasswordScreen(component: ScreenPasswordComponent) {
     }
 }
 
-@Composable
-fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String, oncLick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .padding(start = 12.dp, bottom = 16.dp, end = 12.dp)
-            .fillMaxWidth()
-            .clickable { oncLick() },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                modifier = Modifier.padding(end = 8.dp),
-                painter = painterResource(id = R.drawable.ic_password),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
-            )
-            Column {
-                Text(
-                    text = nameItem,
-                    style = MaterialTheme.typography.displayMedium,
-                    color = Color.White
-                )
-                Text(
-                    text = emailItem,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = CustomColor().grayLight
-                )
-            }
-        }
-        Text(
-            modifier = Modifier.padding(end = 16.dp),
-            text = changeData,
-            style = MaterialTheme.typography.displaySmall,
-            color = CustomColor().grayLight
-        )
-    }
-}

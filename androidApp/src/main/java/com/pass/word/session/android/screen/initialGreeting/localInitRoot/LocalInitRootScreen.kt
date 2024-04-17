@@ -32,7 +32,6 @@ fun LocalInitRootScreen(component: LocalInitRootComponent) {
             is LocalInitRootComponent.Child.ScreenImportPassword -> ImportPasswordScreen(
                 component = instance.component,
             )
-
         }
     }
 }

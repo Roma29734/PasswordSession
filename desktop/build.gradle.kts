@@ -32,7 +32,6 @@ kotlin {
                 implementation(libs.decompose)
                 implementation(libs.decomposeJetbrains)
 
-
                 implementation(project(":shared"))
             }
         }

@@ -79,10 +79,10 @@ class ScreenTonPasswordComponent(
 
             is ScreenTonPasswordEvent.ReadCashPass -> {
                 if (_stateSelectedTypeStorage.value == StateSelectedType.TonStorage) {
-                    val database = TonCashDatabase(event.databaseDriverFactory)
-                    CoroutineScope(Dispatchers.IO).launch {
+//                    CoroutineScope(Dispatchers.IO).launch {
+                        val database = TonCashDatabase(event.databaseDriverFactory)
                         readTonCashBd(database)
-                    }
+//                    }
                 } else {
                     readLocalBd(event.databaseDriverFactory)
                 }
@@ -112,11 +112,11 @@ class ScreenTonPasswordComponent(
 
     // This function read pass, from ton
     private fun readTonPassItem(databaseDriverFactory: DriverFactory) {
+        val database = TonCashDatabase(databaseDriverFactory)
+        readTonCashBd(database)
         CoroutineScope(Dispatchers.IO).launch {
             _stateCallItem.update { false }
             _stateLoading.update { StateBasicDialog.Show }
-            val database = TonCashDatabase(databaseDriverFactory)
-            readTonCashBd(database)
             delay(200)
             when (val readResult = readPassInBlockchainTon()) {
                 is ResultReadResultFromTonBlock.InSuccess -> {
@@ -182,7 +182,7 @@ class ScreenTonPasswordComponent(
     }
 
     // This function read local cash, from ton pass
-    private suspend fun readTonCashBd(database: TonCashDatabase) {
+    private fun readTonCashBd(database: TonCashDatabase) {
         val resultBd = database.getAllPass()
         if (resultBd.isEmpty()) {
             _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }

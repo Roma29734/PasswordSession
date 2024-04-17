@@ -23,20 +23,12 @@ fun MyCustomAppTheme(
     content: @Composable () -> Unit
 ) {
 
-    if(Platform().platform == "Desktop") {
-        MaterialTheme(
-            content = content,
-            colorScheme = colorScheme
-        )
-    } else {
-        val typography = acmeTypography()
-        MaterialTheme(
-            typography = typography,
-            content = content,
-            colorScheme = colorScheme
-        )
-    }
-
+    val typography = acmeTypography()
+    MaterialTheme(
+        typography = typography,
+        content = content,
+        colorScheme = colorScheme
+    )
 }
 
 data class CustomColor(

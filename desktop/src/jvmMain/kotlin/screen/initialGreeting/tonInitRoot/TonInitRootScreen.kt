@@ -7,7 +7,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slid
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.initialGreeting.tonInitRoot.TonInitRootComponent
-import screen.initialGreeting.enterPass.EnterPassScreen
+import screen.mainApp.enterPass.EnterPassScreen
 import screen.initialGreeting.tonInitRoot.enterPassKeySecret.EnterPassKeySecretScreen
 import screen.initialGreeting.tonInitRoot.enterSeedPhrase.EnterSeedPhraseScreen
 import screen.initialGreeting.tonInitRoot.сheckWalletAddress.CheckWalletAddressScreen

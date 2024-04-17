@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -359,7 +360,7 @@ fun CustomDialogUI(
 }
 
 data class CustomImageModel(
-    val painter: Painter,
+    val painter: ImageVector,
     val color: Color,
     val contentScale: ContentScale
 )
@@ -409,7 +410,7 @@ fun DialogLogOut(
 
 
             Image(
-                painter = customImageModel.painter,
+                imageVector = customImageModel.painter,
                 contentDescription = null, // decorative
                 contentScale = customImageModel.contentScale,
                 modifier = Modifier

@@ -8,6 +8,7 @@ import com.pass.word.session.data.putToParams
 import com.pass.word.session.utilits.vibrationResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -48,7 +49,7 @@ class ScreenEnterPassComponent constructor(
                 clickButtonBack()
             }
             is ScreenEnterPassEvent.StateUpdatePassItem -> {
-                vibrationResponse(20, event.context)
+                event.context?.let { vibrationResponse(20, it) }
                 val oldValue = passItem.value
                 val newValue = oldValue + event.newCod
                 _passItem.value = newValue
@@ -60,13 +61,13 @@ class ScreenEnterPassComponent constructor(
                         } else {
                             println("eror pass ${firstEnterPass.value}")
                             callPassEnter("Passwords don't match")
-                            vibrationResponse(400, event.context)
+                            event.context?.let { vibrationResponse(400, it) }
                             _passItem.value = ""
                             _stateEnterPass.update { false }
                         }
                     } else {
                         firstEnterPass.update { passItem.value }
-                        CoroutineScope(Dispatchers.Main).launch {
+                        CoroutineScope(Dispatchers.IO).launch {
                             delay(500)
                             _passItem.value = ""
                             _stateEnterPass.update { true }

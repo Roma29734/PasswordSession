@@ -144,7 +144,6 @@ class MultiDivisionRootComponent constructor(
         }
     }
 
-
     sealed class Child {
         data class ScreenAuthentication @OptIn(DelicateCoroutinesApi::class) constructor(val component: ScreenAuthenticationComponent) :
             Child()

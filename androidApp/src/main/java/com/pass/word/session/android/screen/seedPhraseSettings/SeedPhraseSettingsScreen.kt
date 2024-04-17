@@ -59,6 +59,7 @@ import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPh
 import com.pass.word.session.navigation.screen.mainApp.seedPhraseSettings.ScreenSeedPhraseSettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.seedPhraseSettings.ScreenSeedPhraseSettingsEvent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.ItemPhrase
 import com.pass.word.session.utilits.StateBasicDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -157,27 +158,4 @@ fun SeedPhraseSettingsScreen(component: ScreenSeedPhraseSettingsComponent) {
 }
 
 
-@Composable
-fun ItemPhrase(text: String) {
-    Card(
-        modifier = Modifier
-            .padding(top = 8.dp, bottom = 8.dp, start = 64.dp, end = 64.dp)
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(16.dp),
-        border = BorderStroke(2.dp, CustomColor().grayLight),
-    ) {
-        Row(
-            modifier = Modifier
-                .background(CustomColor().mainBlue)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.displayMedium,
-                color = Color.White,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
-            )
-        }
-    }
-}
+

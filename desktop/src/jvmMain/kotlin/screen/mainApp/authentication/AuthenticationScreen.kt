@@ -1,8 +1,6 @@
-package screen.authenticationScreen
+package screen.mainApp.authentication
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -25,15 +22,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.mainApp.authentication.ScreenAuthStateEvent
 import com.pass.word.session.navigation.screen.mainApp.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.ui.viewComponent.BoxItemCode
 import com.pass.word.session.ui.viewComponent.ButtonNumber
-import com.pass.word.session.utilits.checkUseBiometric
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -196,10 +192,6 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Box(
-                    Modifier
-                        .size(64.dp),
-                )
                 ButtonNumber(textButton = 0) {
                     component.event(
                         ScreenAuthStateEvent.StateUpdatePassItem(

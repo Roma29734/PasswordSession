@@ -3,10 +3,12 @@ package com.pass.word.session.ui.viewComponent
 import Img.MyIconPack
 import Img.myiconpack.IcArrowBackNav
 import Img.myiconpack.IcDownMore
+import Img.myiconpack.IcPassword
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,6 +40,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -198,6 +203,94 @@ fun InputSeedContainer(
         ),
     )
 }
+
+@Composable
+fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String, oncLick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .padding(start = 12.dp, bottom = 16.dp, end = 12.dp)
+            .fillMaxWidth()
+            .clickable { oncLick() },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                modifier = Modifier.padding(end = 8.dp),
+                imageVector = MyIconPack.IcPassword,
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
+            )
+            Column {
+                Text(
+                    text = nameItem,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = Color.White
+                )
+                Text(
+                    text = emailItem,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = CustomColor().grayLight
+                )
+            }
+        }
+        Text(
+            modifier = Modifier.padding(end = 16.dp),
+            text = changeData,
+            style = MaterialTheme.typography.displaySmall,
+            color = CustomColor().grayLight
+        )
+    }
+}
+
+@Composable
+fun ItemPhrase(text: String) {
+    Card(
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp, start = 64.dp, end = 64.dp)
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(16.dp),
+        border = BorderStroke(2.dp, CustomColor().grayLight),
+    ) {
+        Row(
+            modifier = Modifier
+                .background(CustomColor().mainBlue)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.displayMedium,
+                color = Color.White,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
+            )
+        }
+    }
+}
+
+data class ItemSettingsMenuModel(
+    val image: ImageVector, val text: String, val clickHandler: () -> Unit
+)
+
+@Composable
+fun ItemSettingsMenu(image: ImageVector, text: String, clickHandler: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .clickable { clickHandler() }
+            .padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            imageVector = image,
+            contentDescription = "image",
+            modifier = Modifier.size(24.dp),
+            colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(text = text, style = MaterialTheme.typography.displayMedium, color = Color.White)
+    }
+}
+
 
 @Composable
 fun ItemSelectedType(

@@ -53,7 +53,7 @@ class ScreenSettingsComponent constructor(
             is ScreenSettingsStateEvent.ClickToButtonDownloadPass -> {
                 val result = convertListToJsonObject(PersonalDatabase(event.databaseDriverFactory).getAllPass())
                 println("jsonResult - $result")
-                createAndSaveJsonFile(event.context, "examplePass.json", result)
+                event.context?.let { createAndSaveJsonFile(it, "examplePass.json", result) }
                 pluckListenerToastPush("File Download Success")
             }
             is ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent -> {

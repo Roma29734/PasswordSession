@@ -32,12 +32,13 @@ fun main() {
     val lifecycle = LifecycleRegistry()
     val root = runOnMainThreadBlocking {  RootComponent(DefaultComponentContext(lifecycle)) }
     application {
-        val windowState = rememberWindowState(size = DpSize(1700.dp, 1600.dp))
+        val windowState = rememberWindowState(size = DpSize(450.dp, 750.dp))
         val childStack by root.childStack.subscribeAsState()
         Window(
             onCloseRequest = ::exitApplication,
             state = windowState,
-            title = "Password Session"
+            title = "Password Session",
+            resizable = false
         ) {
             MyCustomAppTheme{
                 LifecycleController(lifecycle, windowState)

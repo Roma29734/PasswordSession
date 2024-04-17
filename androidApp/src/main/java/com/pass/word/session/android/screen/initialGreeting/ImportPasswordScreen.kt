@@ -258,5 +258,4 @@ fun ImportPasswordScreen(
             ) { component.event(ScreenImportPasswordEvent.ClickButtonNext) }
         }
     }
-
 }
