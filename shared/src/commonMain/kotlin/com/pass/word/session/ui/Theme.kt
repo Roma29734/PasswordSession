@@ -27,8 +27,7 @@ fun MyCustomAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-
-    println("screeenWidthDp - $screenWidthDp")
+    println("screenWidthDp - $screenWidthDp")
     if(screenWidthDp >= 380.dp) {
         val typography = acmeTypography().medium
         MaterialTheme(
@@ -44,8 +43,6 @@ fun MyCustomAppTheme(
             colorScheme = colorScheme
         )
     }
-
-
 }
 
 data class CustomColor(

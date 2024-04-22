@@ -56,7 +56,7 @@ val typographySmall = Typography(
     bodyLarge = TextStyle(
         fontFamily = poppinsFont,
         fontWeight = FontWeight.ExtraBold,
-        fontSize = 24.sp
+        fontSize = 20.sp
     ),
     displayMedium = TextStyle(
         fontSize = 12.sp,

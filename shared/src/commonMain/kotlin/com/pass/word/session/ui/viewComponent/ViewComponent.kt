@@ -5,10 +5,18 @@ import Img.myiconpack.IcArrowBackNav
 import Img.myiconpack.IcDownMore
 import Img.myiconpack.IcPassword
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,14 +42,18 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
@@ -49,7 +61,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
 import com.pass.word.session.ui.CustomColor
+import kotlinx.coroutines.delay
 
 @Composable
 fun OutlineInputText(
@@ -245,6 +259,137 @@ fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String, on
         )
     }
 }
+
+
+
+//@Composable
+//fun itemBoxToCode(itemText: String) {
+//    val isVisible = remember { mutableStateOf(true) }
+//    val colorItem = remember { mutableStateOf(CustomColor().grayLight) }
+//    LaunchedEffect(itemText) {
+//        if(itemText == "•") colorItem.value = CustomColor().brandBlueLight
+//        if(itemText == "-") colorItem.value = CustomColor().brandRedMain
+//        if(itemText.isEmpty()) colorItem.value = CustomColor().grayLight
+//        isVisible.value = false
+//        delay(500)
+//        isVisible.value = true
+//    }
+//    Box (modifier = Modifier.size(32.dp)){
+//        AnimatedVisibility(
+//            visible = isVisible.value,
+//            enter = fadeIn(animationSpec = TweenSpec(durationMillis = 300)),
+//            exit = fadeOut(animationSpec = TweenSpec(durationMillis = 300))
+//        ) {
+//            Canvas(
+//                modifier = Modifier
+//                    .size(32.dp)
+//                    .padding(4.dp)
+//            ) {
+//                val canvasWidth = size.width
+//                val canvasHeight = size.height
+//
+//                drawCircle(
+//                    color = Color(colorItem.value.value),
+//                    center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+//                    radius = size.minDimension / 2
+//                )
+//
+//            }
+//
+//        }
+//    }
+//}
+
+//@Composable
+//fun itemBoxToCode(itemText: String) {
+//    val colorItem = remember { mutableStateOf(CustomColor().grayLight) }
+//    val targetColor = when (itemText) {
+//        "•" -> CustomColor().brandBlueLight
+//        "-" -> CustomColor().brandRedMain
+//        else -> CustomColor().grayLight
+//    }
+//
+//    LaunchedEffect(itemText) {
+//        colorItem.value = targetColor
+//    }
+//
+//    val animationFraction = animateFloatAsState(
+//        targetValue = 1f,
+//        animationSpec = tween(
+//            durationMillis = 700,
+//            easing = FastOutSlowInEasing
+//        )
+//    ).value
+//
+//    Box(modifier = Modifier.size(32.dp)) {
+//        Canvas(
+//            modifier = Modifier
+//                .size(32.dp)
+//                .padding(4.dp)
+//        ) {
+//            val canvasWidth = size.width
+//            val canvasHeight = size.height
+//
+//            drawCircle(
+//                color = lerp(colorItem.value, targetColor, animationFraction),
+//                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+//                radius = size.minDimension / 2
+//            )
+//        }
+//    }
+//}
+
+@Composable
+fun itemBoxToCode(itemText: String) {
+    val colorItem = remember { mutableStateOf(CustomColor().grayLight) }
+    val targetColor = when (itemText) {
+        "•" -> CustomColor().brandBlueLight
+        "-" -> CustomColor().brandRedMain
+        "!" -> CustomColor().brandGreen
+        else -> CustomColor().grayLight
+    }
+
+    LaunchedEffect(itemText) {
+        colorItem.value = targetColor
+    }
+
+    val scaleFraction by animateFloatAsState(
+        targetValue = if (colorItem.value != CustomColor().grayLight) 1.2f else 1f, // Масштабируем круг на 20%, если цвет не серый
+        animationSpec = tween(
+            durationMillis = 500, // Увеличиваем продолжительность анимации
+            easing = FastOutSlowInEasing // Используем функцию плавности для более плавной анимации
+        )
+    )
+
+    Box(
+        modifier = Modifier.size(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(
+            modifier = Modifier
+                .size(32.dp)
+                .padding(4.dp)
+        ) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+            val scaleFactor = 1f + (scaleFraction - 1f) // Увеличиваем размер круга на 20%
+
+            scale(scaleFactor) {
+                drawCircle(
+                    color = colorItem.value,
+                    center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+                    radius = size.minDimension / 2
+                )
+            }
+        }
+    }
+}
+
+
+
+
+
 
 @Composable
 fun ItemPhrase(text: String) {
