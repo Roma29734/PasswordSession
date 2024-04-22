@@ -12,6 +12,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackA
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.mainApp.enterPassScreen.EnterPassScreen
 import com.pass.word.session.navigation.screen.mainApp.changePassword.ChangePasswordRootComponent
+import com.pass.word.session.navigation.screen.mainApp.changePassword.WarningScreen
 
 @Composable
 fun ChangePasswordRoot(component: ChangePasswordRootComponent) {

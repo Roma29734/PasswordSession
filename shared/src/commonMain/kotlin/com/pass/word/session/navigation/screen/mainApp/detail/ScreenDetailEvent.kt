@@ -8,4 +8,5 @@ interface ScreenDetailEvent {
     data class ChangeStateOpenedAlertDialog(val newState: Boolean) : ScreenDetailEvent
     data class DeleteItemPass(val databaseDriverFactory: DriverFactory): ScreenDetailEvent
     data object EditItemPass: ScreenDetailEvent
+    data object HideDialog: ScreenDetailEvent
 }

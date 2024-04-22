@@ -6,8 +6,8 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.primaryAction.PrimaryActionScreen
 import screen.mainApp.passKeySettings.editPassKey.EditPassKeyScreen
-import screen.mainApp.passKeySettings.primaryAction.PrimaryActionScreen
 import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPassKeySettingsComponent
 
 @Composable

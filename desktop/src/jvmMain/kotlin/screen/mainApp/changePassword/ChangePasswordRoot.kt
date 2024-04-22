@@ -11,6 +11,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slid
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.mainApp.changePassword.ChangePasswordRootComponent
+import com.pass.word.session.navigation.screen.mainApp.changePassword.WarningScreen
 import screen.mainApp.enterPass.EnterPassScreen
 
 @Composable

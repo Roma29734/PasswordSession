@@ -33,6 +33,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.viewComponent.BoxItemCode
 import com.pass.word.session.android.screen.viewComponent.ButtonNumber
 import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
+import com.pass.word.session.navigation.screen.mainApp.screenEnterPass.EnterPassScreenContent
 import com.pass.word.session.navigation.screen.mainApp.screenEnterPass.ScreenEnterPassComponent
 import com.pass.word.session.navigation.screen.mainApp.screenEnterPass.ScreenEnterPassEvent
 import kotlinx.coroutines.launch
@@ -42,10 +43,11 @@ import kotlinx.coroutines.launch
 fun EnterPassScreen(component: ScreenEnterPassComponent) {
 
 
+    val context = LocalContext.current
+
     val passItem: String by component.passItem.subscribeAsState()
     val passEnterState by component.stateEnterPass.collectAsState()
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -68,168 +70,14 @@ fun EnterPassScreen(component: ScreenEnterPassComponent) {
             SnackbarHost(hostState = snackBarHostState)
         },
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Column {
-                UpBarButtonBack(onBackHandler = {
-                    component.onEvent(ScreenEnterPassEvent.ClickButtonBack)
-                })
-
-                Spacer(modifier = Modifier.size(48.dp))
-
-                if (!passEnterState) {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        text = "Enter the password to log in to the application. Attention, if you forget your password, you will not be able to restore it",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-                } else {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        text = "Confirm the password you entered earlier",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
+        EnterPassScreenContent(
+            passItem = passItem,
+            passEnterState = passEnterState,
+            context = context,
+            eventComponentDispatch = {
+                component.onEvent(it)
             }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(bottom = 32.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    BoxItemCode(if (passItem.isNotEmpty()) "•" else "")
-                    BoxItemCode(if (passItem.length >= 2) "•" else "")
-                    BoxItemCode(if (passItem.length >= 3) "•" else "")
-                    BoxItemCode(if (passItem.length >= 4) "•" else "")
-                }
-                Row(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(top = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    ButtonNumber(1) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it,
-                                context
-                            )
-                        )
-                    }
-                    ButtonNumber(2) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                    ButtonNumber(3) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    ButtonNumber(4) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                    ButtonNumber(5) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                    ButtonNumber(6) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    ButtonNumber(7) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                    ButtonNumber(8) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                    ButtonNumber(9) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    Box(
-                        Modifier
-                            .size(64.dp),
-                    )
-                    ButtonNumber(textButton = 0) {
-                        component.onEvent(
-                            ScreenEnterPassEvent.StateUpdatePassItem(
-                                it, context
-                            )
-                        )
-                    }
-                    Box(
-                        Modifier
-                            .size(64.dp),
-                    )
-                }
-            }
-        }
+        )
+
     }
 }

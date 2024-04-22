@@ -1,4 +1,4 @@
-package screen.mainApp.passKeySettings.primaryAction
+package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.primaryAction
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPrimaryKeyActionComponent
 import com.pass.word.session.ui.CustomColor
 import com.pass.word.session.ui.viewComponent.ItemPhrase
 import com.pass.word.session.ui.viewComponent.MainComponentButton

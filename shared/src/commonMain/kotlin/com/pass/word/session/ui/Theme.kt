@@ -1,17 +1,20 @@
 package com.pass.word.session.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import com.pass.word.session.utilits.Platform
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-expect fun acmeTypography(): Typography
+data class AcmeTypographyResponse(
+    val small: Typography,
+    val medium: Typography
+)
+
+expect fun acmeTypography(): AcmeTypographyResponse
 
 val colorScheme = darkColorScheme(
     background = CustomColor().mainBlue
@@ -19,16 +22,30 @@ val colorScheme = darkColorScheme(
 
 @Composable
 fun MyCustomAppTheme(
+    screenWidthDp: Dp,
+    screenHeightDp: Dp,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
 
-    val typography = acmeTypography()
-    MaterialTheme(
-        typography = typography,
-        content = content,
-        colorScheme = colorScheme
-    )
+    println("screeenWidthDp - $screenWidthDp")
+    if(screenWidthDp >= 380.dp) {
+        val typography = acmeTypography().medium
+        MaterialTheme(
+            typography = typography,
+            content = content,
+            colorScheme = colorScheme
+        )
+    } else {
+        val typography = acmeTypography().small
+        MaterialTheme(
+            typography = typography,
+            content = content,
+            colorScheme = colorScheme
+        )
+    }
+
+
 }
 
 data class CustomColor(

@@ -32,15 +32,13 @@ class RootComponent constructor(
     private fun checkStateAppLoading(): Configuration {
 
         getParamsString(keyAuthPass) ?: return Configuration.ScreenInitialGreeting
-        getParamsString(keySecretPassKey) ?: return Configuration.ScreenInitialGreeting
         if (getParamsString(keyWalletSeed) == null) {
             return Configuration.LocalDivisionRoot
         }
-
+        getParamsString(keySecretPassKey) ?: return Configuration.ScreenInitialGreeting
         return Configuration.MultiDivisionRoot
     }
 
-    @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     private fun createChild(
         config: Configuration,
         context: ComponentContext

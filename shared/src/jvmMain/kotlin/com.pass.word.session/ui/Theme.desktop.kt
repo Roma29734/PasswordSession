@@ -9,7 +9,8 @@ import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.sp
 
 
-actual fun acmeTypography(): Typography = typography
+actual fun acmeTypography(): AcmeTypographyResponse =
+    AcmeTypographyResponse(small = typography, medium = typography)
 
 val poppinsFont = FontFamily(
     Font("resources/font/poppins_black.ttf", FontWeight.Black),

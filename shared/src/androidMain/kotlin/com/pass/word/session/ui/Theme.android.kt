@@ -8,7 +8,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.pass.word.session.R
 
-actual fun acmeTypography(): Typography = typography
+actual fun acmeTypography(): AcmeTypographyResponse =
+    AcmeTypographyResponse(small = typographySmall, medium = typographyMedium)
 
 val poppinsFont = FontFamily(
     Font(R.font.poppins_black, FontWeight.Black),
@@ -18,7 +19,7 @@ val poppinsFont = FontFamily(
     Font(R.font.poppins_medium, FontWeight.Medium),
 )
 
-val typography = Typography(
+val typographyMedium = Typography(
     bodyMedium = TextStyle(
         fontFamily = poppinsFont,
         fontWeight = FontWeight.Medium,
@@ -41,6 +42,34 @@ val typography = Typography(
     ),
     displayLarge = TextStyle(
         fontSize = 22.sp,
+        fontFamily = poppinsFont,
+        fontWeight = FontWeight.SemiBold
+    )
+)
+
+val typographySmall = Typography(
+    bodyMedium = TextStyle(
+        fontFamily = poppinsFont,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = poppinsFont,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 24.sp
+    ),
+    displayMedium = TextStyle(
+        fontSize = 12.sp,
+        fontFamily = poppinsFont,
+        fontWeight = FontWeight.Medium,
+    ),
+    displaySmall = TextStyle(
+        fontSize = 10.sp,
+        fontFamily = poppinsFont,
+        fontWeight = FontWeight.SemiBold
+    ),
+    displayLarge = TextStyle(
+        fontSize = 18.sp,
         fontFamily = poppinsFont,
         fontWeight = FontWeight.SemiBold
     )

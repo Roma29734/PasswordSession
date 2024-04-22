@@ -1,4 +1,4 @@
-package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings
+package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.primaryAction
 
 import com.arkivanov.decompose.ComponentContext
 import com.pass.word.session.data.getParamsString

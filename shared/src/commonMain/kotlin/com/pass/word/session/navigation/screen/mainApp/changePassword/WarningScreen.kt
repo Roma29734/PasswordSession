@@ -1,5 +1,7 @@
-package com.pass.word.session.android.screen.mainApp.changePassword
+package com.pass.word.session.navigation.screen.mainApp.changePassword
 
+import Img.MyIconPack
+import Img.myiconpack.IcWarning
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -26,14 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pass.word.session.android.R
-import com.pass.word.session.android.screen.viewComponent.MainComponentButton
-import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.mainApp.changePassword.ScreenWarningComponent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.MainComponentButton
+import com.pass.word.session.ui.viewComponent.UpBarButtonBack
 
 @Composable
 fun WarningScreen(component: ScreenWarningComponent) {
@@ -64,7 +63,7 @@ fun WarningScreen(component: ScreenWarningComponent) {
             exit = fadeOut(animationSpec = tween(durationMillis = 300)),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_warning),
+                imageVector = MyIconPack.IcWarning,
                 contentDescription = "ic warning",
                 modifier = Modifier
                     .size(190.dp)

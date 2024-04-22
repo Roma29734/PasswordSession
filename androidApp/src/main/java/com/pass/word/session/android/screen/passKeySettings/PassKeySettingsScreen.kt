@@ -7,8 +7,8 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.passKeySettings.editPassKey.EditPassKeyScreen
-import com.pass.word.session.android.screen.passKeySettings.primaryAction.PrimaryActionScreen
 import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPassKeySettingsComponent
+import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.primaryAction.PrimaryActionScreen
 
 @Composable
 fun PassKeySettingsScreen(component: ScreenPassKeySettingsComponent) {

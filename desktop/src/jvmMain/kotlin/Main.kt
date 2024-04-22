@@ -40,7 +40,11 @@ fun main() {
             title = "Password Session",
             resizable = false
         ) {
-            MyCustomAppTheme{
+            MyCustomAppTheme(
+                darkTheme = true,
+                screenWidthDp = windowState.size.width,
+                screenHeightDp = windowState.size.height,
+            ) {
                 LifecycleController(lifecycle, windowState)
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Children(

@@ -1,17 +1,11 @@
 package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
-import com.pass.word.session.data.getParamsString
-import com.pass.word.session.data.keySecretPassKey
-import com.pass.word.session.navigation.screen.multiDivisionRoot.MultiDivisionRootComponent
-import com.pass.word.session.utilits.StateBasicDialog
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.primaryAction.ScreenPrimaryKeyActionComponent
 import kotlinx.serialization.Serializable
 
 class ScreenPassKeySettingsComponent(

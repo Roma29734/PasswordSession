@@ -45,6 +45,7 @@ import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.mainApp.detail.AlertDialogDelete
 import com.pass.word.session.navigation.screen.mainApp.detail.BaseTextItem
 import com.pass.word.session.navigation.screen.mainApp.detail.Descriptions
+import com.pass.word.session.navigation.screen.mainApp.detail.DetailScreenContent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailComponent
 import com.pass.word.session.navigation.screen.mainApp.detail.ScreenDetailEvent
 import com.pass.word.session.ui.CustomColor
@@ -54,189 +55,39 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetailScreen(component: ScreenDetailComponent) {
+
+    val context = LocalContext.current
+
+
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val stateOpenAlertDialog: Boolean by component.stateOpenAlertDialog.subscribeAsState()
-    val context = LocalContext.current
     val stateLoading by component.stateOpenDialogChoseType.collectAsState()
 
     val itemModel: PasswordItemModel by component.passwordItem.subscribeAsState()
 
-    component.getOneItem(DriverFactory(context = context))
+    component.getOneItem(DriverFactory(context))
 
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
     ) {
-
-
-
-        if (stateLoading is StateBasicDialog.Show) {
-            Dialog(onDismissRequest = { stateLoading as StateBasicDialog.Show }) {
-                CustomLoadingDialog()
+        DetailScreenContent(
+            clipboardManager = clipboardManager,
+            stateOpenAlertDialog = stateOpenAlertDialog,
+            stateLoading = stateLoading,
+            itemModel = itemModel,
+            driverFactory = DriverFactory(context),
+            snackBarHostHandler = {
+                scope.launch {
+                    snackbarHostState.showSnackbar(it)
+                }
+            },
+            eventComponentDispatch = {
+                component.onEvent(it)
             }
-        }
-
-        if (stateLoading is StateBasicDialog.Error) {
-            Dialog(onDismissRequest = { stateLoading is StateBasicDialog.Error }) {
-                CustomErrorDialog(
-                    textTitle = "An error has occurred",
-                    textSubTitle = "An error occurred during the execution of the request. try again later",
-                    textButton = "close",
-                    handlerButton = {
-//                        component.onEvent(ScreenDetailEvent.HideDialog)
-                    }
-                )
-            }
-        }
-
-        AlertDialogDelete(openDialog = stateOpenAlertDialog, onBackHandler = {
-            component.onEvent(ScreenDetailEvent.ChangeStateOpenedAlertDialog(false))
-        }, onConfirmHandler = {
-            component.onEvent(
-                ScreenDetailEvent.DeleteItemPass(
-                    databaseDriverFactory = DriverFactory(
-                        context
-                    )
-                )
-            )
-        })
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                UpBarButtonBack(onBackHandler = {
-                    component.onEvent(ScreenDetailEvent.ClickButtonBack)
-                })
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 16.dp),
-                    text = itemModel.nameItemPassword,
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                BaseTextItem(
-                    textTitle = "Email/Username",
-                    textSubTitle = itemModel.emailOrUserName,
-                    showSnacbarNandler = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Copy")
-                        }
-                    }
-                )
-                BaseTextItem(
-                    textTitle = "Password",
-                    textSubTitle = itemModel.passwordItem,
-                    showSnacbarNandler = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Copy")
-                        }
-                    }
-                )
-                if (itemModel.urlSite != null) {
-                    BaseTextItem(
-                        textTitle = "Url",
-                        textSubTitle = itemModel.urlSite.toString(),
-                        showSnacbarNandler = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Copy")
-                            }
-                        }
-                    )
-                }
-                if (itemModel.descriptions != null) {
-                    Descriptions(
-                        textTitle = "Descriptions",
-                        textSubTitle = itemModel.descriptions.toString()
-                    )
-                }
-            }
-
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp)
-                        .clickable {
-                            clipboardManager.setText(
-                                AnnotatedString(
-                                    ("${itemModel.nameItemPassword}:${itemModel.emailOrUserName}:${itemModel.passwordItem}${if (itemModel.urlSite != null) ":${itemModel.urlSite}" else ""}${if (itemModel.descriptions != null) ":${itemModel.descriptions}" else ""}")
-                                )
-                            )
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Copy complete")
-                            }
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Image(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = R.drawable.ic_copy_sourse),
-                        contentDescription = "icons copy full",
-                        colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = "Copy everything",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = CustomColor().brandBlueLight
-                    )
-                }
-
-                Spacer(modifier = Modifier.size(12.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp)
-                        .clickable { component.onEvent(ScreenDetailEvent.EditItemPass) }
-                    ,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Image(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = R.drawable.ic_edit),
-                        contentDescription = "icons edit",
-                        colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = "Edit",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = CustomColor().brandBlueLight
-                    )
-                }
-
-                Spacer(modifier = Modifier.size(12.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp)
-                        .clickable {
-                            component.onEvent(ScreenDetailEvent.ChangeStateOpenedAlertDialog(true))
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Image(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = "icons edit",
-                        colorFilter = ColorFilter.tint(CustomColor().brandRedMain)
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = "Delete",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = CustomColor().brandRedMain
-                    )
-                }
-                Spacer(modifier = Modifier.size(16.dp))
-            }
-        }
-
+        )
     }
 }

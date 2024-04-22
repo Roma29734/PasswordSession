@@ -1,3 +1,5 @@
+@file:Suppress("IMPLICIT_CAST_TO_ANY")
+
 package com.pass.word.session.utilits
 
 import android.Manifest
@@ -20,7 +22,10 @@ import kotlinx.serialization.json.JsonObject
 import java.io.File
 import android.os.VibrationEffect
 import android.os.Vibrator
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 
 
 @Composable
@@ -28,6 +33,7 @@ actual fun showToast(message: String) {
     val mContext = LocalContext.current
     Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
 }
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: JsonObject) {
@@ -78,97 +84,178 @@ actual fun checkUseBiometric(
     context: Any,
     onAction: (successState: Boolean, message: String?) -> Unit,
 ){
+    try {
+        val contextRealy = (context as Context)
+        var cancellationSignal: CancellationSignal? = null
 
-    val contextRealy = (context as Context)
-    var cancellationSignal: CancellationSignal? = null
-
-    fun notifyUser(message: String) {
-        Log.d("BIOMETRIC", message)
-    }
-
-    fun getCancelletionSignal(): CancellationSignal {
-        cancellationSignal = CancellationSignal()
-        cancellationSignal?.setOnCancelListener {
-            notifyUser("Ath Cancelled via Signal")
+        fun notifyUser(message: String) {
+            Log.d("BIOMETRIC", message)
         }
 
-        return cancellationSignal as CancellationSignal
-    }
-
-
-    val authenticationCalBack: BiometricPrompt.AuthenticationCallback =
-        @RequiresApi(Build.VERSION_CODES.P)
-        object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                onAction(false, "Authentication Error $errorCode")
-                notifyUser("Authentication Error $errorCode")
-                super.onAuthenticationError(errorCode, errString)
+        fun getCancelletionSignal(): CancellationSignal {
+            cancellationSignal = CancellationSignal()
+            cancellationSignal?.setOnCancelListener {
+                notifyUser("Ath Cancelled via Signal")
             }
 
-            override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                super.onAuthenticationHelp(helpCode, helpString)
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-            }
-
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                notifyUser("Authentication Succeeded")
-                onAction(true, null)
-                super.onAuthenticationSucceeded(result)
-            }
+            return cancellationSignal as CancellationSignal
         }
 
-    fun checkBiometricSupport(context: Context): Boolean {
-        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
 
-        if (!keyguardManager.isDeviceSecure) {
-            onAction(false, "Lock screen security not enabled in the settings")
-            notifyUser("Lock screen security not enabled in the settings")
-            return false
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.USE_BIOMETRIC
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            notifyUser("Fingerprint authentication permission not enabled")
-            return false
-        }
-
-        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    fun launchBiometric() {
-        if (checkBiometricSupport(contextRealy)) {
-            val biometricPrompt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                BiometricPrompt
-                    .Builder(contextRealy)
-                    .setTitle("Authentication is required")
-                    .setSubtitle("Password Session")
-//                    .setDescription("We use biometric authentication to protect your data")
-                    .setNegativeButton("Not Now", contextRealy.mainExecutor) { dialogInterface, i ->
-                        notifyUser("Authentication cancelled")
+        val authenticationCalBack =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+                        onAction(false, "Authentication Error $errorCode")
+                        notifyUser("Authentication Error $errorCode")
+                        super.onAuthenticationError(errorCode, errString)
                     }
-                    .build()
+
+                    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+                        super.onAuthenticationHelp(helpCode, helpString)
+                    }
+
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+                    }
+
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
+                        notifyUser("Authentication Succeeded")
+                        onAction(true, null)
+                        super.onAuthenticationSucceeded(result)
+                    }
+                }
             } else {
-                TODO("VERSION.SDK_INT < P")
+                object : FingerprintManagerCompat.AuthenticationCallback() {
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+                        onAction(false, "Authentication Error $errorCode")
+                        notifyUser("Authentication Error $errorCode")
+                        super.onAuthenticationError(errorCode, errString)
+                    }
+
+                    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+                        super.onAuthenticationHelp(helpCode, helpString)
+                    }
+
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+                    }
+                }
             }
-            biometricPrompt.authenticate(
-                getCancelletionSignal(),
-                contextRealy.mainExecutor,
-                authenticationCalBack
-            )
 
+        val authenticationCalBackFinger: FingerprintManagerCompat.AuthenticationCallback =
+            object : FingerprintManagerCompat.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+                    onAction(false, "Authentication Error $errorCode")
+                    notifyUser("Authentication Error $errorCode")
+                    super.onAuthenticationError(errorCode, errString)
+                }
+
+                override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+                    super.onAuthenticationHelp(helpCode, helpString)
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                }
+            }
+
+        fun checkBiometricSupport(context: Context): Boolean {
+            val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+
+            if (!keyguardManager.isDeviceSecure) {
+                onAction(false, "Lock screen security not enabled in the settings")
+                notifyUser("Lock screen security not enabled in the settings")
+                return false
+            }
+
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.USE_BIOMETRIC
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                notifyUser("Fingerprint authentication permission not enabled")
+                return false
+            }
+
+            return context.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
         }
-    }
-    launchBiometric()
-}
 
+
+
+        fun launchBiometrics() {
+            if (checkBiometricSupport(contextRealy)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val biometricPrompt = BiometricPrompt
+                        .Builder(contextRealy)
+                        .setTitle("Authentication is required")
+                        .setSubtitle("Password Session")
+                        .setNegativeButton("Not Now", contextRealy.mainExecutor) { dialogInterface, i ->
+                            notifyUser("Authentication cancelled")
+                        }
+                        .build()
+
+                    if(authenticationCalBack is BiometricPrompt.AuthenticationCallback) {
+                        biometricPrompt.authenticate(
+                            getCancelletionSignal(),
+                            contextRealy.mainExecutor,
+                            authenticationCalBack
+                        )
+                    }
+                } else {
+                    val fingerprintManager = FingerprintManagerCompat.from(contextRealy)
+                    if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
+                        val cancellationSignal = androidx.core.os.CancellationSignal()
+                        if (ActivityCompat.checkSelfPermission(contextRealy, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                            notifyUser("Fingerprint authentication permission not granted")
+                            return
+                        }
+                        fingerprintManager.authenticate(null, 0, cancellationSignal, authenticationCalBackFinger, null)
+                    }
+                }
+            }
+        }
+
+        fun launchBiometric() {
+            if (checkBiometricSupport(contextRealy)) {
+                val biometricPrompt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    BiometricPrompt
+                        .Builder(contextRealy)
+                        .setTitle("Authentication is required")
+                        .setSubtitle("Password Session")
+                        .setNegativeButton("Not Now", contextRealy.mainExecutor) { dialogInterface, i ->
+                            notifyUser("Authentication cancelled")
+                        }
+                        .build()
+                } else {
+                    val fingerprintManager = FingerprintManagerCompat.from(contextRealy)
+                    if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
+                        val cancellationSignal = androidx.core.os.CancellationSignal()
+                        if (ActivityCompat.checkSelfPermission(contextRealy, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                            notifyUser("Fingerprint authentication permission not granted")
+                            return
+                        }
+                        fingerprintManager.authenticate(null, 0, cancellationSignal, authenticationCalBackFinger, null)
+                    } else {
+                        // Fingerprint authentication is not available, handle accordingly
+                        // Notify the user or fall back to another authentication method
+                    }
+                    TODO("VERSION.SDK_INT < P")
+                }
+                if(authenticationCalBack is BiometricPrompt.AuthenticationCallback) {
+                    biometricPrompt.authenticate(
+                        getCancelletionSignal(),
+                        contextRealy.mainExecutor,
+                        authenticationCalBack
+                    )
+                }
+            }
+        }
+        launchBiometrics()
+    } catch (e: Exception) {
+
+    }
+}
 actual class Platform actual constructor() {
     actual val platform: String = "Android" // Укажите платформу явным образом
 }

@@ -39,7 +39,6 @@ import screen.mainApp.bottom.settings.SettingsScreen
 @Composable
 fun  BottomMultiScreen(component: ScreenBottomMultiComponent) {
     val selectedItem by component.selectedItem.subscribeAsState()
-//    val context = LocalContext.current as MainActivity
     val screens by remember {
         mutableStateOf(
             listOf(
@@ -49,40 +48,6 @@ fun  BottomMultiScreen(component: ScreenBottomMultiComponent) {
             )
         )
     }
-
-//    val backCallback = remember {
-//        object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if(selectedItem >= 1) {
-//                    component.updateSelectedItem(selectedItem - 1)
-//                    screens[selectedItem].openScreen()
-//                    Log.d("BottomMultiScreen", "back handler")
-//                } else {
-//                    context.finish()
-//                }
-//            }
-//        }
-//    }
-
-//    SideEffect {
-//        backCallback.isEnabled = true
-//    }
-//
-//    val backDispatcher = checkNotNull(LocalOnBackPressedDispatcherOwner.current) {
-//        "No OnBackPressedDispatcherOwner was provided via LocalOnBackPressedDispatcherOwner"
-//    }.onBackPressedDispatcher
-//
-//    val lifecycleOwner = LocalLifecycleOwner.current
-//
-//    DisposableEffect(lifecycleOwner, backDispatcher) {
-//         Add callback to the backDispatcher
-//        backDispatcher.addCallback(lifecycleOwner, backCallback)
-//         When the effect leaves the Composition, remove the callback
-//        onDispose {
-//            backCallback.remove()
-//        }
-//    }
-
 
     Scaffold(
         bottomBar = {

@@ -61,6 +61,7 @@ class ScreenTonPasswordComponent(
     fun onEvent(event: ScreenTonPasswordEvent) {
         when (event) {
             is ScreenTonPasswordEvent.ReadBdItem -> {
+                println("readed requesst to base")
                 readTonPassItem(event.databaseDriverFactory)
             }
 
@@ -98,6 +99,9 @@ class ScreenTonPasswordComponent(
     private fun readLocalBd(databaseDriverFactory: DriverFactory) {
         try {
             val database = PersonalDatabase(databaseDriverFactory).getAllPass()
+            logging().i("ScreenTonPasswordComponent") { "readLocalBd result -  ${database}" }
+            println("readLocalBd predReslkts")
+            println("readLocalBd after - $database")
             if (database.isEmpty()) {
                 _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
                 return
@@ -183,7 +187,9 @@ class ScreenTonPasswordComponent(
 
     // This function read local cash, from ton pass
     private fun readTonCashBd(database: TonCashDatabase) {
+        println("readTonCashBd predReslkts")
         val resultBd = database.getAllPass()
+        println("readTonCashBd after - $resultBd")
         if (resultBd.isEmpty()) {
             _statePassItemDisplay.update { StatePassItemDisplay.VisibleMessage("You don't have any saved passwords") }
         } else {

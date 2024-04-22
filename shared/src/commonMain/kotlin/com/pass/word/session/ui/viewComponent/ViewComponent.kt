@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -120,7 +122,8 @@ fun BoxItemCode(itemText: String) {
 fun ButtonNumber(textButton: Int, clickHandler: (Int) -> Unit) {
     Box(
         Modifier
-            .size(64.dp)
+            .sizeIn(minWidth = 32.dp, minHeight = 32.dp, maxHeight = 64.dp, maxWidth = 64.dp)
+            .aspectRatio(1f)
             .background(CustomColor().brandBlueLight, RoundedCornerShape(600.dp))
             .clickable { clickHandler(textButton) },
         contentAlignment = Alignment.Center

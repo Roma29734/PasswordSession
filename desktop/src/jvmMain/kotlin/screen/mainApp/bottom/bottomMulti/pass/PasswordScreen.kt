@@ -64,15 +64,12 @@ fun PasswordScreen(component: ScreenTonPasswordComponent) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
 
-
-
     LaunchedEffect(stateCallItem) {
         if (stateCallItem) {
             component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory()))
         }
         component.onEvent(ScreenTonPasswordEvent.ReadCashPass(DriverFactory()))
     }
-
 
     Column(
         modifier = Modifier
@@ -98,7 +95,6 @@ fun PasswordScreen(component: ScreenTonPasswordComponent) {
                 openBottomSheet = true
             }
         }
-
 
         if (stateVisibleStatusBar is StateStatusBar.Show) {
             Column(

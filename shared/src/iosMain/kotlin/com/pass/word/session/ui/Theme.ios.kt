@@ -6,6 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 
 
-actual fun acmeTypography(): Typography = Typography(
+actual fun acmeTypography(): AcmeTypographyResponse = (
     TODO()
 )

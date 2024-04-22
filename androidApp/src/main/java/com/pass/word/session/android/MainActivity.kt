@@ -1,13 +1,17 @@
 package com.pass.word.session.android
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
@@ -28,7 +32,14 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalDecomposeApi::class, DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            // getting screen size
+            val configuration = LocalConfiguration.current
+
+            val screenHeight = configuration.screenHeightDp.dp
+            val screenWidth = configuration.screenWidthDp.dp
+
             val systemUiController = rememberSystemUiController()
             SideEffect {
                 systemUiController.setStatusBarColor(
@@ -44,7 +55,11 @@ class MainActivity : ComponentActivity() {
                 RootComponent(it)
             }
             val childStack by root.childStack.subscribeAsState()
-            MyCustomAppTheme {
+            MyCustomAppTheme(
+                darkTheme = true,
+                screenWidthDp = screenWidth,
+                screenHeightDp = screenHeight,
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
