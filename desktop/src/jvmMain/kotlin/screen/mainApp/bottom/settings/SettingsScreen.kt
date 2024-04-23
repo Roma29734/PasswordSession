@@ -9,7 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsStateEvent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.SettingsScreenContent
 import kotlinx.coroutines.launch
 
@@ -49,7 +51,7 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
 
             },
             mainComponentBtnHandler = {
-
+                component.onEvent(ScreenSettingsStateEvent.ClickToButtonDownloadPass("adad", DriverFactory()))
             }
         )
     }

@@ -2,6 +2,7 @@ package com.pass.word.session.utilits
 
 import androidx.compose.runtime.Composable
 import kotlinx.serialization.json.JsonObject
+import java.io.File
 
 @Composable
 actual fun showToast(message: String) {
@@ -10,8 +11,17 @@ actual fun showToast(message: String) {
     TODO()
 }
 
+
+
 actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: JsonObject) {
-    TODO()
+    try {
+        val file = File(System.getProperty("user.home"), "Downloads/$fileName")
+        file.writeText(savedJson.toString())
+        println("File saved successfully at: ${file.absolutePath}")
+    } catch (e: Exception) {
+        println("Error saving file: ${e.message}")
+        e.printStackTrace()
+    }
 }
 
 actual fun vibrationResponse(time: Int, context: Any) {

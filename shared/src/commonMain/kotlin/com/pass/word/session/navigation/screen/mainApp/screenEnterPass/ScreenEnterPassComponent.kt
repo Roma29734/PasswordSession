@@ -3,6 +3,7 @@ package com.pass.word.session.navigation.screen.mainApp.screenEnterPass
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.update
 import com.pass.word.session.data.keyAuthPass
 import com.pass.word.session.data.putToParams
 import com.pass.word.session.utilits.vibrationResponse
@@ -62,14 +63,15 @@ class ScreenEnterPassComponent constructor(
                             println("eror pass ${firstEnterPass.value}")
                             callPassEnter("Passwords don't match")
                             event.context?.let { vibrationResponse(400, it) }
-                            _passItem.value = ""
+                            _passItem.update { "" }
                             _stateEnterPass.update { false }
                         }
                     } else {
                         firstEnterPass.update { passItem.value }
                         CoroutineScope(Dispatchers.IO).launch {
+                            _passItem.update { "!!!!" }
                             delay(500)
-                            _passItem.value = ""
+                            _passItem.update { "" }
                             _stateEnterPass.update { true }
                         }
                     }

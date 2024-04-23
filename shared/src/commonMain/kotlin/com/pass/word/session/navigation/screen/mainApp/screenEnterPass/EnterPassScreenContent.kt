@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.pass.word.session.ui.viewComponent.BoxItemCode
 import com.pass.word.session.ui.viewComponent.ButtonNumber
 import com.pass.word.session.ui.viewComponent.UpBarButtonBack
+import com.pass.word.session.ui.viewComponent.itemBoxToCode
 
 @Composable
 fun EnterPassScreenContent(
@@ -76,10 +77,10 @@ fun EnterPassScreenContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                BoxItemCode(if (passItem.isNotEmpty()) "•" else "")
-                BoxItemCode(if (passItem.length >= 2) "•" else "")
-                BoxItemCode(if (passItem.length >= 3) "•" else "")
-                BoxItemCode(if (passItem.length >= 4) "•" else "")
+                itemBoxToCode(if (passItem.isNotEmpty()) passItem[0].toString() else "")
+                itemBoxToCode(if (passItem.length >= 2) passItem[0].toString() else "")
+                itemBoxToCode(if (passItem.length >= 3) passItem[0].toString() else "")
+                itemBoxToCode(if (passItem.length >= 4) passItem[0].toString() else "")
             }
             Row(
                 modifier = Modifier

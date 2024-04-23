@@ -32,7 +32,7 @@ fun main() {
     val lifecycle = LifecycleRegistry()
     val root = runOnMainThreadBlocking {  RootComponent(DefaultComponentContext(lifecycle)) }
     application {
-        val windowState = rememberWindowState(size = DpSize(450.dp, 750.dp))
+        val windowState = rememberWindowState(size = DpSize(500.dp, 800.dp))
         val childStack by root.childStack.subscribeAsState()
         Window(
             onCloseRequest = ::exitApplication,
