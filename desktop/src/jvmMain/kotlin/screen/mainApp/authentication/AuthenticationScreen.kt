@@ -15,8 +15,11 @@ import com.pass.word.session.navigation.screen.mainApp.authentication.Authentica
 import com.pass.word.session.navigation.screen.mainApp.authentication.ScreenAuthStateEvent
 import com.pass.word.session.navigation.screen.mainApp.authentication.ScreenAuthenticationComponent
 import com.pass.word.session.utilits.checkUseBiometric
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.jetbrains.skiko.MainUIDispatcher
 
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
@@ -30,6 +33,9 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
 
 
     LaunchedEffect(passItem) {
+        withContext(MainUIDispatcher) {
+            println("main dispatcher")
+        }
         when (passItem.length) {
             1 -> {
                 passItemToCodeItem.value = "•"
@@ -52,8 +58,6 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
             }
         }
     }
-
-
 
     DisposableEffect(component) {
         val cancel = component.showSnackBarDispatcher.subscribe {

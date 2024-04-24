@@ -2,6 +2,7 @@ package com.pass.word.session.utilits
 
 import androidx.compose.runtime.Composable
 import kotlinx.serialization.json.JsonObject
+import kotlin.coroutines.CoroutineContext
 
 @Composable
 actual fun showToast(message: String) {
@@ -36,3 +37,10 @@ actual fun checkUseBiometric(
 actual class Platform actual constructor() {
     actual val platform: String = "IOS" // Укажите платформу явным образом
 }
+
+actual val defaultDispatcher: CoroutineContext
+    get() =
+        TODO()
+
+
+actual val mainDispatcher: CoroutineContext get() = TODO()

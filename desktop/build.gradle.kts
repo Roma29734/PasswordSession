@@ -1,8 +1,6 @@
-import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-//    kotlin("multiplatform")
     alias(libs.plugins.kotlinMultiplatform)
     id("org.jetbrains.compose")
 }
@@ -21,13 +19,13 @@ kotlin {
         val jvmMain by getting {
             kotlin.srcDirs("src/jvmMain/kotlin")
             dependencies {
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
                 implementation(compose.desktop.currentOs)
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material3)
                 api(compose.ui)
                 api(compose.materialIconsExtended)
-
                 // decompose
                 implementation(libs.decompose)
                 implementation(libs.decomposeJetbrains)
@@ -43,7 +41,7 @@ compose.desktop {
         mainClass = "MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "MyProject"
+            packageName = "PasswordSession"
             macOS {
                 bundleID = "com.pass.word.session.desktop"
             }

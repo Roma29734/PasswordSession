@@ -26,6 +26,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat
+import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.CoroutineContext
 
 
 @Composable
@@ -261,4 +263,10 @@ actual class Platform actual constructor() {
 }
 
 
+actual val defaultDispatcher: CoroutineContext
+    get() =
+        Dispatchers.Default
+
+
+actual val mainDispatcher: CoroutineContext get() = Dispatchers.Main
 

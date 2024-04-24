@@ -8,13 +8,16 @@ import com.arkivanov.essenty.lifecycle.subscribe
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyAuthPass
 import com.pass.word.session.utilits.EventDispatcher
+import com.pass.word.session.utilits.mainDispatcher
 import com.pass.word.session.utilits.vibrationResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @DelicateCoroutinesApi
 class ScreenAuthenticationComponent constructor(
@@ -35,11 +38,13 @@ class ScreenAuthenticationComponent constructor(
             is ScreenAuthStateEvent.ReactionToFollowingBiometrics -> {
                 println("pass $pass")
                 if (eventAuth.successState) {
-                    CoroutineScope(Dispatchers.Default).launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         _passItem.update { "!!!!" }
                         delay(700)
                         vibrationResponse(50, eventAuth.context)
-                        onNavigateToMainScreen()
+                        withContext(mainDispatcher) {
+                            onNavigateToMainScreen()
+                        }
                     }
                 } else {
                     println("event state error message")
@@ -51,11 +56,13 @@ class ScreenAuthenticationComponent constructor(
 
             is ScreenAuthStateEvent.ReactionToFirstBiometrics -> {
                 if (eventAuth.successState) {
-                    CoroutineScope(Dispatchers.Default).launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         _passItem.update { "!!!!" }
                         delay(500)
                         vibrationResponse(50, eventAuth.context)
-                        onNavigateToMainScreen()
+                        withContext(mainDispatcher) {
+                            onNavigateToMainScreen()
+                        }
                     }
                 }
             }
@@ -64,7 +71,7 @@ class ScreenAuthenticationComponent constructor(
 
                 eventAuth.context?.let { vibrationResponse(20, it) }
 
-                CoroutineScope(Dispatchers.Default).launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     val oldValue = passItem.value
                     if (oldValue.length != 4) {
                         val newValue = oldValue + eventAuth.number
@@ -79,7 +86,9 @@ class ScreenAuthenticationComponent constructor(
                                 if (pass == passItem.value) {
                                     _passItem.update { "!!!!" }
                                     delay(700)
-                                    onNavigateToMainScreen()
+                                    withContext(mainDispatcher) {
+                                        onNavigateToMainScreen()
+                                    }
                                 } else {
                                     showSnackBarDispatcher.dispatch("pass error")
                                     _passItem.value = ""
@@ -90,7 +99,9 @@ class ScreenAuthenticationComponent constructor(
                             if (pass == passItem.value) {
                                 _passItem.update { "!!!!" }
                                 delay(700)
-                                onNavigateToMainScreen()
+                                withContext(mainDispatcher) {
+                                    onNavigateToMainScreen()
+                                }
                             } else {
                                 _passItem.value = ""
                                 eventAuth.context?.let { vibrationResponse(400, it) }

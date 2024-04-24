@@ -39,15 +39,71 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.initialGreeting.screenImportPassword.ScreenImportPasswordComponent
 import com.pass.word.session.navigation.screen.initialGreeting.screenImportPassword.ScreenImportPasswordEvent
 import com.pass.word.session.ui.CustomColor
 import com.pass.word.session.ui.viewComponent.MainComponentButton
 import com.pass.word.session.ui.viewComponent.UpBarButtonBack
 import kotlinx.coroutines.launch
+import java.awt.FileDialog
+import java.awt.Frame
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 
 @Composable
 fun ImportPasswordScreen(component: ScreenImportPasswordComponent) {
+
+
+    fun openFileDialog(): String? {
+        val fileChooser = JFileChooser()
+        val filter = FileNameExtensionFilter("JSON files", "json")
+        fileChooser.fileFilter = filter
+        val result = fileChooser.showOpenDialog(null)
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.selectedFile.absolutePath
+        }
+        return null
+    }
+
+    fun readFileContent(filePath: String): String? {
+        val stringBuilder = StringBuilder()
+        try {
+            val reader = BufferedReader(FileReader(filePath))
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                stringBuilder.append(line).append('\n')
+            }
+            reader.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+        return stringBuilder.toString()
+    }
+
+    fun checkSelectedFile(filePath: String) {
+        val fileContent = readFileContent(filePath)
+        fileContent?.let { content ->
+            println("Содержимое файла: $content")
+            component.event(
+                ScreenImportPasswordEvent.ImportData(
+                    fileContent,
+                    DriverFactory()
+                )
+            )
+        }
+    }
+
+    fun checkSelectedFile() {
+        val selectedFilePath = openFileDialog()
+        selectedFilePath?.let { filePath ->
+            println("Выбранный файл содержимое: ${checkSelectedFile(filePath)}")
+        }
+    }
 
     val stateShowCompleteView: Boolean by component.stateShowCompleteView.subscribeAsState()
 
@@ -180,6 +236,7 @@ fun ImportPasswordScreen(component: ScreenImportPasswordComponent) {
                     ) {
                         Button(
                             onClick = {
+                                checkSelectedFile()
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

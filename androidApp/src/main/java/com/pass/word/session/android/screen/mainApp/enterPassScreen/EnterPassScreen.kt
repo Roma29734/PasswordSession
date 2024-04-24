@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun EnterPassScreen(component: ScreenEnterPassComponent) {
 
-
     val context = LocalContext.current
 
     val passItem: String by component.passItem.subscribeAsState()
@@ -88,6 +87,5 @@ fun EnterPassScreen(component: ScreenEnterPassComponent) {
                 component.onEvent(it)
             }
         )
-
     }
 }

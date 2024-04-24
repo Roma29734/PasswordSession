@@ -32,10 +32,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             //put your multiplatform dependencies here
-//            implementation(libs.decompose)
             implementation ("com.arkivanov.decompose:decompose:2.2.0-compose-experimental")
             implementation ("com.arkivanov.decompose:extensions-compose-jetbrains:2.2.0-compose-experimental")
             implementation(libs.kotlinx.serialization.json)
+//            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -60,6 +60,8 @@ kotlin {
 
         jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
+            implementation(libs.coroutineJavax)
         }
 
         commonTest.dependencies {
@@ -80,14 +82,6 @@ kotlin {
             kotlinOptions.jvmTarget = "17"
         }
     }
-//    jvm("desktop"){
-//        compilations.all {
-//            kotlinOptions.jvmTarget = "17"
-//        }
-//        dependencies {
-//            implementation(libs.sqlDelightJvm)
-//        }
-//    }
 }
 
 android {

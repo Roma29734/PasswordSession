@@ -1,8 +1,11 @@
 package com.pass.word.session.utilits
 
 import androidx.compose.runtime.Composable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.JsonObject
+import org.jetbrains.skiko.MainUIDispatcher
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
 @Composable
 actual fun showToast(message: String) {
@@ -10,7 +13,6 @@ actual fun showToast(message: String) {
 //    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
     TODO()
 }
-
 
 
 actual fun createAndSaveJsonFile(context: Any, fileName: String, savedJson: JsonObject) {
@@ -38,3 +40,10 @@ actual fun checkUseBiometric(
 actual class Platform actual constructor() {
     actual val platform: String = "Desktop" // Укажите платформу явным образом
 }
+
+actual val defaultDispatcher: CoroutineContext
+    get() =
+        Dispatchers.Default
+
+
+actual val mainDispatcher: CoroutineContext get() = MainUIDispatcher

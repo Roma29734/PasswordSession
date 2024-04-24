@@ -3,6 +3,7 @@ package com.pass.word.session.utilits
 import androidx.compose.runtime.Composable
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.data.model.PasswordListContainer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -14,6 +15,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlin.coroutines.CoroutineContext
 
 @Composable
 expect fun showToast(message: String)
@@ -110,4 +112,10 @@ class EventDispatcher<T> {
         listeners.remove(listener)
     }
 }
+
+
+// Coroutine dispatcher
+expect val defaultDispatcher: CoroutineContext
+
+expect val mainDispatcher: CoroutineContext
 
