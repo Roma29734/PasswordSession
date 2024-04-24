@@ -21,6 +21,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,6 +48,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -56,6 +60,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -63,7 +68,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
 import com.pass.word.session.ui.CustomColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun OutlineInputText(
@@ -91,8 +100,8 @@ fun OutlineInputText(
             .focusRequester(focusRequester),
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = Color.White,
-            focusedBorderColor = Color.White, // цвет при получении фокуса
-            unfocusedBorderColor = CustomColor().grayLight,  // цвет при отсутствии фокуса
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = CustomColor().grayLight,
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
@@ -102,34 +111,6 @@ fun OutlineInputText(
             onNext = { onNextHandler() }
         )
     )
-}
-
-@Composable
-fun BoxItemCode(itemText: String) {
-    val isVisible = remember { mutableStateOf(false) }
-
-    LaunchedEffect(itemText) {
-        isVisible.value = itemText == "•"
-    }
-
-    Box(
-        Modifier
-            .size(48.dp)
-            .border(2.dp, color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        AnimatedVisibility(
-            visible = isVisible.value,
-            enter = fadeIn(animationSpec = TweenSpec(durationMillis = 300)),
-            exit = fadeOut(animationSpec = TweenSpec(durationMillis = 300))
-        ) {
-            Text(
-                text = itemText,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-    }
 }
 
 @Composable
@@ -180,7 +161,7 @@ fun UpBarButtonBack(onBackHandler: () -> Unit) {
         Image(
             modifier = Modifier
                 .clickable { onBackHandler() }
-                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 12.dp),
             imageVector = MyIconPack.IcArrowBackNav,
             contentDescription = "Button back",
             colorFilter = ColorFilter.tint(
@@ -261,83 +242,45 @@ fun ItemPasswordView(nameItem: String, emailItem: String, changeData: String, on
 }
 
 
+@Composable
+fun btnItemToEnterCodeAuth(textButton: Int, clickHandler: (Int) -> Unit) {
+    var isPressed by remember { mutableStateOf(false) }
 
-//@Composable
-//fun itemBoxToCode(itemText: String) {
-//    val isVisible = remember { mutableStateOf(true) }
-//    val colorItem = remember { mutableStateOf(CustomColor().grayLight) }
-//    LaunchedEffect(itemText) {
-//        if(itemText == "•") colorItem.value = CustomColor().brandBlueLight
-//        if(itemText == "-") colorItem.value = CustomColor().brandRedMain
-//        if(itemText.isEmpty()) colorItem.value = CustomColor().grayLight
-//        isVisible.value = false
-//        delay(500)
-//        isVisible.value = true
-//    }
-//    Box (modifier = Modifier.size(32.dp)){
-//        AnimatedVisibility(
-//            visible = isVisible.value,
-//            enter = fadeIn(animationSpec = TweenSpec(durationMillis = 300)),
-//            exit = fadeOut(animationSpec = TweenSpec(durationMillis = 300))
-//        ) {
-//            Canvas(
-//                modifier = Modifier
-//                    .size(32.dp)
-//                    .padding(4.dp)
-//            ) {
-//                val canvasWidth = size.width
-//                val canvasHeight = size.height
-//
-//                drawCircle(
-//                    color = Color(colorItem.value.value),
-//                    center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
-//                    radius = size.minDimension / 2
-//                )
-//
-//            }
-//
-//        }
-//    }
-//}
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        withContext(Dispatchers.Default) {
+                            isPressed = true
+                            delay(120)
+                            isPressed = false
+                        }
+                    },
+                    onLongPress = { isPressed = false },
+                    onTap = { clickHandler(textButton) }
+                )
+            }
+            .background(
+                color = if (isPressed) Color.Gray else Color.Transparent,
+                shape = CircleShape
+            )
+            .border(
+                width = 2.dp,
+                color = if (isPressed) Color.Gray.copy(alpha = 0.5f) else Color.Transparent, // Более прозрачный оттенок обводки
+                shape = CircleShape
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = textButton.toString(),
+            color = Color.White,
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
 
-//@Composable
-//fun itemBoxToCode(itemText: String) {
-//    val colorItem = remember { mutableStateOf(CustomColor().grayLight) }
-//    val targetColor = when (itemText) {
-//        "•" -> CustomColor().brandBlueLight
-//        "-" -> CustomColor().brandRedMain
-//        else -> CustomColor().grayLight
-//    }
-//
-//    LaunchedEffect(itemText) {
-//        colorItem.value = targetColor
-//    }
-//
-//    val animationFraction = animateFloatAsState(
-//        targetValue = 1f,
-//        animationSpec = tween(
-//            durationMillis = 700,
-//            easing = FastOutSlowInEasing
-//        )
-//    ).value
-//
-//    Box(modifier = Modifier.size(32.dp)) {
-//        Canvas(
-//            modifier = Modifier
-//                .size(32.dp)
-//                .padding(4.dp)
-//        ) {
-//            val canvasWidth = size.width
-//            val canvasHeight = size.height
-//
-//            drawCircle(
-//                color = lerp(colorItem.value, targetColor, animationFraction),
-//                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
-//                radius = size.minDimension / 2
-//            )
-//        }
-//    }
-//}
 
 @Composable
 fun itemBoxToCode(itemText: String) {
@@ -362,12 +305,12 @@ fun itemBoxToCode(itemText: String) {
     )
 
     Box(
-        modifier = Modifier.size(32.dp),
+        modifier = Modifier.size(24.dp),
         contentAlignment = Alignment.Center
     ) {
         Canvas(
             modifier = Modifier
-                .size(32.dp)
+                .size(24.dp)
                 .padding(4.dp)
         ) {
             val canvasWidth = size.width
@@ -411,26 +354,27 @@ fun ItemPhrase(text: String) {
     }
 }
 
-data class ItemSettingsMenuModel(
-    val image: ImageVector, val text: String, val clickHandler: () -> Unit
-)
-
 @Composable
 fun ItemSettingsMenu(image: ImageVector, text: String, clickHandler: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clickable { clickHandler() }
-            .padding(start = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            imageVector = image,
-            contentDescription = "image",
-            modifier = Modifier.size(24.dp),
-            colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(text = text, style = MaterialTheme.typography.displayMedium, color = Color.White)
+    Column (modifier = Modifier
+        .clickable { clickHandler() }) {
+        Spacer(Modifier.size(4.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                imageVector = image,
+                contentDescription = "image",
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(text = text, style = MaterialTheme.typography.displayMedium, color = Color.White)
+        }
+        Spacer(Modifier.size(4.dp))
     }
 }
 

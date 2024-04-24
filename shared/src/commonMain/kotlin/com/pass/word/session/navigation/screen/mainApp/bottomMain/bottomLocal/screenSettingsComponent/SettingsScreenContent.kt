@@ -2,6 +2,7 @@ package com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.s
 
 import Img.MyIconPack
 import Img.myiconpack.IcImport
+import Img.myiconpack.IcLogOut
 import Img.myiconpack.IcLogoGitHub
 import Img.myiconpack.IcLogoTelegram
 import Img.myiconpack.IcPasswordVertical
@@ -64,7 +65,7 @@ fun SettingsScreenContent(
                                         eventComponentDispatch(ScreenSettingsStateEvent.OnNavigateToImportPassword)
                                     }
                                 )
-                                Spacer(modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.size(8.dp))
                             }
 
                             ItemSettings.ChangePassword -> {
@@ -75,7 +76,7 @@ fun SettingsScreenContent(
                                         eventComponentDispatch(ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent)
                                     }
                                 )
-                                Spacer(modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.size(8.dp))
                             }
 
                             ItemSettings.SeedPhraseSettings -> {
@@ -87,7 +88,7 @@ fun SettingsScreenContent(
                                     }
                                 )
 
-                                Spacer(modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.size(8.dp))
                             }
 
                             ItemSettings.GitHub -> {
@@ -100,7 +101,7 @@ fun SettingsScreenContent(
                                         )
                                     }
                                 )
-                                Spacer(modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.size(8.dp))
                             }
 
                             ItemSettings.Telegram -> {
@@ -111,6 +112,7 @@ fun SettingsScreenContent(
                                         openUrlHandler("https://t.me/apkPublicPrograms")
                                     }
                                 )
+                                Spacer(modifier = Modifier.size(8.dp))
                             }
 
                             ItemSettings.PassKeySettings -> {
@@ -122,7 +124,18 @@ fun SettingsScreenContent(
                                     }
                                 )
 
-                                Spacer(modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.size(8.dp))
+                            }
+                            ItemSettings.LogOut -> {
+                                ItemSettingsMenu(
+                                    image = MyIconPack.IcLogOut,
+                                    text = "LogOut",
+                                    clickHandler = {
+                                        eventComponentDispatch(ScreenSettingsStateEvent.OnClickLogOut)
+                                    }
+                                )
+
+                                Spacer(modifier = Modifier.size(8.dp))
                             }
                         }
 
@@ -130,12 +143,9 @@ fun SettingsScreenContent(
                 }
 
             })
-
         }
-
         MainComponentButton(text = "download password", true) {
             mainComponentBtnHandler()
         }
-
     }
 }

@@ -142,7 +142,7 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
     ) {
         AuthenticationScreenContent(
             passItem = passItemToCodeItem.value,
-            context = null,
+            context = context,
             eventComponentDispatch = {
                 component.event(it)
             },
@@ -160,19 +160,4 @@ fun AuthenticationScreen(component: ScreenAuthenticationComponent) {
         )
     }
 }
-
-
-@Preview
-@Composable
-fun previewItemBoxToCode() {
-    Row(
-        modifier = Modifier
-    ) {
-        itemBoxToCode(itemText = "-")
-        itemBoxToCode(itemText = "•")
-        itemBoxToCode(itemText = "@")
-        itemBoxToCode(itemText = "@")
-    }
-}
-
 

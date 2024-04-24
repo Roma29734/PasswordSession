@@ -2,6 +2,10 @@ package com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.s
 
 import com.arkivanov.decompose.ComponentContext
 import com.pass.word.session.data.PersonalDatabase
+import com.pass.word.session.data.TonCashDatabase
+import com.pass.word.session.data.clearSettings
+import com.pass.word.session.utilits.EventDispatcher
+import com.pass.word.session.utilits.StateBasicDialog
 import com.pass.word.session.utilits.convertListToJsonObject
 import com.pass.word.session.utilits.createAndSaveJsonFile
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,18 +13,23 @@ import kotlinx.coroutines.flow.update
 
 class ScreenSettingsComponent constructor(
     private val componentContext: ComponentContext,
-    private val stateApp: Boolean,
+    stateApp: Boolean,
     private val onNavigateToChangePasswordComponent: () -> Unit,
     private val onNavigateToImportPasswordComponent: () -> Unit,
     private val onNavigateToPhraseSettingsComponent: () -> Unit,
-    private val onNavigateToPassKeySettingsComponent: () -> Unit
+    private val onNavigateToPassKeySettingsComponent: () -> Unit,
+    private val navToInitScreen: () -> Unit,
 ) : ComponentContext by componentContext {
 
-
-    private val listenerToastPush = mutableListOf<(message: String) -> Unit>()
+    val showSnackBarDispatcher = EventDispatcher<String>()
 
     private var _itemSettingsList: MutableStateFlow<List<ItemSettings>> = MutableStateFlow(listOf())
     val itemSettingsList get() = _itemSettingsList
+
+
+    private var _stateVisibleDialog =
+        MutableStateFlow<StateBasicDialog>(StateBasicDialog.Hide)
+    val stateVisibleDialog = _stateVisibleDialog
 
     init {
         val itemList = mutableListOf<ItemSettings>()
@@ -32,19 +41,8 @@ class ScreenSettingsComponent constructor(
         }
         itemList.add(ItemSettings.GitHub)
         itemList.add(ItemSettings.Telegram)
+        itemList.add(ItemSettings.LogOut)
         _itemSettingsList.update { itemList }
-    }
-
-    fun subscribeListenerToastPush(listener: (message: String) -> Unit) {
-        listenerToastPush.add(listener)
-    }
-
-    fun unsubscribeListenerToastPush(listener: (message: String) -> Unit) {
-        listenerToastPush.remove(listener)
-    }
-
-    private fun pluckListenerToastPush(message: String) {
-        listenerToastPush.forEach { it.invoke(message) }
     }
 
 
@@ -54,7 +52,7 @@ class ScreenSettingsComponent constructor(
                 val result = convertListToJsonObject(PersonalDatabase(event.databaseDriverFactory).getAllPass())
                 println("jsonResult - $result")
                 event.context?.let { createAndSaveJsonFile(it, "examplePass.json", result) }
-                pluckListenerToastPush("File Download Success")
+                showSnackBarDispatcher.dispatch("File Download Success")
             }
             is ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent -> {
                 onNavigateToChangePasswordComponent()
@@ -67,6 +65,21 @@ class ScreenSettingsComponent constructor(
             }
             is ScreenSettingsStateEvent.OnNavigateToPassKeySettingsComponent -> {
                 onNavigateToPassKeySettingsComponent()
+            }
+
+            is ScreenSettingsStateEvent.OnClickLogOut -> {
+                _stateVisibleDialog.update { StateBasicDialog.Show }
+            }
+            is ScreenSettingsStateEvent.OnClickInDialogButton -> {
+                _stateVisibleDialog.update { StateBasicDialog.Hide }
+                if(event.clickButtonContinue) {
+                    val tonBase = TonCashDatabase(event.databaseDriverFactory)
+                    val localBase = PersonalDatabase(event.databaseDriverFactory)
+                    tonBase.clearDatabase()
+                    localBase.clearDatabase()
+                    clearSettings()
+                    navToInitScreen()
+                }
             }
         }
     }

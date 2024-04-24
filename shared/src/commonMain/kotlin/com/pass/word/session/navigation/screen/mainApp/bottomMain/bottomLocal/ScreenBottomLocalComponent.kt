@@ -18,7 +18,8 @@ class ScreenBottomLocalComponent constructor(
     componentContext: ComponentContext,
     private val onNavigateToDetailComponent: (PasswordItemModel) -> Unit,
     private val onNavigateToChangePasswordComponent: () -> Unit,
-    private val onNavigateToImportPasswordComponent: () -> Unit
+    private val onNavigateToImportPasswordComponent: () -> Unit,
+    private val onNavToInitScreen: () -> Unit,
 ) : ComponentContext by componentContext {
 
 
@@ -75,8 +76,9 @@ class ScreenBottomLocalComponent constructor(
                     stateApp = false,
                     onNavigateToChangePasswordComponent = { onNavigateToChangePasswordComponent() },
                     onNavigateToImportPasswordComponent = { onNavigateToImportPasswordComponent() },
-                    {  },
-                    {}
+                    onNavigateToPhraseSettingsComponent = { },
+                    onNavigateToPassKeySettingsComponent = { },
+                    navToInitScreen ={onNavToInitScreen()}
                 )
             )
         }

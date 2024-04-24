@@ -88,50 +88,6 @@ fun OutlineInputText(
     )
 }
 
-@Composable
-fun BoxItemCode(itemText: String) {
-    val isVisible = remember { mutableStateOf(false) }
-
-    LaunchedEffect(itemText) {
-        isVisible.value = itemText == "•"
-    }
-
-    Box(
-        Modifier
-            .size(48.dp)
-            .border(2.dp, color = CustomColor().grayLight, RoundedCornerShape(600.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        AnimatedVisibility(
-            visible = isVisible.value,
-            enter = fadeIn(animationSpec = TweenSpec(durationMillis = 300)),
-            exit = fadeOut(animationSpec = TweenSpec(durationMillis = 300))
-        ) {
-            Text(
-                text = itemText,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-    }
-}
-
-@Composable
-fun ButtonNumber(textButton: Int, clickHandler: (Int) -> Unit) {
-    Box(
-        Modifier
-            .size(64.dp)
-            .background(CustomColor().brandBlueLight, RoundedCornerShape(600.dp))
-            .clickable { clickHandler(textButton) },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = textButton.toString(),
-            color = Color.White,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
 
 @Composable
 fun MainComponentButton(

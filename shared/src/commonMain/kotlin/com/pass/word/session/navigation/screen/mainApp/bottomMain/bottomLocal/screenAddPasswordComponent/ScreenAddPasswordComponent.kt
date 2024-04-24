@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordItemModel
+import com.pass.word.session.utilits.EventDispatcher
 import com.pass.word.session.utilits.getThisLocalTime
 import com.pass.word.session.utilits.onCheckValidation
 
@@ -28,19 +29,9 @@ class ScreenAddPasswordComponent constructor(
     private var _textDescriptions = MutableValue("")
     val textDescriptions: Value<String> = _textDescriptions
 
-    private val listenersPassCreate = mutableListOf<(message: String, complete: Boolean) -> Unit>()
 
-    fun subscribeListenerPassCreate(listener: (message: String, complete: Boolean) -> Unit) {
-        listenersPassCreate.add(listener)
-    }
+    val showSnackBarDispatcher = EventDispatcher<String>()
 
-    fun unsubscribeListenerPassCreate(listener: (message: String, complete: Boolean) -> Unit) {
-        listenersPassCreate.remove(listener)
-    }
-
-    private fun pluckPassCreate(message: String, complete: Boolean) {
-        listenersPassCreate.forEach { it.invoke(message, complete) }
-    }
 
     private fun addPassToDataBass(
         databaseDriverFactory: DriverFactory
@@ -62,14 +53,14 @@ class ScreenAddPasswordComponent constructor(
         _textPassword.value = ""
         _textUrl.value = ""
         _textDescriptions.value = ""
-        pluckPassCreate("Password a success created", true)
+        showSnackBarDispatcher.dispatch("Password a success created")
     }
 
     fun onEvent(eventAdd: ScreenAddPasswordStateEvent) {
         when (eventAdd) {
             is ScreenAddPasswordStateEvent.ClickButtonAddNewState -> {
                 if (textTitle.value.isEmpty() || textEmailOrUserName.value.isEmpty() || textPassword.value.isEmpty()) {
-                    pluckPassCreate("Not all fields are filled in", false)
+                    showSnackBarDispatcher.dispatch("Not all fields are filled in")
                 } else {
                     addPassToDataBass(eventAdd.databaseDriverFactory)
                 }

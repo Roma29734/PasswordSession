@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import com.pass.word.session.ui.viewComponent.BoxItemCode
-import com.pass.word.session.ui.viewComponent.ButtonNumber
+import com.pass.word.session.ui.viewComponent.btnItemToEnterCodeAuth
+import com.pass.word.session.ui.viewComponent.btnItemToEnterCodeAuth
 import com.pass.word.session.ui.viewComponent.itemBoxToCode
 import kotlinx.coroutines.FlowPreview
 
@@ -53,11 +54,14 @@ fun AuthenticationScreenContent(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.Center
         ) {
             itemBoxToCode(if (passItem.isNotEmpty()) passItem[0].toString() else "")
+            Spacer(Modifier.size(16.dp))
             itemBoxToCode(if (passItem.length >= 2) passItem[0].toString() else "")
+            Spacer(Modifier.size(16.dp))
             itemBoxToCode(if (passItem.length >= 3) passItem[0].toString() else "")
+            Spacer(Modifier.size(16.dp))
             itemBoxToCode(if (passItem.length >= 4) passItem[0].toString() else "")
         }
         Row(
@@ -67,7 +71,7 @@ fun AuthenticationScreenContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            ButtonNumber(1) {
+            btnItemToEnterCodeAuth(1) {
                 eventComponentDispatch(
                     ScreenAuthStateEvent.StateUpdatePassItem(
                         it.toString(),
@@ -75,7 +79,7 @@ fun AuthenticationScreenContent(
                     )
                 )
             }
-            ButtonNumber(2) {
+            btnItemToEnterCodeAuth(2) {
                 eventComponentDispatch(
                     ScreenAuthStateEvent.StateUpdatePassItem(
                         it.toString(),
@@ -83,39 +87,7 @@ fun AuthenticationScreenContent(
                     )
                 )
             }
-            ButtonNumber(3) {
-                eventComponentDispatch(
-                    ScreenAuthStateEvent.StateUpdatePassItem(
-                        it.toString(),
-                        context
-                    )
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .width(300.dp)
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            ButtonNumber(4) {
-                eventComponentDispatch(
-                    ScreenAuthStateEvent.StateUpdatePassItem(
-                        it.toString(),
-                        context
-                    )
-                )
-            }
-            ButtonNumber(5) {
-                eventComponentDispatch(
-                    ScreenAuthStateEvent.StateUpdatePassItem(
-                        it.toString(),
-                        context
-                    )
-                )
-            }
-            ButtonNumber(6) {
+            btnItemToEnterCodeAuth(3) {
                 eventComponentDispatch(
                     ScreenAuthStateEvent.StateUpdatePassItem(
                         it.toString(),
@@ -131,7 +103,7 @@ fun AuthenticationScreenContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            ButtonNumber(7) {
+            btnItemToEnterCodeAuth(4) {
                 eventComponentDispatch(
                     ScreenAuthStateEvent.StateUpdatePassItem(
                         it.toString(),
@@ -139,7 +111,7 @@ fun AuthenticationScreenContent(
                     )
                 )
             }
-            ButtonNumber(8) {
+            btnItemToEnterCodeAuth(5) {
                 eventComponentDispatch(
                     ScreenAuthStateEvent.StateUpdatePassItem(
                         it.toString(),
@@ -147,7 +119,39 @@ fun AuthenticationScreenContent(
                     )
                 )
             }
-            ButtonNumber(9) {
+            btnItemToEnterCodeAuth(6) {
+                eventComponentDispatch(
+                    ScreenAuthStateEvent.StateUpdatePassItem(
+                        it.toString(),
+                        context
+                    )
+                )
+            }
+        }
+        Row(
+            modifier = Modifier
+                .width(300.dp)
+                .padding(top = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            btnItemToEnterCodeAuth(7) {
+                eventComponentDispatch(
+                    ScreenAuthStateEvent.StateUpdatePassItem(
+                        it.toString(),
+                        context
+                    )
+                )
+            }
+            btnItemToEnterCodeAuth(8) {
+                eventComponentDispatch(
+                    ScreenAuthStateEvent.StateUpdatePassItem(
+                        it.toString(),
+                        context
+                    )
+                )
+            }
+            btnItemToEnterCodeAuth(9) {
                 eventComponentDispatch(
                     ScreenAuthStateEvent.StateUpdatePassItem(
                         it.toString(),
@@ -168,7 +172,7 @@ fun AuthenticationScreenContent(
                     Modifier
                         .size(64.dp),
                 )
-                ButtonNumber(textButton = 0) {
+                btnItemToEnterCodeAuth(textButton = 0) {
                     eventComponentDispatch(
                         ScreenAuthStateEvent.StateUpdatePassItem(
                             it.toString(), context
@@ -189,7 +193,7 @@ fun AuthenticationScreenContent(
                 )
 
             } else {
-                ButtonNumber(textButton = 0) {
+                btnItemToEnterCodeAuth(textButton = 0) {
                     eventComponentDispatch(
                         ScreenAuthStateEvent.StateUpdatePassItem(
                             it.toString(), context

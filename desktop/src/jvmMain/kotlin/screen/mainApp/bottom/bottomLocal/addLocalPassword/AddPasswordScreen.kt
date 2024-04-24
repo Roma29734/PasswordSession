@@ -28,18 +28,16 @@ fun AppPasswordScreen(component: ScreenAddPasswordComponent) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     DisposableEffect(component) {
-        val listenerPassCreated: (message: String, complete: Boolean) -> Unit = { msg, complete ->
+        val cancel = component.showSnackBarDispatcher.subscribe {
             scope.launch {
-                snackBarHostState.showSnackbar(msg)
+                snackBarHostState.showSnackbar(it)
             }
         }
-        component.subscribeListenerPassCreate(listenerPassCreated)
-
         onDispose {
-            // Отписка при уничтожении экрана
-            component.unsubscribeListenerPassCreate(listenerPassCreated)
+            cancel()
         }
     }
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)

@@ -21,7 +21,8 @@ class ScreenBottomMultiComponent(
     private val onNavigateToChangePasswordComponent: () -> Unit,
     private val onNavigateToImportPasswordComponent: () -> Unit,
     private val onNavigateToPhraseSettingsComponent: () -> Unit,
-    private val onNavigateToPassKeySettingsComponent: () -> Unit
+    private val onNavigateToPassKeySettingsComponent: () -> Unit,
+    private val onNavToInitScreen: () -> Unit,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
@@ -84,6 +85,9 @@ class ScreenBottomMultiComponent(
                     },
                     onNavigateToPassKeySettingsComponent = {
                         onNavigateToPassKeySettingsComponent()
+                    },
+                    navToInitScreen = {
+                        onNavToInitScreen()
                     }
                 )
             )

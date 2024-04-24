@@ -59,18 +59,17 @@ fun EnterPassScreen(component: ScreenEnterPassComponent) {
         }
     }
     DisposableEffect(component) {
-        val listenerSnackBarShow: (String) -> Unit = {
+        val cancel = component.showSnackBarDispatcher.subscribe {
             scope.launch {
                 passItemToCodeItem.value = "----"
                 snackBarHostState.showSnackbar(it)
                 passItemToCodeItem.value = ""
             }
         }
-        component.subscribeListenerSnackBar(listenerSnackBarShow)
 
         onDispose {
             // Отписка при уничтожении экрана
-            component.unsubscribeListenerSnackBar(listenerSnackBarShow)
+            cancel()
         }
     }
 

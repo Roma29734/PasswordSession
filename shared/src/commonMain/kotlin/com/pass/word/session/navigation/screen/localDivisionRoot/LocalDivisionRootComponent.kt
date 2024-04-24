@@ -21,7 +21,8 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.Serializable
 
 class LocalDivisionRootComponent constructor(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val onNavToInitScreen: () -> Unit
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Configuration>()
@@ -51,6 +52,9 @@ class LocalDivisionRootComponent constructor(
                     },
                     onNavigateToImportPasswordComponent = {
                         navigation.pushNew(Configuration.ScreenImportPassword)
+                    },
+                    onNavToInitScreen = {
+                        onNavToInitScreen()
                     }
                 )
             )

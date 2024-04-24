@@ -92,7 +92,8 @@ class MultiDivisionRootComponent constructor(
                     },
                     onNavigateToPassKeySettingsComponent = {
                         navigation.pushNew(Configuration.ScreenPassKeySettings)
-                    }
+                    },
+                    onNavToInitScreen = { navToInitScreen() }
                 )
             )
 

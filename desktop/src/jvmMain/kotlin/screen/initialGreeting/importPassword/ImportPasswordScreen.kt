@@ -128,17 +128,14 @@ fun ImportPasswordScreen(component: ScreenImportPasswordComponent) {
     }
 
     DisposableEffect(component) {
-        val listenerPassCreated: (message: String) -> Unit = { msg ->
-
+        val cancel = component.showSnackBarDispatcher.subscribe {
             scope.launch {
-                snackBarHostState.showSnackbar(msg)
+                snackBarHostState.showSnackbar(it)
             }
         }
 
-        component.subscribeListenerEvent(listenerPassCreated)
-
         onDispose {
-            component.unsubscribeListenerEvent(listenerPassCreated)
+            cancel()
         }
     }
 

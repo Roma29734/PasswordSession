@@ -8,6 +8,7 @@ import com.arkivanov.essenty.lifecycle.doOnCreate
 import com.arkivanov.essenty.lifecycle.subscribe
 import com.pass.word.session.data.PersonalDatabase
 import com.pass.word.session.data.model.PasswordListContainer
+import com.pass.word.session.utilits.EventDispatcher
 import kotlinx.serialization.json.Json
 
 class ScreenImportPasswordComponent constructor(
@@ -21,19 +22,7 @@ class ScreenImportPasswordComponent constructor(
 
     val stateBack = onBackHandler != null
 
-    private val listenerEvent = mutableListOf<(message: String) -> Unit>()
-
-    fun subscribeListenerEvent(listener: (message: String) -> Unit) {
-        listenerEvent.add(listener)
-    }
-
-    fun unsubscribeListenerEvent(listener: (message: String) -> Unit) {
-        listenerEvent.remove(listener)
-    }
-
-    private fun pluckListenerEvent(message: String) {
-        listenerEvent.forEach { it.invoke(message) }
-    }
+    val showSnackBarDispatcher = EventDispatcher<String>()
 
     fun event(event: ScreenImportPasswordEvent) {
         when (event) {
@@ -48,7 +37,7 @@ class ScreenImportPasswordComponent constructor(
                     PersonalDatabase(event.databaseDriverFactory).createPass(newJson.passwordList)
                     _stateShowCompleteView.value = true
                 } catch (e: Exception) {
-                    pluckListenerEvent("The wrong file is selected")
+                    showSnackBarDispatcher.dispatch("The wrong file is selected")
                     println("error - $e")
                 }
             }

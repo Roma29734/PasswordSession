@@ -1,5 +1,7 @@
 package com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.settingsScreen
 
+import Img.MyIconPack
+import Img.myiconpack.IcWarning
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
@@ -31,37 +33,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.viewComponent.MainComponentButton
 import com.pass.word.session.data.DriverFactory
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ItemSettings
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsStateEvent
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.SettingsScreenContent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.CustomImageModel
+import com.pass.word.session.ui.viewComponent.DialogLogOut
+import com.pass.word.session.utilits.StateBasicDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun SettingsScreen(component: ScreenSettingsComponent) {
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val itemSettingsList by component.itemSettingsList.collectAsState()
+    val stateVisibleDialog by component.stateVisibleDialog.collectAsState()
 
+    if (stateVisibleDialog is StateBasicDialog.Show) {
+        Dialog(onDismissRequest = { stateVisibleDialog is StateBasicDialog.Hide }) {
+            DialogLogOut(
+                cancelHandler = {
+                    component.onEvent(ScreenSettingsStateEvent.OnClickInDialogButton(false, DriverFactory(context = context)))
+                },
+                continueHandler = {
+                    component.onEvent(ScreenSettingsStateEvent.OnClickInDialogButton(true, DriverFactory(context = context)))
+                },
+                textCancelButton = "Cancel",
+                textContinueButton = "Continue",
+                customImageModel = CustomImageModel(
+                    painter = MyIconPack.IcWarning,
+                    color = CustomColor().brandRedMain,
+                    contentScale = ContentScale.Fit
+                ),
+                notifiText = "Dangerous",
+                subTitleText = "when you click continue, you exit the application and all data will be erased forever, they will remain only in the blockchain",
+                startTime = 15
+            )
+        }
+    }
     DisposableEffect(component) {
-        val listenerPassCreated: (message: String) -> Unit = { msg ->
+        val cancel = component.showSnackBarDispatcher.subscribe {
             scope.launch {
-                snackBarHostState.showSnackbar(msg)
+                snackBarHostState.showSnackbar(it)
             }
         }
-        component.subscribeListenerToastPush(listenerPassCreated)
-
         onDispose {
-            // Отписка при уничтожении экрана
-            component.unsubscribeListenerToastPush(listenerPassCreated)
+            cancel()
         }
     }
 
@@ -70,110 +99,19 @@ fun SettingsScreen(component: ScreenSettingsComponent) {
             SnackbarHost(hostState = snackBarHostState)
         },
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
 
-
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, top = 24.dp),
-                    text = "Settings",
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-
-                Spacer(modifier = Modifier.size(16.dp))
-
-                LazyColumn(content = {
-
-                    if(itemSettingsList.isNotEmpty()) {
-                        items(count = itemSettingsList.size) { countItem ->
-
-                            when(itemSettingsList[countItem]) {
-                                ItemSettings.ImportPassword -> {
-                                    ItemSettingsMenu(
-                                        image = painterResource(id = R.drawable.ic_import),
-                                        text = "import password",
-                                        clickHandler = {
-                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToImportPassword)
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.size(16.dp))
-                                }
-                                ItemSettings.ChangePassword -> {
-                                    ItemSettingsMenu(
-                                        image = painterResource(id = R.drawable.ic_pin),
-                                        text = "change password",
-                                        clickHandler = {
-                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToChangePasswordComponent)
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.size(16.dp))
-                                }
-                                ItemSettings.SeedPhraseSettings -> {
-                                    ItemSettingsMenu(
-                                        image = painterResource(id = R.drawable.ic_password_vertical),
-                                        text = "seed phrase settings",
-                                        clickHandler = {
-                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToSeedPhraseSettings)
-                                        }
-                                    )
-
-                                    Spacer(modifier = Modifier.size(16.dp))
-                                }
-                                ItemSettings.GitHub -> {
-                                    ItemSettingsMenu(
-                                        image = painterResource(id = R.drawable.ic_logo_git_hub),
-                                        text = "gitHub",
-                                        clickHandler = {
-                                            openCustomTab("https://github.com/Roma29734/PasswordSession", context)
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.size(16.dp))
-                                }
-                                ItemSettings.Telegram -> {
-                                    ItemSettingsMenu(
-                                        image = painterResource(id = R.drawable.ic_logo_telegram),
-                                        text = "telegram",
-                                        clickHandler = {
-                                            openCustomTab("https://t.me/apkPublicPrograms", context)
-                                        }
-                                    )
-                                }
-                                ItemSettings.PassKeySettings -> {
-                                    ItemSettingsMenu(
-                                        image = painterResource(id = R.drawable.ic_security_lock),
-                                        text = "pass key phrase settings",
-                                        clickHandler = {
-                                            component.onEvent(ScreenSettingsStateEvent.OnNavigateToPassKeySettingsComponent)
-                                        }
-                                    )
-
-                                    Spacer(modifier = Modifier.size(16.dp))
-                                }
-                            }
-
-                        }
-                    }
-
-                })
-
+        SettingsScreenContent(
+            itemSettingsList = itemSettingsList,
+            eventComponentDispatch = {
+                component.onEvent(it)
+            },
+            openUrlHandler = {
+                openCustomTab(it, context)
+            },
+            mainComponentBtnHandler = {
+                component.onEvent(ScreenSettingsStateEvent.ClickToButtonDownloadPass("adad", DriverFactory(context = context)))
             }
-
-            MainComponentButton(text = "download password", true) {
-                component.onEvent(
-                    ScreenSettingsStateEvent.ClickToButtonDownloadPass(
-                        context,
-                        DriverFactory(context)
-                    )
-                )
-            }
-        }
-
+        )
     }
 }
 
@@ -191,23 +129,4 @@ fun openCustomTab(url: String, context: Context) {
     customBuilder.intent.setPackage(packageName)
 
     customBuilder.launchUrl(context, Uri.parse(url))
-}
-
-@Composable
-fun ItemSettingsMenu(image: Painter, text: String, clickHandler: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clickable { clickHandler() }
-            .padding(start = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = image,
-            contentDescription = "image",
-            modifier = Modifier.size(24.dp),
-            colorFilter = ColorFilter.tint(CustomColor().brandBlueLight)
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(text = text, style = MaterialTheme.typography.displayMedium, color = Color.White)
-    }
 }

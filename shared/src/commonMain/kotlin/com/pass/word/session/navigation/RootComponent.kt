@@ -60,7 +60,9 @@ class RootComponent constructor(
             )
 
             is Configuration.LocalDivisionRoot -> Child.LocalDivisionRoot(
-                LocalDivisionRootComponent(componentContext = context)
+                LocalDivisionRootComponent(componentContext = context, onNavToInitScreen = {
+                    navigation.replaceAll(Configuration.ScreenInitialGreeting)
+                })
             )
 
             is Configuration.MultiDivisionRoot -> Child.MultiDivisionRoot(

@@ -19,6 +19,7 @@ import Img.myiconpack.IcPin
 import Img.myiconpack.IcSave
 import Img.myiconpack.IcSecurityLock
 import Img.myiconpack.IcWarning
+import Img.myiconpack.IcLogOut
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlin.collections.List as ____KtList
 
@@ -33,6 +34,6 @@ public val MyIconPack.AllIcons: ____KtList<ImageVector>
     }
     __AllIcons= listOf(IcArrowBackNav, IcComplete, IcCopySourse, IcDelete, IcDownMore, IcEdit,
         IcError, IcFingerPrint, IcImport, IcKeyVariantTow, IcLauncherForeground, IcLogoGitHub,
-        IcLogoTelegram, IcPassword, IcPasswordVertical, IcPin, IcSave, IcSecurityLock, IcWarning)
+        IcLogoTelegram, IcPassword, IcPasswordVertical, IcPin, IcSave, IcSecurityLock, IcWarning, IcLogOut)
     return __AllIcons!!
   }

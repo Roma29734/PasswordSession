@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import com.pass.word.session.data.keyAuthPass
 import com.pass.word.session.data.putToParams
+import com.pass.word.session.utilits.EventDispatcher
 import com.pass.word.session.utilits.vibrationResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,41 +30,29 @@ class ScreenEnterPassComponent constructor(
 
     private var firstEnterPass = MutableStateFlow("")
 
-    private val listenersPassEnter = mutableListOf<(String) -> Unit>()
-
-    fun subscribeListenerSnackBar(listener: (String) -> Unit) {
-        listenersPassEnter.add(listener)
-    }
-
-    fun unsubscribeListenerSnackBar(listener: (String) -> Unit) {
-        listenersPassEnter.remove(listener)
-    }
-
-    private fun callPassEnter(message: String) {
-        listenersPassEnter.forEach { it.invoke(message) }
-    }
-
+    val showSnackBarDispatcher = EventDispatcher<String>()
 
     fun onEvent(event: ScreenEnterPassEvent) {
         when (event) {
             is ScreenEnterPassEvent.ClickButtonBack -> {
                 clickButtonBack()
             }
+
             is ScreenEnterPassEvent.StateUpdatePassItem -> {
                 event.context?.let { vibrationResponse(20, it) }
                 val oldValue = passItem.value
                 val newValue = oldValue + event.newCod
                 _passItem.value = newValue
                 if (passItem.value.length == 4) {
-                    if(_stateEnterPass.value) {
-                        if(_passItem.value == firstEnterPass.value) {
+                    if (_stateEnterPass.value) {
+                        if (_passItem.value == firstEnterPass.value) {
                             passItem.value.putToParams(keyAuthPass)
                             navigateToNext()
                         } else {
                             println("eror pass ${firstEnterPass.value}")
-                            callPassEnter("Passwords don't match")
-                            event.context?.let { vibrationResponse(400, it) }
                             _passItem.update { "" }
+                            showSnackBarDispatcher.dispatch("Passwords don't match")
+                            event.context?.let { vibrationResponse(400, it) }
                             _stateEnterPass.update { false }
                         }
                     } else {

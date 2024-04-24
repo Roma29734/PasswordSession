@@ -10,8 +10,10 @@ interface ScreenSettingsStateEvent {
     data object OnNavigateToImportPassword : ScreenSettingsStateEvent
     data object OnNavigateToSeedPhraseSettings: ScreenSettingsStateEvent
     data object OnNavigateToPassKeySettingsComponent: ScreenSettingsStateEvent
+    data object OnClickLogOut: ScreenSettingsStateEvent
+    data class OnClickInDialogButton(val clickButtonContinue: Boolean, val databaseDriverFactory: DriverFactory): ScreenSettingsStateEvent
 }
 
 enum class ItemSettings {
-    ImportPassword, ChangePassword, SeedPhraseSettings, PassKeySettings,Telegram, GitHub
+    ImportPassword, ChangePassword, SeedPhraseSettings, PassKeySettings,Telegram, GitHub, LogOut
 }
