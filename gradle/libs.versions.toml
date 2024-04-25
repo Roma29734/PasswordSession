@@ -5,7 +5,8 @@ compose = "1.5.4"
 compose-compiler = "1.5.4"
 compose-material3 = "1.1.2"
 androidx-activityCompose = "1.8.0"
-decompose = "2.2.0-alpha03"
+decompose = "2.2.2"
+decomposeExperimental = "2.2.2-compose-experimental"
 kotlinxSerializationJson = "1.6.1"
 kotlinXDataTime = "0.5.0"
 sqlDelight = "2.0.1"
@@ -34,7 +35,7 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 decomposeJetpack = { module = "com.arkivanov.decompose:extensions-compose-jetpack", version.ref = "decompose" }
-decomposeJetbrains = { module ="com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose"}
+decomposeJetbrains = { module ="com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decomposeExperimental"}
 kotlinXDataTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinXDataTime" }
 sqlDelightAndroid = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelightNative = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
