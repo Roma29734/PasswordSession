@@ -1,4 +1,4 @@
-package screen.mainApp.bottom.bottomMulti.pass
+package com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword
 
 import Img.MyIconPack
 import Img.myiconpack.IcKeyVariantTow
@@ -21,25 +21,19 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.pass.word.session.data.DriverFactory
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordEvent
 import com.pass.word.session.ui.CustomColor
 import com.pass.word.session.ui.viewComponent.CustomErrorDialog
 import com.pass.word.session.ui.viewComponent.CustomLoadingDialog
@@ -53,23 +47,18 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordScreen(component: ScreenTonPasswordComponent) {
-    val stateLoading by component.stateLoading.collectAsState()
-    val statePassItemDisplay by component.statePassItemDisplay.collectAsState()
-    val stateCallItem by component.stateCallItem.collectAsState()
-    val stateSelectedTypeStorage by component.stateSelectedTypeStorage.collectAsState()
-    val stateVisibleStatusBar by component.stateVisibleStatusBar.collectAsState()
+fun MultiPasswordScreenContent(
+    stateLoading: StateBasicDialog,
+    statePassItemDisplay: StatePassItemDisplay,
+    stateSelectedTypeStorage: StateSelectedType,
+    stateVisibleStatusBar: StateStatusBar,
+    driverFactory: DriverFactory,
+    eventComponentDispatch: (ScreenMultiPasswordEvent) -> Unit,
+) {
+
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-
-    LaunchedEffect(stateCallItem) {
-        if (stateCallItem) {
-            component.onEvent(ScreenTonPasswordEvent.ReadBdItem(DriverFactory()))
-        }
-        component.onEvent(ScreenTonPasswordEvent.ReadCashPass(DriverFactory()))
-    }
 
     Column(
         modifier = Modifier
@@ -143,9 +132,9 @@ fun PasswordScreen(component: ScreenTonPasswordComponent) {
                                 if (stateSelectedTypeStorage == StateSelectedType.TonStorage) {
                                     openBottomSheet = false
                                 } else {
-                                    component.onEvent(
-                                        ScreenTonPasswordEvent.UpdateSelectedType(
-                                            DriverFactory(),
+                                    eventComponentDispatch(
+                                        ScreenMultiPasswordEvent.UpdateSelectedType(
+                                            driverFactory,
                                             StateSelectedType.TonStorage
                                         )
                                     )
@@ -177,9 +166,9 @@ fun PasswordScreen(component: ScreenTonPasswordComponent) {
                                 if (stateSelectedTypeStorage == StateSelectedType.LocalStorage) {
                                     openBottomSheet = false
                                 } else {
-                                    component.onEvent(
-                                        ScreenTonPasswordEvent.UpdateSelectedType(
-                                            DriverFactory(),
+                                    eventComponentDispatch(
+                                        ScreenMultiPasswordEvent.UpdateSelectedType(
+                                            driverFactory,
                                             StateSelectedType.LocalStorage
                                         )
                                     )
@@ -216,7 +205,7 @@ fun PasswordScreen(component: ScreenTonPasswordComponent) {
                             emailItem = item[countItem].emailOrUserName,
                             changeData = item[countItem].changeData,
                             oncLick = {
-                                component.onEvent(ScreenTonPasswordEvent.ClickToItem(item[countItem]))
+                                eventComponentDispatch(ScreenMultiPasswordEvent.ClickToItem(item[countItem]))
                             }
                         )
                     }
@@ -258,10 +247,11 @@ fun PasswordScreen(component: ScreenTonPasswordComponent) {
                     textSubTitle = "An error occurred during the execution of the request. try again later",
                     textButton = "close",
                     handlerButton = {
-                        component.onEvent(ScreenTonPasswordEvent.HideDialog)
+                        eventComponentDispatch(ScreenMultiPasswordEvent.HideDialog)
                     }
                 )
             }
         }
     }
+
 }

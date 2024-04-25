@@ -17,13 +17,10 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
@@ -33,7 +30,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.ScreenBottomMultiComponent
 import com.pass.word.session.ui.CustomColor
 import screen.mainApp.bottom.bottomMulti.addMultiPassword.AddMultiPasswordScreen
-import screen.mainApp.bottom.bottomMulti.pass.PasswordScreen
+import screen.mainApp.bottom.bottomMulti.multiPass.MultiPasswordScreen
 import screen.mainApp.bottom.settings.SettingsScreen
 
 @Composable
@@ -102,7 +99,7 @@ fun  BottomMultiScreen(component: ScreenBottomMultiComponent) {
                     animation = stackAnimation(fade() + scale()),
                 ) { child ->
                     when (val instance = child.instance) {
-                        is ScreenBottomMultiComponent.Child.ScreenPassword -> PasswordScreen(instance.component)
+                        is ScreenBottomMultiComponent.Child.ScreenPassword -> MultiPasswordScreen(instance.component)
                         is ScreenBottomMultiComponent.Child.ScreenAddPassword -> AddMultiPasswordScreen(
                             instance.component
                         )

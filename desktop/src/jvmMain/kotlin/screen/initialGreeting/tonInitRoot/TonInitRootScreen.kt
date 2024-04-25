@@ -6,11 +6,11 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.pass.word.session.navigation.screen.initialGreeting.screenCheckWalletAddress.CheckWalletAddressScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterPassKeySecret.EnterPassKeySecretScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.EnterSeedPhraseScreen
 import com.pass.word.session.navigation.screen.initialGreeting.tonInitRoot.TonInitRootComponent
 import screen.mainApp.enterPass.EnterPassScreen
-import screen.initialGreeting.tonInitRoot.enterPassKeySecret.EnterPassKeySecretScreen
-import screen.initialGreeting.tonInitRoot.enterSeedPhrase.EnterSeedPhraseScreen
-import screen.initialGreeting.tonInitRoot.сheckWalletAddress.CheckWalletAddressScreen
 
 @Composable
 fun TonInitRootScreen(component: TonInitRootComponent) {

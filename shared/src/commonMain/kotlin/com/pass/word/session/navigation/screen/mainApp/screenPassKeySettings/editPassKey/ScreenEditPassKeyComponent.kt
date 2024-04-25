@@ -1,8 +1,9 @@
-package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings
+package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.editPassKey
 
 import com.arkivanov.decompose.ComponentContext
 import com.pass.word.session.data.getParamsString
 import com.pass.word.session.data.keyWalletSeed
+import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPassKeySettingsEvent
 import com.pass.word.session.tonCore.contract.wallet.WalletOperation
 import com.pass.word.session.utilits.StateBasicResult
 import com.pass.word.session.utilits.StateTwosItemDialog

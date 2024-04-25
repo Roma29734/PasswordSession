@@ -7,7 +7,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slid
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.initialGreeting.InitialGreetingRootComponent
-import screen.initialGreeting.choosingType.ChoosingTypeScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ChoosingTypeScreen
 import screen.initialGreeting.firstInitial.FirstInitialScreen
 import screen.initialGreeting.localInitRoot.LocalInitRootScreen
 import screen.initialGreeting.tonInitRoot.TonInitRootScreen

@@ -10,7 +10,7 @@ import com.arkivanov.decompose.value.Value
 import com.pass.word.session.data.model.PasswordItemModel
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.screenSettingsComponent.ScreenSettingsComponent
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenAddMultiPassword.ScreenAddMultiPasswordComponent
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenTonPasswordComponent
+import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.screenTonPassword.ScreenMultiPasswordComponent
 import com.pass.word.session.utilits.StateSelectedType
 import kotlinx.serialization.Serializable
 
@@ -62,7 +62,7 @@ class ScreenBottomMultiComponent(
     ): Child {
         return when (config) {
             Configuration.ScreenPassword -> Child.ScreenPassword(
-                ScreenTonPasswordComponent(
+                ScreenMultiPasswordComponent(
                     componentContext = context,
                     onNavigateToDetailComponent = { passwordItemModel, stateSelectedType ->
                         onNavigateToDetailComponent(passwordItemModel, stateSelectedType)
@@ -96,7 +96,7 @@ class ScreenBottomMultiComponent(
     }
 
     sealed class Child {
-        data class ScreenPassword(val component: ScreenTonPasswordComponent) : Child()
+        data class ScreenPassword(val component: ScreenMultiPasswordComponent) : Child()
         data class ScreenAddPassword(val component: ScreenAddMultiPasswordComponent) : Child()
         data class ScreenSettings(val component: ScreenSettingsComponent) : Child()
 

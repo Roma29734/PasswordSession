@@ -6,7 +6,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import com.pass.word.session.android.screen.mainApp.editScreen.EditScreen
+import screen.mainApp.edit.EditScreen
 import com.pass.word.session.navigation.screen.multiDivisionRoot.MultiDivisionRootComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import screen.initialGreeting.importPassword.ImportPasswordScreen

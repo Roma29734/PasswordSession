@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
@@ -31,7 +30,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.ScreenBottomLocalComponent
 import com.pass.word.session.ui.CustomColor
 import screen.mainApp.bottom.bottomLocal.addLocalPassword.AppPasswordScreen
-import screen.mainApp.bottom.bottomLocal.password.PasswordScreen
+import screen.mainApp.bottom.bottomLocal.localPassword.LocalPasswordScreen
 import screen.mainApp.bottom.bottomMulti.ScreensBottom
 import screen.mainApp.bottom.settings.SettingsScreen
 
@@ -102,7 +101,7 @@ fun BottomLocalScreen(component: ScreenBottomLocalComponent) {
                     animation = stackAnimation(fade() + scale()),
                 ) { child ->
                     when (val instance = child.instance) {
-                        is ScreenBottomLocalComponent.Child.ScreenPassword -> PasswordScreen(instance.component)
+                        is ScreenBottomLocalComponent.Child.ScreenPassword -> LocalPasswordScreen(instance.component)
                         is ScreenBottomLocalComponent.Child.ScreenAddPassword -> AppPasswordScreen(
                             instance.component
                         )

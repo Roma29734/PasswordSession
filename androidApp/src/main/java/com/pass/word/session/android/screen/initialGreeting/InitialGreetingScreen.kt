@@ -6,10 +6,11 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
-import com.pass.word.session.android.screen.initialGreeting.choosingType.ChoosingTypeScreen
 import com.pass.word.session.android.screen.initialGreeting.localInitRoot.LocalInitRootScreen
 import com.pass.word.session.android.screen.initialGreeting.tonInitRoot.TonInitRootScreen
 import com.pass.word.session.navigation.screen.initialGreeting.InitialGreetingRootComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ChoosingTypeScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenFirstInitial.FirstInitialScreen
 
 @Composable
 fun InitialGreetingScreen(component: InitialGreetingRootComponent) {

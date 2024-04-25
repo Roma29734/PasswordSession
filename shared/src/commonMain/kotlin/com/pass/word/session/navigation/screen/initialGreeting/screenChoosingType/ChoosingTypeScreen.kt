@@ -1,9 +1,6 @@
-package screen.initialGreeting.choosingType
+package com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType
 
 import androidx.compose.runtime.Composable
-import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ScreenChoosingTypeComponent
-import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ScreenChoosingTypeContent
-import com.pass.word.session.navigation.screen.initialGreeting.screenChoosingType.ScreenChoosingTypeEvent
 
 @Composable
 fun ChoosingTypeScreen(component: ScreenChoosingTypeComponent) {

@@ -1,4 +1,4 @@
-package com.pass.word.session.android.screen.initialGreeting
+package com.pass.word.session.navigation.screen.initialGreeting.screenFirstInitial
 
 import androidx.compose.runtime.Composable
 import com.pass.word.session.navigation.screen.initialGreeting.screenFirstInitial.FirstInititalScreenContent

@@ -7,9 +7,9 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.mainApp.enterPassScreen.EnterPassScreen
-import com.pass.word.session.android.screen.initialGreeting.checkWalletAddress.CheckWalletAddressScreen
-import com.pass.word.session.android.screen.initialGreeting.enterPassKeySecret.EnterPassKeySecretScreen
-import com.pass.word.session.android.screen.initialGreeting.enterSeedPhrase.EnterSeedPhraseScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenCheckWalletAddress.CheckWalletAddressScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterPassKeySecret.EnterPassKeySecretScreen
+import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.EnterSeedPhraseScreen
 import com.pass.word.session.navigation.screen.initialGreeting.tonInitRoot.TonInitRootComponent
 
 @Composable

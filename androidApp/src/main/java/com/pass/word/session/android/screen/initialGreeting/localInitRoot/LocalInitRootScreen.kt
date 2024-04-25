@@ -8,8 +8,8 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackA
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.screen.mainApp.enterPassScreen.EnterPassScreen
 import com.pass.word.session.android.screen.initialGreeting.ImportPasswordScreen
-import com.pass.word.session.android.screen.initialGreeting.SecondInitialScreen
 import com.pass.word.session.navigation.screen.initialGreeting.localInitRoot.LocalInitRootComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenSecondInitial.SecondInitialScreen
 
 @Composable
 fun LocalInitRootScreen(component: LocalInitRootComponent) {

@@ -1,10 +1,8 @@
-package screen.initialGreeting.tonInitRoot.enterSeedPhrase
+package com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.EnterSeedPhraseScreenContent
-import com.pass.word.session.navigation.screen.initialGreeting.screenEnterSeedPhrase.ScreenEnterSeedPhraseComponent
 
 @Composable
 fun EnterSeedPhraseScreen(component: ScreenEnterSeedPhraseComponent) {
@@ -17,9 +15,12 @@ fun EnterSeedPhraseScreen(component: ScreenEnterSeedPhraseComponent) {
 
     EnterSeedPhraseScreenContent(
         passEnterState = passEnterState,
-        stateSeedText = stateSeedText,
-        stateOpenDialogLoading = stateOpenDialogLoading,
-        stateLoadingAlert = stateLoadingAlert
-    ) { component.onEvent(it) }
-
+                stateSeedText = stateSeedText,
+        stateOpenDialogLoading= stateOpenDialogLoading,
+        stateLoadingAlert = stateLoadingAlert,
+        eventDispatch = {
+            component.onEvent(it)
+        }
+    )
 }
+

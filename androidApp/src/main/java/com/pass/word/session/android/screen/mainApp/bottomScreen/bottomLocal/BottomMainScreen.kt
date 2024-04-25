@@ -28,7 +28,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackA
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.addPasswordScreen.AppPasswordScreen
-import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.PasswordScreen
+import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.localPassword.LocalPasswordScreen
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.settingsScreen.SettingsScreen
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.ScreenBottomLocalComponent
 import com.pass.word.session.ui.CustomColor
@@ -98,7 +98,7 @@ fun BottomMainScreen(component: ScreenBottomLocalComponent) {
                     animation = stackAnimation(fade() + scale()),
                 ) { child ->
                     when (val instance = child.instance) {
-                        is ScreenBottomLocalComponent.Child.ScreenPassword -> PasswordScreen(instance.component)
+                        is ScreenBottomLocalComponent.Child.ScreenPassword -> LocalPasswordScreen(instance.component)
                         is ScreenBottomLocalComponent.Child.ScreenAddPassword -> AppPasswordScreen(
                             instance.component
                         )

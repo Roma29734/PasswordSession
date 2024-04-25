@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.lighthousegames.logging.logging
 
-class ScreenTonPasswordComponent(
+class ScreenMultiPasswordComponent(
     componentContext: ComponentContext,
     private val onNavigateToDetailComponent: (PasswordItemModel, StateSelectedType) -> Unit
 ) : ComponentContext by componentContext {
@@ -58,14 +58,14 @@ class ScreenTonPasswordComponent(
     val stateVisibleStatusBar get() = _stateVisibleStatusBar
 
     // this function handle event
-    fun onEvent(event: ScreenTonPasswordEvent) {
+    fun onEvent(event: ScreenMultiPasswordEvent) {
         when (event) {
-            is ScreenTonPasswordEvent.ReadBdItem -> {
+            is ScreenMultiPasswordEvent.ReadBdItem -> {
                 println("readed requesst to base")
                 readTonPassItem(event.databaseDriverFactory)
             }
 
-            is ScreenTonPasswordEvent.UpdateSelectedType -> {
+            is ScreenMultiPasswordEvent.UpdateSelectedType -> {
                 _stateSelectedTypeStorage.update { event.newType }
                 if (_stateSelectedTypeStorage.value == StateSelectedType.TonStorage) {
                     readTonPassItem(event.databaseDriverFactory)
@@ -74,11 +74,11 @@ class ScreenTonPasswordComponent(
                 }
             }
 
-            is ScreenTonPasswordEvent.ClickToItem -> {
+            is ScreenMultiPasswordEvent.ClickToItem -> {
                 onNavigateToDetailComponent(event.model, _stateSelectedTypeStorage.value)
             }
 
-            is ScreenTonPasswordEvent.ReadCashPass -> {
+            is ScreenMultiPasswordEvent.ReadCashPass -> {
                 if (_stateSelectedTypeStorage.value == StateSelectedType.TonStorage) {
 //                    CoroutineScope(Dispatchers.IO).launch {
                         val database = TonCashDatabase(event.databaseDriverFactory)
@@ -89,7 +89,7 @@ class ScreenTonPasswordComponent(
                 }
             }
 
-            is ScreenTonPasswordEvent.HideDialog -> {
+            is ScreenMultiPasswordEvent.HideDialog -> {
                 _stateLoading.update { StateBasicDialog.Hide }
             }
         }

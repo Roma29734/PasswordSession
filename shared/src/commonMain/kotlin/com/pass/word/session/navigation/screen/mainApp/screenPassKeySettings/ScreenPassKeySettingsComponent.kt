@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
+import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.editPassKey.ScreenEditPassKeyComponent
 import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.primaryAction.ScreenPrimaryKeyActionComponent
 import kotlinx.serialization.Serializable
 

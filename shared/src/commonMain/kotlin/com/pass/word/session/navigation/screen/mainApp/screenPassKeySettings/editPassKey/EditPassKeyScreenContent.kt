@@ -1,5 +1,7 @@
-package com.pass.word.session.android.screen.passKeySettings.editPassKey
+package com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.editPassKey
 
+import Img.MyIconPack
+import Img.myiconpack.IcWarning
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,8 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,35 +19,34 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.pass.word.session.android.R
-import com.pass.word.session.android.screen.initialGreeting.enterSeedPhrase.InputSeedContainer
-import com.pass.word.session.android.screen.viewComponent.CustomErrorDialog
-import com.pass.word.session.android.screen.viewComponent.CustomImageModel
-import com.pass.word.session.android.screen.viewComponent.CustomLoadingDialog
-import com.pass.word.session.android.screen.viewComponent.DialogLogOut
-import com.pass.word.session.android.screen.viewComponent.MainComponentButton
-import com.pass.word.session.android.screen.viewComponent.UpBarButtonBack
-import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenEditPassKeyComponent
 import com.pass.word.session.navigation.screen.mainApp.screenPassKeySettings.ScreenPassKeySettingsEvent
 import com.pass.word.session.ui.CustomColor
+import com.pass.word.session.ui.viewComponent.CustomErrorDialog
+import com.pass.word.session.ui.viewComponent.CustomImageModel
+import com.pass.word.session.ui.viewComponent.CustomLoadingDialog
+import com.pass.word.session.ui.viewComponent.DialogLogOut
+import com.pass.word.session.ui.viewComponent.InputSeedContainer
+import com.pass.word.session.ui.viewComponent.MainComponentButton
+import com.pass.word.session.ui.viewComponent.UpBarButtonBack
 import com.pass.word.session.utilits.StateTwosItemDialog
 
 @Composable
-fun EditPassKeyScreen(component: ScreenEditPassKeyComponent) {
+fun EditPassKeyScreenContent(
+    statePassKeySecret: String,
+    stateEnableButtonNext: Boolean,
+    warningText: String?,
+    stateShowedDialog: StateTwosItemDialog,
+    eventComponentDispatch: (ScreenPassKeySettingsEvent) -> Unit,
+) {
 
-    val statePassKeySecret by component.statePassKeySecret.collectAsState()
-    val stateEnableButtonNext by component.stateEnableButtonNext.collectAsState()
     val focusRequesters = remember {
         FocusRequester()
     }
     val focusManager = LocalFocusManager.current
-    val warningText by component.warningText.collectAsState()
-    val stateShowedDialog by component.stateShowedDialog.collectAsState()
-
+    
     Column(
         Modifier
             .fillMaxSize()
@@ -60,12 +59,12 @@ fun EditPassKeyScreen(component: ScreenEditPassKeyComponent) {
         if (stateShowedDialog is StateTwosItemDialog.ShowOneDialog) {
             Dialog(onDismissRequest = { stateShowedDialog is StateTwosItemDialog.ShowOneDialog }) {
                 DialogLogOut(
-                    cancelHandler = { component.onEvent(ScreenPassKeySettingsEvent.HideDialog) },
-                    continueHandler = { component.onEvent(ScreenPassKeySettingsEvent.OnNext) },
+                    cancelHandler = { eventComponentDispatch(ScreenPassKeySettingsEvent.HideDialog) },
+                    continueHandler = { eventComponentDispatch(ScreenPassKeySettingsEvent.OnNext) },
                     textCancelButton = "Cancel",
                     textContinueButton = "Continue",
                     customImageModel = CustomImageModel(
-                        painter = painterResource(id = R.drawable.ic_warning),
+                        painter = MyIconPack.IcWarning,
                         color = CustomColor().brandRedMain,
                         contentScale = ContentScale.Fit
                     ),
@@ -89,15 +88,15 @@ fun EditPassKeyScreen(component: ScreenEditPassKeyComponent) {
                     textSubTitle = "An error occurred during the execution of the request. try again later",
                     textButton = "close",
                     handlerButton = {
-                        component.onEvent(ScreenPassKeySettingsEvent.HideDialog)
-                        component.onEvent(ScreenPassKeySettingsEvent.OnBack)
+                        eventComponentDispatch(ScreenPassKeySettingsEvent.HideDialog)
+                        eventComponentDispatch(ScreenPassKeySettingsEvent.OnBack)
                     }
                 )
             }
         }
 
         UpBarButtonBack(onBackHandler = {
-            component.onEvent(ScreenPassKeySettingsEvent.OnBack)
+            eventComponentDispatch(ScreenPassKeySettingsEvent.OnBack)
         })
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -117,7 +116,7 @@ fun EditPassKeyScreen(component: ScreenEditPassKeyComponent) {
                     focusManager.clearFocus()
                 },
                 changeTextItemHandler = {
-                    component.onEvent(ScreenPassKeySettingsEvent.ChangeItemText(it))
+                    eventComponentDispatch(ScreenPassKeySettingsEvent.ChangeItemText(it))
                 }
             )
             Spacer(modifier = Modifier.size(24.dp))
@@ -136,7 +135,7 @@ fun EditPassKeyScreen(component: ScreenEditPassKeyComponent) {
             stateEnableButtonNext,
             colorButton = CustomColor().brandRedMain
         ) {
-            component.onEvent(ScreenPassKeySettingsEvent.OnClickButtonChange)
+            eventComponentDispatch(ScreenPassKeySettingsEvent.OnClickButtonChange)
         }
     }
 }

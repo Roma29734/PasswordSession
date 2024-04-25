@@ -7,9 +7,9 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slid
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.pass.word.session.navigation.screen.initialGreeting.localInitRoot.LocalInitRootComponent
+import com.pass.word.session.navigation.screen.initialGreeting.screenSecondInitial.SecondInitialScreen
 import screen.mainApp.enterPass.EnterPassScreen
 import screen.initialGreeting.importPassword.ImportPasswordScreen
-import screen.initialGreeting.secondInitial.SecondInitialScreen
 
 @Composable
 fun LocalInitRootScreen(component: LocalInitRootComponent) {

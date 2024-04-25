@@ -1,4 +1,4 @@
-package com.pass.word.session.android.screen.initialGreeting.enterPassKeySecret
+package com.pass.word.session.navigation.screen.initialGreeting.screenEnterPassKeySecret
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

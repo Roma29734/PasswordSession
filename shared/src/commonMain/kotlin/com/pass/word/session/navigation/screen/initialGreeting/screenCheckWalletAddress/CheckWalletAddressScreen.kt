@@ -1,4 +1,4 @@
-package screen.initialGreeting.tonInitRoot.сheckWalletAddress
+package com.pass.word.session.navigation.screen.initialGreeting.screenCheckWalletAddress
 
 import androidx.compose.runtime.Composable
 import com.pass.word.session.navigation.screen.initialGreeting.screenCheckWalletAddress.CheckWalletAddressScreenContent

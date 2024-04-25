@@ -2,9 +2,6 @@ package com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti
 
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.activity.addCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -26,7 +23,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -40,12 +36,9 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import com.pass.word.session.android.MainActivity
 import com.pass.word.session.android.R
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.ScreensBottom
-import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.addPasswordScreen.AppPasswordScreen
-import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.passwordScreen.PasswordScreen
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomLocal.settingsScreen.SettingsScreen
 import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.addMultiPassword.AddMultiPasswordScreen
-import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.tonPassword.TonPasswordScreen
-import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomLocal.ScreenBottomLocalComponent
+import com.pass.word.session.android.screen.mainApp.bottomScreen.bottomMulti.multiPassword.MultiPasswordScreen
 import com.pass.word.session.navigation.screen.mainApp.bottomMain.bottomMulti.ScreenBottomMultiComponent
 import com.pass.word.session.ui.CustomColor
 
@@ -151,7 +144,7 @@ fun BottomMultiScreen(component: ScreenBottomMultiComponent) {
                     animation = stackAnimation(fade() + scale()),
                 ) { child ->
                     when (val instance = child.instance) {
-                        is ScreenBottomMultiComponent.Child.ScreenPassword -> TonPasswordScreen(instance.component)
+                        is ScreenBottomMultiComponent.Child.ScreenPassword -> MultiPasswordScreen(instance.component)
                         is ScreenBottomMultiComponent.Child.ScreenAddPassword -> AddMultiPasswordScreen(
                             instance.component
                         )
