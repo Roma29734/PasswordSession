@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +48,9 @@ fun WarningScreen(component: ScreenWarningComponent) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(color = MaterialTheme.colorScheme.background).verticalScroll(
+                rememberScrollState()
+            ),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -83,7 +87,7 @@ fun WarningScreen(component: ScreenWarningComponent) {
                 text = "warning, if you forget your password, you will not be able to reset it, that is, you will lose all your data, treat the next step with care, by clicking continue you agree that all your data may be lost beyond recovery",
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.White,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 textAlign = TextAlign.Center
             )
         }

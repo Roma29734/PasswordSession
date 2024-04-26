@@ -82,25 +82,23 @@ fun ImportPasswordScreen(
             }
         }
 
-
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            Log.d("papersFragment", "получено if")
-            // Разрешение получено, выполните необходимые действия здесь
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                Log.d("papersFragment", "получено if")
+                // Разрешение получено, выполните необходимые действия здесь
 //            save()
-            val intenst = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "application/json"
+                val intenst = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "application/json"
+                }
+                someActivityResultLauncher.launch(intenst)
+            } else {
+                Log.d("papersFragment", "не получено if")
+                Toast.makeText(context, "Предоставьте разрешение", Toast.LENGTH_SHORT)
+                    .show()
             }
-            someActivityResultLauncher.launch(intenst)
-        } else {
-            Log.d("papersFragment", "не получено if")
-            Toast.makeText(context, "Предоставьте разрешение", Toast.LENGTH_SHORT)
-                .show()
         }
-    }
-
-
 
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -117,7 +115,7 @@ fun ImportPasswordScreen(
     }
 
     LaunchedEffect(stateShowCompleteView) {
-        if(stateShowCompleteView) {
+        if (stateShowCompleteView) {
             visibleCompleteImportState = true
         }
     }
@@ -139,7 +137,7 @@ fun ImportPasswordScreen(
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) {
         ImportPasswordScreenContent(
-            stateShowCompleteView =stateShowCompleteView,
+            stateShowCompleteView = stateShowCompleteView,
             stateBack = component.stateBack,
             visibleState = visibleState,
             visibleCompleteImportState = visibleCompleteImportState,
@@ -159,15 +157,18 @@ fun ImportPasswordScreen(
                     }
                 )
             },
-            eventComponentDispatch = {component.event(it)}
+            eventComponentDispatch = { component.event(it) }
         )
     }
 }
 
 
-
-
-private fun requestWriteStoragePermission(context: Context, activity: Activity, launch: (String) -> Unit, funHandler: () -> Unit) {
+private fun requestWriteStoragePermission(
+    context: Context,
+    activity: Activity,
+    launch: (String) -> Unit,
+    funHandler: () -> Unit
+) {
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         funHandler()
         return

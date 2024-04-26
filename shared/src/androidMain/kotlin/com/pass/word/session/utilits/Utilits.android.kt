@@ -128,39 +128,39 @@ actual fun checkUseBiometric(
                     }
                 }
             } else {
-                object : FingerprintManagerCompat.AuthenticationCallback() {
-                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                        onAction(false, "Authentication Error $errorCode")
-                        notifyUser("Authentication Error $errorCode")
-                        super.onAuthenticationError(errorCode, errString)
-                    }
-
-                    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                        super.onAuthenticationHelp(helpCode, helpString)
-                    }
-
-                    override fun onAuthenticationFailed() {
-                        super.onAuthenticationFailed()
-                    }
-                }
+//                object : FingerprintManagerCompat.AuthenticationCallback() {
+//                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+//                        onAction(false, "Authentication Error $errorCode")
+//                        notifyUser("Authentication Error $errorCode")
+//                        super.onAuthenticationError(errorCode, errString)
+//                    }
+//
+//                    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+//                        super.onAuthenticationHelp(helpCode, helpString)
+//                    }
+//
+//                    override fun onAuthenticationFailed() {
+//                        super.onAuthenticationFailed()
+//                    }
+//                }
             }
 
-        val authenticationCalBackFinger: FingerprintManagerCompat.AuthenticationCallback =
-            object : FingerprintManagerCompat.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                    onAction(false, "Authentication Error $errorCode")
-                    notifyUser("Authentication Error $errorCode")
-                    super.onAuthenticationError(errorCode, errString)
-                }
-
-                override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                    super.onAuthenticationHelp(helpCode, helpString)
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                }
-            }
+//        val authenticationCalBackFinger: FingerprintManagerCompat.AuthenticationCallback =
+//            object : FingerprintManagerCompat.AuthenticationCallback() {
+//                override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+//                    onAction(false, "Authentication Error $errorCode")
+//                    notifyUser("Authentication Error $errorCode")
+//                    super.onAuthenticationError(errorCode, errString)
+//                }
+//
+//                override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+//                    super.onAuthenticationHelp(helpCode, helpString)
+//                }
+//
+//                override fun onAuthenticationFailed() {
+//                    super.onAuthenticationFailed()
+//                }
+//            }
 
         fun checkBiometricSupport(context: Context): Boolean {
             val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
@@ -205,15 +205,15 @@ actual fun checkUseBiometric(
                         )
                     }
                 } else {
-                    val fingerprintManager = FingerprintManagerCompat.from(contextRealy)
-                    if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
-                        val cancellationSignal = androidx.core.os.CancellationSignal()
-                        if (ActivityCompat.checkSelfPermission(contextRealy, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-                            notifyUser("Fingerprint authentication permission not granted")
-                            return
-                        }
-                        fingerprintManager.authenticate(null, 0, cancellationSignal, authenticationCalBackFinger, null)
-                    }
+//                    val fingerprintManager = FingerprintManagerCompat.from(contextRealy)
+//                    if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
+//                        val cancellationSignal = androidx.core.os.CancellationSignal()
+//                        if (ActivityCompat.checkSelfPermission(contextRealy, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+//                            notifyUser("Fingerprint authentication permission not granted")
+//                            return
+//                        }
+//                        fingerprintManager.authenticate(null, 0, cancellationSignal, authenticationCalBackFinger, null)
+//                    }
                 }
             }
         }
@@ -230,18 +230,18 @@ actual fun checkUseBiometric(
                         }
                         .build()
                 } else {
-                    val fingerprintManager = FingerprintManagerCompat.from(contextRealy)
-                    if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
-                        val cancellationSignal = androidx.core.os.CancellationSignal()
-                        if (ActivityCompat.checkSelfPermission(contextRealy, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-                            notifyUser("Fingerprint authentication permission not granted")
-                            return
-                        }
-                        fingerprintManager.authenticate(null, 0, cancellationSignal, authenticationCalBackFinger, null)
-                    } else {
+//                    val fingerprintManager = FingerprintManagerCompat.from(contextRealy)
+//                    if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
+//                        val cancellationSignal = androidx.core.os.CancellationSignal()
+//                        if (ActivityCompat.checkSelfPermission(contextRealy, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+//                            notifyUser("Fingerprint authentication permission not granted")
+//                            return
+//                        }
+//                        fingerprintManager.authenticate(null, 0, cancellationSignal, authenticationCalBackFinger, null)
+//                    } else {
                         // Fingerprint authentication is not available, handle accordingly
                         // Notify the user or fall back to another authentication method
-                    }
+//                    }
                     TODO("VERSION.SDK_INT < P")
                 }
                 if(authenticationCalBack is BiometricPrompt.AuthenticationCallback) {

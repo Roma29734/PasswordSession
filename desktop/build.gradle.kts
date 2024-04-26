@@ -15,11 +15,14 @@ kotlin {
             kotlinOptions.jvmTarget = "17"
         }
     }
+
     sourceSets {
         val jvmMain by getting {
             kotlin.srcDirs("src/jvmMain/kotlin")
             dependencies {
-//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
+
+                implementation(projects.shared)
+
                 implementation(compose.desktop.currentOs)
                 api(compose.runtime)
                 api(compose.foundation)
@@ -29,8 +32,6 @@ kotlin {
                 // decompose
                 implementation(libs.decompose)
                 implementation(libs.decomposeJetbrains)
-
-                implementation(project(":shared"))
             }
         }
     }
@@ -42,6 +43,10 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "PasswordSession"
+            packageVersion = "1.0.0"
+            windows {
+                iconFile.set(project.file("icon.ico"))
+            }
             macOS {
                 bundleID = "com.pass.word.session.desktop"
             }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -54,104 +56,110 @@ fun AddPasswordScreenContent(
             .background(color = MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
-
-            Text(
-                modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp),
-                text = "Add New Password",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
-            )
-
-
-            OutlineInputText(
-                textInTitle = "Title",
-                outText = textTitle,
-                onValueChangeHandler = {
-                    eventComponentDispatch(
-                        ScreenAddPasswordStateEvent.UpdateTextTitle(
-                            it
-                        )
-                    )
-                },
-                focusRequester = focusRequesterTitle,
-                onNextHandler = {
-                    focusRequesterEmailUserName.requestFocus()
-                }, keyboardType = KeyboardType.Text
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Email/UserName",
-                outText = textEmailORUserName,
-                onValueChangeHandler = {
-                    eventComponentDispatch(
-                        ScreenAddPasswordStateEvent.UpdateTextEmailORUserName(
-                            it
-                        )
-                    )
-                },
-                focusRequester = focusRequesterEmailUserName,
-                onNextHandler = {
-                    focusRequesterPassword.requestFocus()
-                }, keyboardType = KeyboardType.Email
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Password",
-                outText = textPassword,
-                onValueChangeHandler = {
-                    eventComponentDispatch(
-                        ScreenAddPasswordStateEvent.UpdateTextPassword(
-                            it
-                        )
-                    )
-                },
-                focusRequester = focusRequesterPassword,
-                onNextHandler = {
-                    focusRequesterUrl.requestFocus()
-                }, keyboardType = KeyboardType.Password
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Url",
-                outText = textUrl,
-                onValueChangeHandler = {
-                    eventComponentDispatch(ScreenAddPasswordStateEvent.UpdateTextUrl(it))
-                },
-                focusRequester = focusRequesterUrl,
-                onNextHandler = {
-                    focusRequesterDescriptions.requestFocus()
-                }, keyboardType = KeyboardType.Text
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            OutlineInputText(
-                textInTitle = "Descriptions",
-                outText = textDescriptions,
-                onValueChangeHandler = {
-                    eventComponentDispatch(
-                        ScreenAddPasswordStateEvent.UpdateTextDescriptions(
-                            it
-                        )
-                    )
-                },
-                focusRequester = focusRequesterDescriptions,
-                onNextHandler = {
-                    focusManager.clearFocus()
-                }, keyboardType = KeyboardType.Text
-            )
-
-        }
-        MainComponentButton(
-            text = "add new password",
-            true
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background).verticalScroll(
+                    rememberScrollState()
+                ),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            eventComponentDispatch(
-                ScreenAddPasswordStateEvent.ClickButtonAddNewState(
-                    databaseDriverFactory = driverFactory
+            Column {
+
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 16.dp),
+                    text = "Add New Password",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
                 )
-            )
+
+
+                OutlineInputText(
+                    textInTitle = "Title",
+                    outText = textTitle,
+                    onValueChangeHandler = {
+                        eventComponentDispatch(
+                            ScreenAddPasswordStateEvent.UpdateTextTitle(
+                                it
+                            )
+                        )
+                    },
+                    focusRequester = focusRequesterTitle,
+                    onNextHandler = {
+                        focusRequesterEmailUserName.requestFocus()
+                    }, keyboardType = KeyboardType.Text
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Email/UserName",
+                    outText = textEmailORUserName,
+                    onValueChangeHandler = {
+                        eventComponentDispatch(
+                            ScreenAddPasswordStateEvent.UpdateTextEmailORUserName(
+                                it
+                            )
+                        )
+                    },
+                    focusRequester = focusRequesterEmailUserName,
+                    onNextHandler = {
+                        focusRequesterPassword.requestFocus()
+                    }, keyboardType = KeyboardType.Email
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Password",
+                    outText = textPassword,
+                    onValueChangeHandler = {
+                        eventComponentDispatch(
+                            ScreenAddPasswordStateEvent.UpdateTextPassword(
+                                it
+                            )
+                        )
+                    },
+                    focusRequester = focusRequesterPassword,
+                    onNextHandler = {
+                        focusRequesterUrl.requestFocus()
+                    }, keyboardType = KeyboardType.Password
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Url",
+                    outText = textUrl,
+                    onValueChangeHandler = {
+                        eventComponentDispatch(ScreenAddPasswordStateEvent.UpdateTextUrl(it))
+                    },
+                    focusRequester = focusRequesterUrl,
+                    onNextHandler = {
+                        focusRequesterDescriptions.requestFocus()
+                    }, keyboardType = KeyboardType.Text
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                OutlineInputText(
+                    textInTitle = "Descriptions",
+                    outText = textDescriptions,
+                    onValueChangeHandler = {
+                        eventComponentDispatch(
+                            ScreenAddPasswordStateEvent.UpdateTextDescriptions(
+                                it
+                            )
+                        )
+                    },
+                    focusRequester = focusRequesterDescriptions,
+                    onNextHandler = {
+                        focusManager.clearFocus()
+                    }, keyboardType = KeyboardType.Text
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+            }
+            MainComponentButton(
+                text = "add new password",
+                true
+            ) {
+                eventComponentDispatch(
+                    ScreenAddPasswordStateEvent.ClickButtonAddNewState(
+                        databaseDriverFactory = driverFactory
+                    )
+                )
+            }
         }
     }
-
-
 }

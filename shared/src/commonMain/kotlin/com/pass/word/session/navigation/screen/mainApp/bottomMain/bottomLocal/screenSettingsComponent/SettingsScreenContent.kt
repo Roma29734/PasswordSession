@@ -10,15 +10,18 @@ import Img.myiconpack.IcPin
 import Img.myiconpack.IcSecurityLock
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -33,26 +36,19 @@ fun SettingsScreenContent(
     mainComponentBtnHandler: () -> Unit
 ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column {
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)) {
 
-
+        Column(
+            modifier = Modifier.align(Alignment.TopCenter),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp),
                 text = "Settings",
                 color = Color.White,
                 style = MaterialTheme.typography.bodyLarge
             )
-
-            Spacer(modifier = Modifier.size(16.dp))
-
             LazyColumn(content = {
-
                 if (itemSettingsList.isNotEmpty()) {
                     items(count = itemSettingsList.size) { countItem ->
 
@@ -126,6 +122,7 @@ fun SettingsScreenContent(
 
                                 Spacer(modifier = Modifier.size(8.dp))
                             }
+
                             ItemSettings.LogOut -> {
                                 ItemSettingsMenu(
                                     image = MyIconPack.IcLogOut,
@@ -141,11 +138,15 @@ fun SettingsScreenContent(
 
                     }
                 }
-
             })
         }
-        MainComponentButton(text = "download password", true) {
-            mainComponentBtnHandler()
+
+
+        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+            MainComponentButton(text = "download password", true) {
+                mainComponentBtnHandler()
+            }
         }
+
     }
 }

@@ -59,8 +59,7 @@ kotlin {
 
         jvmMain.dependencies {
             implementation(libs.sqlDelightJvm)
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
-            implementation(libs.coroutineJavax)
+            implementation(libs.coroutine.swing)
         }
 
         commonTest.dependencies {

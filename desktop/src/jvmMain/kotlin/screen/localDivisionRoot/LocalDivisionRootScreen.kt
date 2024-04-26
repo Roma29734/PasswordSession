@@ -9,12 +9,14 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import screen.mainApp.edit.EditScreen
 
 import com.pass.word.session.navigation.screen.localDivisionRoot.LocalDivisionRootComponent
+import kotlinx.coroutines.DelicateCoroutinesApi
 import screen.initialGreeting.importPassword.ImportPasswordScreen
 import screen.mainApp.authentication.AuthenticationScreen
 import screen.mainApp.bottom.bottomLocal.BottomLocalScreen
 import screen.mainApp.changePassword.ChangePasswordRoot
 import screen.mainApp.detail.DetailScreen
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun LocalDivisionRootScreen(component: LocalDivisionRootComponent) {
 
